@@ -1,0 +1,60 @@
+/*
+ * Minimal reset — just enough for consistent cross-browser baseline.
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: max(var(--space-md, 16px), env(safe-area-inset-top, 0px));
+}
+
+body {
+  min-height: 100svh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring, rgba(200, 162, 70, 0.4));
+  outline-offset: 2px;
+}
+
+/* Remove default list styling where semantic lists aren't needed */
+[role="list"] {
+  list-style: none;
+  padding: 0;
+}

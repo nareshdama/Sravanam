@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ede6dc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141018" media="(prefers-color-scheme: dark)" />
+    <title>Sravanam</title>
+    <!-- Inline so first paint has layout/color before the module + bundled CSS load -->
+    <style>
+      .app-boot {
+        box-sizing: border-box;
+        min-height: 100svh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        color: #1a1510;
+        background: #f5f0e8;
+        background-image: linear-gradient(165deg, #f8f3eb 0%, #f0e9de 42%, #e8dfd2 100%);
+      }
+      @media (prefers-color-scheme: dark) {
+        .app-boot {
+          color: #e8dfd0;
+          background: #0c0a12;
+          background-image: linear-gradient(165deg, #1a1620 0%, #100e18 45%, #0c0a12 100%);
+        }
+      }
+      .app-boot__title {
+        font-weight: 600;
+        font-size: clamp(1.75rem, 5vw, 2.25rem);
+        margin: 0;
+        letter-spacing: 0.03em;
+      }
+      .app-boot__status {
+        font-family: system-ui, sans-serif;
+        font-size: 0.8125rem;
+        margin: 12px 0 0;
+        opacity: 0.45;
+        letter-spacing: 0.04em;
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      />
+    </noscript>
+  </head>
+  <body>
+    <a class="skip-link" href="#app">Skip to content</a>
+    <div id="app">
+      <main class="app-boot" aria-busy="true">
+        <p class="app-boot__title">Sravanam</p>
+        <p class="app-boot__status">Loading…</p>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

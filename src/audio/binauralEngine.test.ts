@@ -1,0 +1,138 @@
+import { describe, expect, it } from 'vitest'
+import { BinauralEngine, clampBinauralFrequencies } from './binauralEngine'
+import { getTemplateById, resolveTemplateFrequencies } from '../data/binauralTemplates'
+
+/** Minimal Web Audio mocks so `BinauralEngine` runs in Node without a browser. */
+function createAudioParam(initial = 0) {
+  const p = {
+    value: initial,
+    setValueAtTime(v: number) {
+      p.value = v
+      return p
+    },
+    linearRampToValueAtTime(v: number) {
+      p.value = v
+      return p
+    },
+    cancelScheduledValues() {
+      return p
+    },
+  }
+  return p
+}
+
+function createMockAudioContextFactory(sampleRate: number) {
+  const oscillators: { frequency: ReturnType<typeof createAudioParam> }[] = []
+
+  const factory = () => {
+    const ctx = {
+      sampleRate,
+      currentTime: 0 as number,
+      destination: {} as AudioDestinationNode,
+      async resume() {
+        return ctx
+      },
+      async close() {},
+      createChannelMerger() {
+        return {
+          connect(dest: AudioNode) {
+            return dest
+          },
+          disconnect() {},
+        }
+      },
+      createGain() {
+        return {
+          connect(_dest: AudioNode) {
+            return _dest
+          },
+          gain: createAudioParam(0),
+          disconnect() {},
+        }
+      },
+      createOscillator() {
+        const frequency = createAudioParam(0)
+        oscillators.push({ frequency })
+        return {
+          frequency,
+          type: 'sine' as OscillatorType,
+          connect() {
+            return {}
+          },
+          disconnect() {},
+          start() {},
+          stop() {},
+        }
+      },
+    }
+    return ctx as unknown as AudioContext
+  }
+
+  return { factory, oscillators }
+}
+
+describe('BinauralEngine', () => {
+  it('drives left = carrier and right = carrier + beat on the oscillator AudioParams', async () => {
+    const { factory, oscillators } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+
+    engine.setCarrierHz(200)
+    engine.setBeatHz(7.83)
+    await engine.start()
+
+    expect(oscillators).toHaveLength(2)
+    const { carrierHz, beatHz } = clampBinauralFrequencies(48_000, 200, 7.83)
+    expect(oscillators[0]!.frequency.value).toBeCloseTo(carrierHz, 8)
+    expect(oscillators[1]!.frequency.value).toBeCloseTo(carrierHz + beatHz, 8)
+
+    const live = engine.getChannelFrequencies()
+    expect(live).not.toBeNull()
+    expect(live!.leftHz).toBeCloseTo(carrierHz, 8)
+    expect(live!.rightHz).toBeCloseTo(carrierHz + beatHz, 8)
+
+    engine.stop()
+  })
+
+  it('updates oscillator frequencies when beat changes while running', async () => {
+    const { factory, oscillators } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+    await engine.start()
+    engine.setCarrierHz(200)
+    engine.setBeatHz(40)
+
+    const { carrierHz, beatHz } = clampBinauralFrequencies(48_000, 200, 40)
+    expect(oscillators[0]!.frequency.value).toBeCloseTo(carrierHz, 8)
+    expect(oscillators[1]!.frequency.value).toBeCloseTo(carrierHz + beatHz, 8)
+
+    engine.stop()
+  })
+
+  it('gamma 40 Hz template matches engine channel math', async () => {
+    const t = getTemplateById('gamma-40')!
+    const r = resolveTemplateFrequencies(t)
+    const { factory, oscillators } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+    engine.setCarrierHz(r.carrierHz)
+    engine.setBeatHz(r.beatHz)
+    await engine.start()
+
+    expect(oscillators[1]!.frequency.value - oscillators[0]!.frequency.value).toBeCloseTo(
+      40,
+      8,
+    )
+    engine.stop()
+  })
+
+  it('exposes audio clock and playback start time while running', async () => {
+    const { factory } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+    expect(engine.getAudioClock()).toBeNull()
+    expect(engine.getPlaybackStartTime()).toBeNull()
+    await engine.start()
+    const clock = engine.getAudioClock()
+    expect(clock).not.toBeNull()
+    expect(clock!.sampleRate).toBe(48_000)
+    expect(engine.getPlaybackStartTime()).toBe(0)
+    engine.stop()
+  })
+})

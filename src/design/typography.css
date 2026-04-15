@@ -1,0 +1,122 @@
+/*
+ * Typography — display (Cormorant Garamond) + body (Source Sans 3)
+ */
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  background-image: var(--color-bg-gradient);
+  background-attachment: fixed;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Display ── */
+
+.display-hero {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2rem, 6vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: 0.03em;
+  color: var(--color-ink);
+}
+
+.display-section {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 4.5vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  color: var(--color-ink);
+}
+
+.display-card {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: var(--color-ink);
+}
+
+/* ── Epigraph (Sanskrit, italic) ── */
+
+.epigraph {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  color: var(--color-gold);
+}
+
+@media (prefers-color-scheme: dark) {
+  .epigraph {
+    color: var(--color-gold-glow);
+  }
+}
+
+/* ── Body ── */
+
+.body-primary {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+
+.body-secondary {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+
+.caption {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--color-ink-muted);
+}
+
+.footnote {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--color-ink-tertiary);
+}
+
+/* ── Labels ── */
+
+.label-uppercase {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+@media (prefers-color-scheme: dark) {
+  .label-uppercase {
+    color: var(--color-gold-glow);
+  }
+}
+
+/* ── Monospace (data) ── */
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+
+.mono-sm {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-tertiary);
+}
