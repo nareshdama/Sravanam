@@ -3,7 +3,7 @@
  * Principle: everything breathes, nothing bounces.
  */
 
-/* ── Gentle breath (idle glow on active elements) ── */
+/* —— Gentle breath (idle glow on active elements) —— */
 
 @keyframes breathe {
   0%, 100% {
@@ -14,7 +14,7 @@
   }
 }
 
-/* ── Playback pulse (status indicator) ── */
+/* —— Playback pulse (status indicator) —— */
 
 @keyframes playback-pulse {
   0%, 100% {
@@ -27,9 +27,8 @@
   }
 }
 
-/* ── Gold glow pulse (active card/button accent) ── */
+/* —— Gold glow pulse (active card/button accent) —— */
 
-/* Pulsing gold ring — optional; selected cards use static --shadow-gold-active */
 @keyframes gold-glow {
   0%, 100% {
     box-shadow: 0 0 12px rgba(200, 162, 70, 0.2);
@@ -39,7 +38,7 @@
   }
 }
 
-/* ── Fade in (screen entrance) ── */
+/* —— Fade in (screen entrance) —— */
 
 @keyframes fade-in {
   from {
@@ -52,7 +51,7 @@
   }
 }
 
-/* ── Staggered card entrance ── */
+/* —— Staggered card entrance —— */
 
 .intention-card {
   animation: fade-in var(--duration-deliberate) var(--ease-out) both;
@@ -63,15 +62,22 @@
 .intention-card:nth-child(3) { animation-delay: 120ms; }
 .intention-card:nth-child(4) { animation-delay: 180ms; }
 
-/* ── Reduced motion: no decorative motion; keep static gold on selection ── */
+/* —— Reduced motion: no decorative motion; keep static gold on selection —— */
 
 @media (prefers-reduced-motion: reduce) {
   .intention-card {
     animation: none;
   }
 
-  .landing__mandala {
+  .landing--fullbg .landing__content,
+  .landing__content-shell,
+  .landing__hero-text,
+  .landing__tagline,
+  .landing__cta,
+  .landing__disclaimer {
     animation: none;
+    opacity: 1;
+    transform: none;
   }
 
   .intention-card,

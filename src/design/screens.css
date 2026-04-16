@@ -1,8 +1,8 @@
-/*
+﻿/*
  * Per-screen layout styles.
  */
 
-/* ── App shell ── */
+/* —— App shell —— */
 
 .app-chrome {
   width: 100%;
@@ -115,30 +115,197 @@
   width: 100%;
 }
 
-/* ── Landing ── */
+/* Full-bleed landing (WebGL / static viz behind copy) */
+.app__screen--landing {
+  padding: 0;
+  align-self: stretch;
+  width: 100%;
+  min-height: 100svh;
+  justify-content: flex-start;
+}
+
+/* —— Landing —— */
 
 .landing {
   text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100svh;
+  isolation: isolate;
+}
+
+.landing--fullbg .landing__bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Scroll drives animation; empty areas receive pointer for parallax */
+  pointer-events: auto;
+  background: #14110e;
+}
+
+.landing--viz-static .landing__bg {
+  pointer-events: none;
+}
+
+.landing--fullbg .landing__bg canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Fixed overlay: CTA/title stay centered while page scroll drives WebGL */
+.landing__content-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(env(safe-area-inset-top, 0px), var(--space-lg))
+    max(env(safe-area-inset-right, 0px), var(--space-md))
+    max(env(safe-area-inset-bottom, 0px), var(--space-xl))
+    max(env(safe-area-inset-left, 0px), var(--space-md));
+  pointer-events: none;
+}
+
+.landing__content-shell .landing__content {
+  pointer-events: auto;
+}
+
+.landing__content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-lg);
-  min-height: 80svh;
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: max(env(safe-area-inset-top, 0px), var(--space-lg))
+    max(env(safe-area-inset-right, 0px), var(--space-md))
+    max(env(safe-area-inset-bottom, 0px), var(--space-xl))
+    max(env(safe-area-inset-left, 0px), var(--space-md));
 }
 
-.landing__mandala {
-  width: clamp(200px, 50vw, 320px);
-  height: clamp(200px, 50vw, 320px);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-  animation: breathe 5.5s ease-in-out infinite;
-  transform-origin: center center;
+/* Scroll range for window.scrollY → shader (paired with drive="page") */
+.landing__scroll-spacer {
+  width: 100%;
+  min-height: 320vh;
+  flex-shrink: 0;
 }
 
-.landing__mandala canvas {
-  width: 100% !important;
-  height: 100% !important;
+/* No glass panel — copy floats over viz; shadows keep type readable */
+.landing--viz-webgl .landing__title {
+  color: #fdfcfa;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.95),
+    0 0 28px rgba(0, 0, 0, 0.75),
+    0 0 2px rgba(0, 0, 0, 0.9);
+}
+
+.landing--viz-webgl .landing__tagline-line--lead {
+  text-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.9),
+    0 0 18px rgba(0, 0, 0, 0.65);
+}
+
+.landing--viz-webgl .landing__tagline-line--tail {
+  color: rgba(245, 240, 232, 0.92);
+  text-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.88),
+    0 0 16px rgba(0, 0, 0, 0.6);
+}
+
+.landing--viz-webgl .landing__disclaimer {
+  color: rgba(245, 240, 232, 0.72);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+.landing--viz-webgl .landing__cta.btn--ghost {
+  color: #fdfcfa;
+  border-color: rgba(200, 162, 70, 0.65);
+  background: rgba(8, 6, 5, 0.25);
+  box-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 253, 247, 0.06);
+}
+
+.landing--viz-webgl .landing__cta.btn--ghost:hover:not(:disabled) {
+  background: rgba(200, 162, 70, 0.18);
+  border-color: var(--color-gold);
+  box-shadow:
+    0 0 28px rgba(200, 162, 70, 0.25),
+    0 2px 16px rgba(0, 0, 0, 0.45);
+}
+
+/* Static path — no frosted card; mandala is readable behind type */
+.landing--viz-static .landing__title {
+  text-shadow: 0 1px 2px rgba(245, 240, 232, 0.35);
+}
+
+/* Rising entrance from stillness */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Staggered entrance for landing elements */
+.landing--fullbg .landing__content {
+  animation: fade-in-scale 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.landing__hero-text {
+  animation: rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 250ms;
+}
+
+.landing__tagline {
+  animation: fade-in 600ms ease-out both;
+  animation-delay: 450ms;
+}
+
+.landing__cta {
+  animation: rise-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 650ms;
+}
+
+.landing__disclaimer {
+  animation: fade-in 500ms ease-out both;
+  animation-delay: 850ms;
 }
 
 .landing__hero-text {
@@ -201,7 +368,7 @@
   opacity: 0.4;
 }
 
-/* ── Intentions ── */
+/* —— Intentions —— */
 
 .intentions {
   display: flex;
@@ -245,43 +412,51 @@
   background: var(--color-glass-bg);
   -webkit-backdrop-filter: blur(var(--blur-strength));
   backdrop-filter: blur(var(--blur-strength));
+  border: 1px solid var(--color-glass-border);
+  box-shadow: inset 0 1px 0 var(--color-glass-edge), var(--color-glass-shadow);
   transition:
-    border-color var(--duration-deliberate) var(--ease-default),
-    box-shadow var(--duration-deliberate) var(--ease-default),
-    transform var(--duration-fast) var(--ease-default);
+    transform var(--duration-fast) var(--ease-default),
+    border-color var(--duration-fast) var(--ease-default),
+    box-shadow var(--duration-fast) var(--ease-default);
 }
 
 .intention-card:hover {
+  transform: translateY(-3px);
   border-color: var(--color-border-gold);
-  box-shadow: 0 4px 20px rgba(200, 162, 70, 0.08);
+  box-shadow: inset 0 1px 0 var(--color-glass-edge), 0 8px 24px rgba(200, 162, 70, 0.12);
 }
 
 .intention-card:active {
-  transform: scale(0.98);
+  transform: translateY(-1px) scale(0.99);
 }
 
 .intention-card[aria-pressed='true'] {
   border-color: var(--color-gold);
   box-shadow:
-    0 0 0 1px var(--color-gold),
+    inset 0 1px 0 var(--color-glass-edge),
     var(--shadow-gold-active);
+}
+
+.intention-card[aria-pressed='true']:hover {
+  box-shadow:
+    inset 0 1px 0 var(--color-glass-edge),
+    0 0 28px rgba(200, 162, 70, 0.35);
 }
 
 .intention-card__check {
   position: absolute;
   top: var(--space-sm);
   right: var(--space-sm);
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-gold);
+  color: var(--color-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: var(--radius-full);
-  background: rgba(200, 162, 70, 0.28);
-  color: var(--color-ink);
   opacity: 0;
-  transform: scale(0.88);
-  pointer-events: none;
+  transform: scale(0.5);
   transition:
     opacity var(--duration-fast) var(--ease-default),
     transform var(--duration-fast) var(--ease-default);
@@ -336,7 +511,7 @@
   text-align: center;
 }
 
-/* ── Session card ── */
+/* —— Session card —— */
 
 .session {
   display: flex;
@@ -401,7 +576,7 @@
   }
 }
 
-/* ── Immersive ── */
+/* —— Immersive —— */
 
 .immersive {
   position: fixed;
@@ -513,7 +688,7 @@
   accent-color: var(--color-gold-glow);
 }
 
-/* ── View transitions ── */
+/* —— View transitions —— */
 
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(root),

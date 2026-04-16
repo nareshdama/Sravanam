@@ -3,7 +3,7 @@
  * All components use design tokens from tokens.css.
  */
 
-/* ── Glass card ── */
+/* —— Glass card —— */
 
 .card {
   padding: var(--space-lg);
@@ -21,7 +21,7 @@
   }
 }
 
-/* ── Buttons ── */
+/* —— Buttons —— */
 
 .btn {
   display: inline-flex;
@@ -41,7 +41,8 @@
   transition:
     background var(--duration-fast) var(--ease-default),
     transform var(--duration-fast) var(--ease-default),
-    box-shadow var(--duration-fast) var(--ease-default);
+    box-shadow var(--duration-fast) var(--ease-default),
+    border-color var(--duration-fast) var(--ease-default);
 }
 
 .btn:hover:not(:disabled) {
@@ -66,16 +67,62 @@
   border: 1px solid var(--color-border-gold);
   color: var(--color-ink);
   box-shadow: none;
+  transition:
+    background var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-default);
 }
 
 .btn--ghost:hover:not(:disabled) {
   background: var(--color-gold-muted);
+  border-color: var(--color-gold);
+  box-shadow:
+    0 0 16px rgba(200, 162, 70, 0.2),
+    0 0 32px rgba(200, 162, 70, 0.1);
+}
+
+/* Vedic breathing glow on ghost button hover */
+@keyframes golden-breath {
+  0%, 100% {
+    box-shadow:
+      0 0 16px rgba(200, 162, 70, 0.2),
+      0 0 32px rgba(200, 162, 70, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 24px rgba(200, 162, 70, 0.35),
+      0 0 48px rgba(200, 162, 70, 0.15);
+  }
+}
+
+.btn--ghost:hover:not(:disabled) {
+  animation: golden-breath 2.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn--ghost:hover:not(:disabled) {
+    animation: none;
+    box-shadow: 0 0 20px rgba(200, 162, 70, 0.3);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   .btn {
     border-color: rgba(200, 162, 70, 0.25);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+
+  .btn--ghost {
+    color: var(--color-ink);
+  }
+
+  .btn--ghost:hover:not(:disabled) {
+    background: rgba(200, 162, 70, 0.12);
+    border-color: var(--color-gold-glow);
+    box-shadow:
+      0 0 20px rgba(232, 200, 106, 0.25),
+      0 0 40px rgba(232, 200, 106, 0.12);
   }
 }
 
@@ -88,7 +135,7 @@
   background: var(--btn-stop-hover);
 }
 
-/* ── Floating icon button (immersive overlay) ── */
+/* —— Floating icon button (immersive overlay) —— */
 
 .btn-icon {
   display: inline-flex;
@@ -114,7 +161,7 @@
   cursor: not-allowed;
 }
 
-/* ── Fields ── */
+/* —— Fields —— */
 
 .field {
   display: block;
@@ -170,7 +217,7 @@
   cursor: pointer;
 }
 
-/* ── Segmented control (ambient bed picker) ── */
+/* —— Segmented control (ambient bed picker) —— */
 
 .segmented {
   display: flex;
@@ -218,12 +265,13 @@
   }
 }
 
-/* ── Disclosure (advanced tuning, etc.) ── */
+/* —— Disclosure (advanced tuning, etc.) —— */
 
 .disclosure {
   border: none;
   padding: 0;
 }
+
 
 .disclosure > summary {
   cursor: pointer;
@@ -257,7 +305,7 @@
   transform: rotate(45deg);
 }
 
-/* ── Tab switcher ── */
+/* —— Tab switcher —— */
 
 .tabs {
   display: flex;
@@ -299,7 +347,8 @@
   }
 }
 
-/* ── Reduced motion ── */
+/* —— Reduced motion —— */
+
 
 @media (prefers-reduced-motion: reduce) {
   .btn,
@@ -311,5 +360,9 @@
 
   .btn:active:not(:disabled) {
     transform: none;
+  }
+
+  .btn--ghost:hover:not(:disabled) {
+    animation: none;
   }
 }
