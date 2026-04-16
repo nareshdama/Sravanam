@@ -1,16 +1,13 @@
-/**
- * Landing screen — Sri Yantra WebGL hero (or static mandala when reduced motion), title, CTA.
+﻿/**
+ * Landing screen — copy + CTA. WebGL Sri Yantra is mounted globally (#app-global-viz).
+ * Reduced motion: static mandala in #landing-static-viz-root only on this screen.
  */
 
-import type { Root } from 'react-dom/client'
-
 import { navigate } from '../app'
-import { mountSriYantraLanding, unmountSriYantraLanding } from '../landing/sriYantraRoot'
 import { prefersReducedMotion } from '../lib/motionPreference'
 import { createStaticMandala, type StaticMandalaController } from '../viz/staticMandala'
 
 let mandala: StaticMandalaController | null = null
-let reactRoot: Root | null = null
 
 export function renderLanding(root: HTMLElement): void {
   const reduced = prefersReducedMotion()
@@ -18,7 +15,7 @@ export function renderLanding(root: HTMLElement): void {
   root.innerHTML = `
     <div class="app__screen app__screen--landing">
       <div class="landing landing--fullbg${reduced ? ' landing--viz-static' : ' landing--viz-webgl'}">
-        <div class="landing__bg" id="landing-viz-root" aria-hidden="true"></div>
+        ${reduced ? '<div class="landing__bg landing__bg--static" id="landing-static-viz-root" aria-hidden="true"></div>' : ''}
         <div class="landing__content-shell">
           <div class="landing__content">
             <div class="landing__hero-text">
@@ -43,17 +40,12 @@ export function renderLanding(root: HTMLElement): void {
     </div>
   `
 
-  const vizMount = root.querySelector<HTMLElement>('#landing-viz-root')
-  if (!vizMount) return
-
   if (reduced) {
+    const mount = root.querySelector<HTMLElement>('#landing-static-viz-root')
+    if (!mount) return
     mandala?.stop()
-    mandala = createStaticMandala(vizMount, { reducedMotion: true })
+    mandala = createStaticMandala(mount, { reducedMotion: true })
     mandala.start()
-  } else {
-    unmountSriYantraLanding(reactRoot)
-    reactRoot = null
-    reactRoot = mountSriYantraLanding(vizMount)
   }
 
   const cta = root.querySelector<HTMLButtonElement>('#landing-cta')
@@ -67,6 +59,4 @@ export function renderLanding(root: HTMLElement): void {
 export function destroyLanding(): void {
   mandala?.stop()
   mandala = null
-  unmountSriYantraLanding(reactRoot)
-  reactRoot = null
 }

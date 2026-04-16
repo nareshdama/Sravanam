@@ -222,13 +222,26 @@ body {
 }
 
 #app {
+  position: relative;
+  z-index: 1;
   max-width: 560px;
   margin: 0 auto;
   min-height: 100svh;
+  background: transparent;
   padding: max(env(safe-area-inset-top, 0px), var(--space-3))
     max(env(safe-area-inset-right, 0px), var(--space-2))
     max(env(safe-area-inset-bottom, 0px), var(--space-4))
     max(env(safe-area-inset-left, 0px), var(--space-2));
+}
+
+html {
+  background: #14110e;
+}
+
+/* Let the full-viewport Sri Yantra show through; surfaces use .card / .app__screen--padded */
+body {
+  background: transparent !important;
+  background-image: none !important;
 }
 
 .is-hidden {

@@ -18,12 +18,14 @@ import './style.css'
 import { boot } from './app'
 import { initRouteSync } from './lib/routeSync'
 import { appStore, type Screen } from './state/appState'
+import { mountGlobalVizLayer } from './landing/mountGlobalViz'
 import { renderLanding, destroyLanding } from './screens/landing'
 import { renderIntentionPicker, destroyIntentionPicker } from './screens/intentionPicker'
 import { renderSessionCard, destroySessionCard } from './screens/sessionCard'
 import { renderImmersive, destroyImmersive } from './screens/immersive'
 
-const appRoot = document.querySelector<HTMLDivElement>('#app')!
+const screenRoot = document.querySelector<HTMLDivElement>('#app-screen')!
+const globalVizEl = document.querySelector<HTMLDivElement>('#app-global-viz')!
 
 let currentScreen: Screen | null = null
 
@@ -51,16 +53,16 @@ function renderScreen(screen: Screen): void {
   currentScreen = screen
   switch (screen) {
     case 'landing':
-      renderLanding(appRoot)
+      renderLanding(screenRoot)
       break
     case 'intentions':
-      renderIntentionPicker(appRoot)
+      renderIntentionPicker(screenRoot)
       break
     case 'session':
-      renderSessionCard(appRoot)
+      renderSessionCard(screenRoot)
       break
     case 'immersive':
-      renderImmersive(appRoot)
+      renderImmersive(screenRoot)
       break
   }
 }
@@ -75,6 +77,11 @@ appStore.subscribe((state) => {
 // Boot the application, sync URL hash to screen, then render the initial screen
 boot()
 initRouteSync()
+
+if (globalVizEl) {
+  mountGlobalVizLayer(globalVizEl)
+}
+
 renderScreen(appStore.get().screen)
 
 /** Part 7 — cache shell + assets for offline revisit (production only) */

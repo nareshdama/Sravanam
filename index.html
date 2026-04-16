@@ -60,12 +60,15 @@
     </noscript>
   </head>
   <body>
-    <a class="skip-link" href="#app">Skip to content</a>
+    <a class="skip-link" href="#app-screen">Skip to content</a>
+    <div id="app-global-viz" class="app-global-viz" aria-hidden="true"></div>
     <div id="app">
-      <main class="app-boot" aria-busy="true">
-        <p class="app-boot__title">Sravanam</p>
-        <p class="app-boot__status">Loading…</p>
-      </main>
+      <div id="app-screen" role="main">
+        <div class="app-boot">
+          <p class="app-boot__title">Sravanam</p>
+          <p class="app-boot__status">Loading…</p>
+        </div>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
