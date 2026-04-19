@@ -21,18 +21,32 @@ function createAudioParam(initial = 0) {
   return p
 }
 
-function createMockAudioContextFactory(sampleRate: number) {
+function createMockAudioContextFactory(
+  sampleRate: number,
+  options?: { resume?: () => Promise<unknown> },
+) {
   const oscillators: { frequency: ReturnType<typeof createAudioParam> }[] = []
+  const contexts: Array<{ closeCalls: number }> = []
 
   const factory = () => {
     const ctx = {
       sampleRate,
       currentTime: 0 as number,
+      state: 'suspended' as AudioContextState,
       destination: {} as AudioDestinationNode,
       async resume() {
+        await options?.resume?.()
+        if (ctx.state !== 'closed') {
+          ctx.state = 'running'
+        }
         return ctx
       },
-      async close() {},
+      async close() {
+        ctx.state = 'closed'
+        tracker.closeCalls += 1
+      },
+      addEventListener() {},
+      removeEventListener() {},
       createChannelMerger() {
         return {
           connect(dest: AudioNode) {
@@ -65,10 +79,12 @@ function createMockAudioContextFactory(sampleRate: number) {
         }
       },
     }
+    const tracker = { closeCalls: 0 }
+    contexts.push(tracker)
     return ctx as unknown as AudioContext
   }
 
-  return { factory, oscillators }
+  return { factory, oscillators, contexts }
 }
 
 describe('BinauralEngine', () => {
@@ -133,6 +149,66 @@ describe('BinauralEngine', () => {
     expect(clock).not.toBeNull()
     expect(clock!.sampleRate).toBe(48_000)
     expect(engine.getPlaybackStartTime()).toBe(0)
+    engine.stop()
+  })
+
+  it('reuses the same in-flight start for rapid duplicate starts', async () => {
+    let releaseResume!: () => void
+    const resumeGate = new Promise<void>((resolve) => {
+      releaseResume = resolve
+    })
+    const { factory, oscillators, contexts } = createMockAudioContextFactory(48_000, {
+      resume: () => resumeGate,
+    })
+    const engine = new BinauralEngine(factory)
+
+    const first = engine.start()
+    const second = engine.start()
+
+    expect(contexts).toHaveLength(1)
+
+    releaseResume()
+    await first
+    await second
+
+    expect(oscillators).toHaveLength(2)
+    expect(contexts).toHaveLength(1)
+    engine.stop()
+  })
+
+  it('closes a pending AudioContext when stopped before resume resolves', async () => {
+    let releaseResume!: () => void
+    const resumeGate = new Promise<void>((resolve) => {
+      releaseResume = resolve
+    })
+    const { factory, contexts } = createMockAudioContextFactory(48_000, {
+      resume: () => resumeGate,
+    })
+    const engine = new BinauralEngine(factory)
+
+    const startPromise = engine.start()
+    engine.stop()
+
+    releaseResume()
+    await startPromise
+
+    expect(engine.running).toBe(false)
+    expect(contexts[0]?.closeCalls).toBe(1)
+  })
+
+  it('clamps frequencies against the actual AudioContext sample rate once started', async () => {
+    const { factory } = createMockAudioContextFactory(44_100)
+    const engine = new BinauralEngine(factory)
+
+    engine.setCarrierHz(20_000)
+    engine.setBeatHz(2_000)
+    await engine.start()
+
+    const live = engine.getParams()
+    const expected = clampBinauralFrequencies(44_100, 20_000, 2_000)
+    expect(live.carrierHz).toBeCloseTo(expected.carrierHz, 8)
+    expect(live.beatHz).toBeCloseTo(expected.beatHz, 8)
+
     engine.stop()
   })
 })

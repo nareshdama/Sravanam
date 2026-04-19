@@ -117,6 +117,8 @@ export class BinauralEngine {
   private playbackStartTime: number | null = null
   /** Scheduled from `stop()`; cleared if user starts again before fade completes. */
   private stopFadeTimer: ReturnType<typeof setTimeout> | null = null
+  /** Guards against duplicate/concurrent `start()` calls. */
+  private startPromise: Promise<void> | null = null
   private onVisibilityResume: (() => void) | null = null
   private onContextStateResume: (() => void) | null = null
 
@@ -213,6 +215,18 @@ export class BinauralEngine {
   }
 
   async start(): Promise<void> {
+    if (this.startPromise) return this.startPromise
+
+    const run = this.startInternal()
+    this.startPromise = run.finally(() => {
+      if (this.startPromise === run) {
+        this.startPromise = null
+      }
+    })
+    return this.startPromise
+  }
+
+  private async startInternal(): Promise<void> {
     if (this.stopFadeTimer !== null) {
       clearTimeout(this.stopFadeTimer)
       this.stopFadeTimer = null
@@ -225,8 +239,20 @@ export class BinauralEngine {
     try {
       await ctx.resume()
     } catch {
-      this.teardown(ctx)
-      throw new Error('AudioContext could not start (often autoplay policy — interact with the page and try again).')
+      if (this.context === ctx) {
+        this.teardown(ctx)
+      } else if (ctx.state !== 'closed') {
+        void ctx.close().catch(() => {})
+      }
+      throw new Error('AudioContext could not start (often autoplay policy ? interact with the page and try again).')
+    }
+
+    // `stop()` may have run while `resume()` was pending.
+    if (this.context !== ctx) {
+      if (ctx.state !== 'closed') {
+        void ctx.close().catch(() => {})
+      }
+      return
     }
 
     this.attachResumeHandlers(ctx)
@@ -277,8 +303,13 @@ export class BinauralEngine {
     const oscL = this.oscL
     const oscR = this.oscR
 
-    if (!ctx || !masterGain || !oscL || !oscR) {
+    if (!ctx) {
       this.teardown(null)
+      return
+    }
+
+    if (!masterGain || !oscL || !oscR) {
+      this.teardown(ctx)
       return
     }
 

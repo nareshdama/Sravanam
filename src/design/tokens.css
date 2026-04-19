@@ -1,131 +1,192 @@
 /*
- * Design tokens — "Temple at Dusk"
- *
- * Warm parchment light, deep indigo dark, brass-gold accents.
- * Every screen should feel like walking into a dimly lit temple at twilight.
+ * Design tokens — Apple-grade neutral system with warm Sravanam accents.
+ * The inventory below is the canonical surface contract for the front-end.
  */
 
 :root {
   color-scheme: light dark;
 
-  /* ── Fonts ── */
-  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --font-body: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  /* Fonts */
+  --font-display: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --font-body: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Monaco', 'Menlo', monospace;
+  --font-serif: 'Iowan Old Style', 'Georgia', 'Times New Roman', serif;
 
-  /* ── Spacing (8px grid) ── */
-  --space-xs:  4px;
-  --space-sm:  8px;
-  --space-md:  16px;
-  --space-lg:  24px;
-  --space-xl:  32px;
-  --space-2xl: 48px;
-  --space-3xl: 64px;
+  /* Spacing (4px grid) */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
 
-  /* ── Radii ── */
-  --radius-card: 16px;
-  --radius-btn:  12px;
-  --radius-input: 8px;
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 18px;
   --radius-full: 9999px;
 
-  /* ── Transitions ── */
-  --ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
-  --duration-fast: 0.15s;
-  --duration-normal: 0.3s;
-  --duration-slow: 0.5s;
-  --duration-deliberate: 0.4s;
+  /* Light palette */
+  --color-bg: #FFFFFF;
+  --color-bg-secondary: #F5F5F7;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-deep: #EBEBF0;
 
-  --opacity-disabled: 0.3;
-  --shadow-gold-active: 0 0 20px rgba(200, 162, 70, 0.3);
+  --color-ink: #1D1D1F;
+  --color-ink-secondary: #86868B;
+  --color-ink-tertiary: #A2A2A7;
+  --color-ink-quaternary: rgba(29, 29, 31, 0.28);
 
-  /* ── Light palette: aged parchment, iron ink, brass lamp ── */
-  --color-bg:           #f5f0e8;
-  --color-bg-gradient:  linear-gradient(165deg, #f8f3eb 0%, #f0e9de 42%, #e8dfd2 100%);
-  --color-surface:      rgba(255, 253, 247, 0.70);
-  --color-surface-solid: #fffdf7;
+  --color-blue: #0071E3;
+  --color-blue-hover: #0A84FF;
+  --color-blue-pressed: #40B0FF;
+  --color-blue-glow: rgba(0, 113, 227, 0.18);
 
-  --color-ink:          #1a1510;
-  /* Muted = 55% ink / 45% transparent (Part 2); tertiary slightly lighter */
-  --color-ink-muted:    color-mix(in srgb, var(--color-ink) 55%, transparent);
-  --color-ink-secondary: var(--color-ink-muted);
-  --color-ink-tertiary: color-mix(in srgb, var(--color-ink) 42%, transparent);
+  --color-warm: #D4A574;
+  --color-warm-light: #E8B884;
+  --color-warm-lighter: #F0C99A;
 
-  --color-gold:         #c8a246;
-  --color-gold-glow:    #e8c86a;
-  --color-gold-muted:   rgba(200, 162, 70, 0.18);
+  --color-success: #34C759;
+  --color-warning: #FF9500;
+  --color-error: #FF3B30;
+  --color-info: #32ADE6;
 
-  --color-kasaya:       #a0522d;
-  --color-rose:         #c27488;
+  --color-border: rgba(0, 0, 0, 0.10);
+  --color-border-light: rgba(0, 0, 0, 0.06);
+  --color-border-strong: rgba(0, 0, 0, 0.16);
+  --color-border-subtle: rgba(0, 0, 0, 0.04);
 
-  --color-danger:       #8b2020;
+  --color-surface: rgba(255, 255, 255, 0.92);
+  --color-surface-strong: rgba(255, 255, 255, 0.98);
+  --color-surface-solid: #FFFFFF;
+  --color-surface-raised: rgba(255, 255, 255, 0.96);
 
-  --color-border:       rgba(26, 21, 16, 0.10);
-  --color-border-gold:  rgba(200, 162, 70, 0.22);
+  --color-glass-bg: rgba(255, 255, 255, 0.80);
+  --color-glass-bg-strong: rgba(255, 255, 255, 0.92);
+  --color-glass-border: rgba(0, 0, 0, 0.08);
+  --color-glass-highlight: rgba(255, 255, 255, 0.74);
+  --color-glass-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 18px 40px -22px rgba(0, 0, 0, 0.22),
+    0 24px 72px -28px rgba(0, 0, 0, 0.18);
+  --gloss-overlay:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.72) 0%,
+      rgba(255, 255, 255, 0.16) 34%,
+      rgba(255, 255, 255, 0) 100%
+    );
 
-  --color-glass-bg:     rgba(255, 253, 247, 0.55);
-  --color-glass-border: rgba(26, 21, 16, 0.10);
-  --color-glass-edge:   rgba(255, 255, 255, 0.75);
-  --color-glass-shadow: 0 10px 36px rgba(26, 21, 16, 0.08);
+  --btn-primary-bg: #1D1D1F;
+  --btn-primary-fg: #F5F5F7;
+  --btn-primary-hover: #333335;
+  --btn-primary-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 16px 32px -20px rgba(29, 29, 31, 0.48);
 
-  --color-focus-ring:   rgba(200, 162, 70, 0.40);
+  --btn-secondary-bg: #0071E3;
+  --btn-secondary-fg: #FFFFFF;
+  --btn-secondary-hover: #0A84FF;
 
-  /* ── Button gradients (light) ── */
-  --btn-primary-bg:     linear-gradient(180deg, #3d3428 0%, #1a1510 100%);
-  --btn-primary-fg:     #fdfcfa;
-  --btn-primary-hover:  linear-gradient(180deg, #524636 0%, #1a1510 100%);
+  /* Motion */
+  --ease-default: cubic-bezier(0.2, 0, 0.38, 0.92);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.2, 0.9, 0.2, 1.1);
+  --duration-fast: 0.1s;
+  --duration-normal: 0.2s;
+  --duration-slow: 0.4s;
+  --duration-xslow: 0.6s;
 
-  --btn-stop-bg:        linear-gradient(180deg, #6b5a48 0%, #453a2e 100%);
-  --btn-stop-fg:        #fdfcfa;
-  --btn-stop-hover:     linear-gradient(180deg, #7d6a54 0%, #453a2e 100%);
+  --blur-strength: 12px;
+  --blur-strong: 20px;
+  --opacity-disabled: 0.45;
 
-  /* ── Blur ── */
-  --blur-strength: 20px;
+  --color-focus-ring: var(--color-blue);
+  --focus-ring-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 4px rgba(0, 113, 227, 0.3);
 
-  /* ── Immersive dark surface (always dark) ── */
-  --color-immersive-bg:   #0c0a12;
-  --color-immersive-surface: rgba(26, 21, 32, 0.60);
+  --color-immersive-bg: #000000;
+  --color-immersive-surface: rgba(255, 255, 255, 0.76);
+
+  /* Legacy aliases used by the migrated components */
+  --color-gold: var(--color-warm);
+  --color-gold-bright: var(--color-warm-light);
+  --color-gold-deep: var(--color-warm-lighter);
+  --color-gold-glow: rgba(212, 165, 116, 0.2);
 }
 
-/* ── Dark palette: deep indigo-black, moonlit stone, gold flame ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg:           #0c0a12;
-    --color-bg-gradient:  linear-gradient(165deg, #1a1620 0%, #100e18 45%, #0c0a12 100%);
-    --color-surface:      rgba(26, 21, 32, 0.60);
-    --color-surface-solid: #1a1520;
+    --color-bg: #000000;
+    --color-bg-secondary: #1C1C1E;
+    --color-bg-elevated: #111113;
+    --color-bg-deep: #09090A;
 
-    --color-ink:          #e8dfd0;
-    /* --color-ink-muted / secondary / tertiary follow var(--color-ink) via color-mix */
+    --color-ink: #F5F5F7;
+    --color-ink-secondary: #AEAEB2;
+    --color-ink-tertiary: #8E8E93;
+    --color-ink-quaternary: rgba(245, 245, 247, 0.26);
 
-    --color-gold:         #c8a246;
-    --color-gold-glow:    #e8c86a;
-    --color-gold-muted:   rgba(200, 162, 70, 0.14);
+    --color-blue: #0A84FF;
+    --color-blue-hover: #3B9BFF;
+    --color-blue-pressed: #74B7FF;
+    --color-blue-glow: rgba(10, 132, 255, 0.28);
 
-    --color-kasaya:       #d97757;
-    --color-rose:         #d4849a;
+    --color-warm: #D4A574;
+    --color-warm-light: #E8B884;
+    --color-warm-lighter: #F0C99A;
 
-    --color-danger:       #c04040;
+    --color-success: #30D158;
+    --color-warning: #FF9F0A;
+    --color-error: #FF453A;
+    --color-info: #64D2FF;
 
-    --color-border:       rgba(232, 223, 208, 0.08);
-    --color-border-gold:  rgba(200, 162, 70, 0.18);
+    --color-border: rgba(255, 255, 255, 0.12);
+    --color-border-light: rgba(255, 255, 255, 0.08);
+    --color-border-strong: rgba(255, 255, 255, 0.18);
+    --color-border-subtle: rgba(255, 255, 255, 0.05);
 
-    --color-glass-bg:     rgba(26, 21, 32, 0.72);
-    --color-glass-border: rgba(200, 162, 70, 0.12);
-    --color-glass-edge:   rgba(255, 248, 235, 0.06);
-    --color-glass-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+    --color-surface: rgba(28, 28, 30, 0.8);
+    --color-surface-strong: rgba(36, 36, 39, 0.9);
+    --color-surface-solid: #111113;
+    --color-surface-raised: rgba(24, 24, 28, 0.92);
 
-    --color-focus-ring:   rgba(200, 162, 70, 0.45);
+    --color-glass-bg: rgba(28, 28, 30, 0.8);
+    --color-glass-bg-strong: rgba(36, 36, 39, 0.9);
+    --color-glass-border: rgba(255, 255, 255, 0.1);
+    --color-glass-highlight: rgba(255, 255, 255, 0.08);
+    --color-glass-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+      0 18px 40px -22px rgba(0, 0, 0, 0.7),
+      0 24px 72px -28px rgba(0, 0, 0, 0.75);
+    --gloss-overlay:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.02) 36%,
+        rgba(255, 255, 255, 0) 100%
+      );
 
-    /* Buttons flip to gold-on-dark */
-    --btn-primary-bg:     linear-gradient(180deg, #e8dcc8 0%, #c8a246 100%);
-    --btn-primary-fg:     #1a1410;
-    --btn-primary-hover:  linear-gradient(180deg, #f0e8d8 0%, #c8a246 100%);
+    --btn-primary-bg: #F5F5F7;
+    --btn-primary-fg: #1D1D1F;
+    --btn-primary-hover: #FFFFFF;
+    --btn-primary-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.5) inset,
+      0 18px 36px -22px rgba(255, 255, 255, 0.18);
 
-    --btn-stop-bg:        linear-gradient(180deg, #8a7a68 0%, #5c5248 100%);
-    --btn-stop-fg:        #1a1410;
-    --btn-stop-hover:     linear-gradient(180deg, #9a8a78 0%, #5c5248 100%);
+    --btn-secondary-bg: #0A84FF;
+    --btn-secondary-fg: #FFFFFF;
+    --btn-secondary-hover: #3B9BFF;
 
-    --blur-strength: 24px;
+    --focus-ring-shadow: 0 0 0 2px rgba(0, 0, 0, 0.9), 0 0 0 4px rgba(10, 132, 255, 0.4);
+    --color-immersive-surface: rgba(28, 28, 30, 0.78);
+    --color-gold-glow: rgba(212, 165, 116, 0.28);
   }
 }

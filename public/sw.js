@@ -3,7 +3,7 @@
  * Caches successful same-origin GET responses; serves cache on network failure.
  * Bump CACHE_VERSION when shipping breaking asset changes.
  */
-const CACHE_VERSION = 'sravanam-v1'
+const CACHE_VERSION = 'sravanam-v2'
 
 self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting())

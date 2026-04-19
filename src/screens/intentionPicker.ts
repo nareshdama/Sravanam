@@ -1,6 +1,6 @@
 /**
- * Intention picker screen — "What draws you here?"
- * 4 cards: Rest, Calm, Focus, Deep.
+ * Intention picker screen — "Nāda Brahma: Choose Your Mode"
+ * 9 life mode cards in a 3×3 grid.
  */
 
 import { navigate, applyIntention } from '../app'
@@ -64,9 +64,9 @@ export function renderIntentionPicker(root: HTMLElement): void {
       ${renderAppChrome()}
       <div class="intentions">
         <div class="intentions__heading">
-          <h2 class="display-section">What draws you here?</h2>
-          <p class="body-secondary" style="margin-top: var(--space-sm)">
-            Choose an intention. We'll set the frequencies.
+          <h2 class="display-section">N\u0101da Brahma</h2>
+          <p class="body-secondary" style="margin-top: var(--space-2)">
+            The universe is sound. Choose your mode.
           </p>
         </div>
         <div class="intentions__grid" role="list">

@@ -3,12 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ede6dc" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#141018" media="(prefers-color-scheme: dark)" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
     <title>Sravanam</title>
-    <!-- Inline so first paint has layout/color before the module + bundled CSS load -->
+
     <style>
+      html,
+      body {
+        background: #ffffff;
+        color: #1d1d1f;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: #000000;
+          color: #f5f5f7;
+        }
+      }
+
       .app-boot {
         box-sizing: border-box;
         min-height: 100svh;
@@ -18,55 +32,49 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-family: 'Cormorant Garamond', Georgia, serif;
-        color: #1a1510;
-        background: #f5f0e8;
-        background-image: linear-gradient(165deg, #f8f3eb 0%, #f0e9de 42%, #e8dfd2 100%);
+        gap: 12px;
+        font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+        color: inherit;
+        background:
+          radial-gradient(circle at top, rgba(0, 113, 227, 0.08), transparent 42%),
+          radial-gradient(circle at bottom right, rgba(212, 165, 116, 0.08), transparent 30%),
+          linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 247, 1) 100%);
       }
+
       @media (prefers-color-scheme: dark) {
         .app-boot {
-          color: #e8dfd0;
-          background: #0c0a12;
-          background-image: linear-gradient(165deg, #1a1620 0%, #100e18 45%, #0c0a12 100%);
+          background:
+            radial-gradient(circle at top, rgba(10, 132, 255, 0.14), transparent 42%),
+            radial-gradient(circle at bottom right, rgba(212, 165, 116, 0.12), transparent 30%),
+            linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(28, 28, 30, 1) 100%);
         }
       }
+
       .app-boot__title {
-        font-weight: 600;
-        font-size: clamp(1.75rem, 5vw, 2.25rem);
+        font-weight: 700;
+        font-size: clamp(1.75rem, 5vw, 2.5rem);
         margin: 0;
-        letter-spacing: 0.03em;
+        letter-spacing: -0.03em;
       }
+
       .app-boot__status {
-        font-family: system-ui, sans-serif;
-        font-size: 0.8125rem;
-        margin: 12px 0 0;
-        opacity: 0.45;
-        letter-spacing: 0.04em;
+        font-size: 0.75rem;
+        margin: 0;
+        opacity: 0.72;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: inherit;
       }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap"
-      />
-    </noscript>
   </head>
   <body>
     <a class="skip-link" href="#app-screen">Skip to content</a>
-    <div id="app-global-viz" class="app-global-viz" aria-hidden="true"></div>
+    <div id="app-global-viz" aria-hidden="true"></div>
     <div id="app">
       <div id="app-screen" role="main">
         <div class="app-boot">
           <p class="app-boot__title">Sravanam</p>
-          <p class="app-boot__status">Loading…</p>
+          <p class="app-boot__status">Awakening</p>
         </div>
       </div>
     </div>

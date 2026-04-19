@@ -1,6 +1,6 @@
 /**
  * Advanced tuning disclosure — carrier, beat, waveform, volume.
- * For power users who want manual control.
+ * Includes Saptaswar scale picker for snapping carrier to Gandharva Veda notes.
  */
 
 import { sessionStore } from '../state/sessionState'
@@ -9,6 +9,7 @@ import {
   clampBinauralFrequencies,
   getBinauralLimits,
 } from '../audio/binauralEngine'
+import { SAPTASWAR_SCALE } from '../data/saptaswarScale'
 
 function formatHz(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(3).replace(/\.?0+$/, '')} kHz`
@@ -17,12 +18,32 @@ function formatHz(n: number): string {
   return n.toFixed(3)
 }
 
+function renderSaptaswarPicker(currentCarrierHz: number): string {
+  const buttons = SAPTASWAR_SCALE.map((note) => {
+    const active = note.hz === currentCarrierHz ? ' tuning__saptaswar-btn--active' : ''
+    return `<button
+      type="button"
+      class="tuning__saptaswar-btn${active}"
+      data-saptaswar-hz="${note.hz}"
+      title="${note.sanskrit} — ${note.chakraSanskrit} (${note.hz} Hz)"
+      aria-pressed="${note.hz === currentCarrierHz}"
+    >${note.note}</button>`
+  }).join('')
+  return `
+    <div class="tuning__saptaswar" role="group" aria-label="Saptaswar scale — snap carrier to Gandharva Veda note">
+      <span class="tuning__saptaswar-label">Saptaswar</span>
+      <div class="tuning__saptaswar-notes">${buttons}</div>
+    </div>
+  `
+}
+
 export function renderAdvancedTuning(): string {
   const s = sessionStore.get()
   return `
     <details class="disclosure" id="advanced-tuning">
       <summary>Advanced tuning</summary>
-      <div style="padding-top: var(--space-md); display: flex; flex-direction: column; gap: var(--space-md)">
+      <div style="padding-top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4)">
+        ${renderSaptaswarPicker(s.carrierHz)}
         <label class="field">
           <span class="field__label">Carrier (Hz)</span>
           <input type="number" id="adv-carrier" min="1" step="any" value="${s.carrierHz}" />
@@ -86,6 +107,23 @@ export function wireAdvancedTuning(container: HTMLElement): void {
     beatRange.max = String(Math.max(0.1, l.maxBeatHz))
     carrierRange.max = String(l.maxCarrierHz)
   }
+
+  // Saptaswar note buttons — snap carrier to selected note
+  container.querySelectorAll<HTMLButtonElement>('[data-saptaswar-hz]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const hz = Number(btn.dataset.saptaswarHz)
+      if (!hz) return
+      carrierNum.value = String(hz)
+      carrierRange.value = String(Math.min(Number(carrierRange.max), hz))
+      syncFromInputs()
+      // Update active state on all note buttons
+      container.querySelectorAll<HTMLButtonElement>('[data-saptaswar-hz]').forEach((b) => {
+        const active = Number(b.dataset.saptaswarHz) === hz
+        b.setAttribute('aria-pressed', String(active))
+        b.classList.toggle('tuning__saptaswar-btn--active', active)
+      })
+    })
+  })
 
   carrierNum.addEventListener('input', () => {
     carrierRange.value = carrierNum.value

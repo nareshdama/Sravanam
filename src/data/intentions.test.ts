@@ -3,8 +3,8 @@ import { INTENTIONS, getIntentionById, getIntentionTemplateIds } from './intenti
 import { getTemplateById } from './binauralTemplates'
 
 describe('intentions', () => {
-  it('has 4 intentions', () => {
-    expect(INTENTIONS).toHaveLength(4)
+  it('has 9 Nāda Brahma Life Mode intentions', () => {
+    expect(INTENTIONS).toHaveLength(9)
   })
 
   it('every intention has a valid default template', () => {
@@ -24,24 +24,27 @@ describe('intentions', () => {
   })
 
   it('getIntentionById returns correct intention', () => {
-    const deep = getIntentionById('deep')
-    expect(deep).toBeDefined()
-    expect(deep!.title).toBe('Deep')
-    expect(deep!.defaultTemplateId).toBe('theta-5-7-yoga')
+    const sleep = getIntentionById('deep-sleep')
+    expect(sleep).toBeDefined()
+    expect(sleep!.title).toBe('Deep Sleep')
+    expect(sleep!.defaultTemplateId).toBe('vedic-delta-seed-0.98')
   })
 
   it('getIntentionById returns undefined for unknown', () => {
     expect(getIntentionById('nonexistent')).toBeUndefined()
+    expect(getIntentionById('rest')).toBeUndefined()
+    expect(getIntentionById('deep')).toBeUndefined()
   })
 
   it('getIntentionTemplateIds includes default + alternates', () => {
     const focus = getIntentionById('focus')!
     const ids = getIntentionTemplateIds(focus)
-    expect(ids[0]).toBe('beta-20')
-    expect(ids).toContain('alpha-beta-12-15')
-    expect(ids).toContain('beta-28-30')
-    const deep = getIntentionById('deep')!
-    expect(getIntentionTemplateIds(deep)).toContain('theta-5-6')
+    expect(ids[0]).toBe('vedic-alpha-clarity-10')
+    expect(ids).toContain('vedic-alpha-phi-12.67')
+    expect(ids).toContain('vedic-beta-execution-23.49')
+
+    const spiritual = getIntentionById('spiritual')!
+    expect(getIntentionTemplateIds(spiritual)).toContain('vedic-parabrahman-999')
   })
 
   it('each intention has a unique ID', () => {
@@ -54,5 +57,18 @@ describe('intentions', () => {
       expect(intention.icon.length, intention.id).toBeGreaterThan(0)
       expect(intention.illustration.length, intention.id).toBeGreaterThan(0)
     }
+  })
+
+  it('all 9 mode IDs are present', () => {
+    const ids = INTENTIONS.map((i) => i.id)
+    expect(ids).toContain('deep-sleep')
+    expect(ids).toContain('relax')
+    expect(ids).toContain('focus')
+    expect(ids).toContain('ultra-focus')
+    expect(ids).toContain('knowledge')
+    expect(ids).toContain('healing')
+    expect(ids).toContain('wealth')
+    expect(ids).toContain('love')
+    expect(ids).toContain('spiritual')
   })
 })

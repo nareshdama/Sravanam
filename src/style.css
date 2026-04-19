@@ -6,66 +6,59 @@
 :root {
   color-scheme: light dark;
 
-  /* system-ui first: usable before webfonts finish (non-blocking Google Fonts in index.html) */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Source Sans 3', sans-serif;
-  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  /* Legacy font tokens — kept for backwards compatibility with legacy classes in style.css.
+     The design system (tokens.css, imported first) defines --font-display/--font-body/--font-mono. */
+  --font-sans: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
 
-  /* Light: aged paper, iron ink, brass */
-  --bg-page: #ede6dc;
-  --bg-page-gradient: linear-gradient(
-    165deg,
-    #f4ede3 0%,
-    #e8dfd2 42%,
-    #e2d8c8 100%
-  );
-  --vedic-ink: #1f1a14;
-  --vedic-ink-soft: #3d3428;
-  --vedic-gold: #8b6914;
-  --vedic-gold-bright: #a67c1a;
-  --vedic-accent: #9a3412;
-  --vedic-border: rgba(139, 105, 20, 0.28);
+  /* Legacy tokens remapped to the cosmic theme (single canonical look) */
+  --bg-page: var(--color-bg);
+  --bg-page-gradient: none;
+  --vedic-ink: var(--color-ink);
+  --vedic-ink-soft: var(--color-ink-secondary);
+  --vedic-gold: var(--color-gold);
+  --vedic-gold-bright: var(--color-gold-bright);
+  --vedic-accent: var(--color-gold-deep);
+  --vedic-border: var(--color-border);
 
-  --glass-bg: rgba(255, 252, 247, 0.55);
-  --glass-border: rgba(61, 52, 40, 0.14);
-  --glass-edge: rgba(255, 255, 255, 0.75);
-  --glass-shadow: 0 10px 36px rgba(31, 26, 20, 0.08);
+  --glass-bg: var(--color-glass-bg);
+  --glass-border: var(--color-glass-border);
+  --glass-edge: var(--color-glass-highlight);
+  --glass-shadow: var(--color-glass-shadow);
   --glass-inset: inset 0 1px 0 var(--glass-edge);
 
-  --label: var(--vedic-ink);
-  --secondary-label: rgba(31, 26, 20, 0.62);
-  --tertiary-label: rgba(31, 26, 20, 0.42);
+  --label: var(--color-ink);
+  --secondary-label: var(--color-ink-secondary);
+  --tertiary-label: var(--color-ink-tertiary);
 
-  --separator: rgba(61, 52, 40, 0.14);
+  --separator: var(--color-border-light);
 
-  --surface-ctrl: rgba(61, 52, 40, 0.06);
+  --surface-ctrl: rgba(255, 255, 255, 0.04);
 
-  --btn-primary-top: #3d3428;
-  --btn-primary-bottom: #1f1a14;
-  --btn-primary-hover: #524636;
-  --btn-stop-top: #6b5a48;
-  --btn-stop-bottom: #453a2e;
-  --btn-stop-hover: #7d6a54;
+  --btn-primary-top: #F4DC9A;
+  --btn-primary-bottom: #C9A14A;
+  --btn-primary-hover: #FAE6AD;
+  --btn-stop-top: #FF8B8B;
+  --btn-stop-bottom: #E85555;
+  --btn-stop-hover: #FF9999;
 
   --focus-ring: rgba(154, 52, 18, 0.35);
 
   --ink: var(--vedic-ink);
   --ink-soft: var(--vedic-ink-soft);
 
-  --blur-strength: 20px;
-
-  --space-1: 8px;
-  --space-2: 16px;
-  --space-3: 24px;
-  --space-4: 32px;
+  /* Legacy spacing scale preserved under different names (prevent conflict with design tokens).
+     Modern --space-* tokens are defined in design/tokens.css. */
+  --legacy-space-1: 8px;
+  --legacy-space-2: 16px;
+  --legacy-space-3: 24px;
+  --legacy-space-4: 32px;
 
   --radius-group: 14px;
   --radius-control: 10px;
-  --ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  /* --ease-default and --blur-strength are defined in design/tokens.css */
   --duration: 0.2s;
 
-  font-family: var(--font-sans);
+  font-family: var(--font-body, var(--font-sans));
   font-size: 17px;
   line-height: 1.4;
   color: var(--label);
@@ -75,51 +68,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-page: #141018;
-    --bg-page-gradient: linear-gradient(
-      165deg,
-      #1a1620 0%,
-      #121018 45%,
-      #0e0c12 100%
-    );
-    --vedic-ink: #e8e0d4;
-    --vedic-ink-soft: #c4b8a8;
-    --vedic-gold: #c4a35a;
-    --vedic-gold-bright: #d4b56a;
-    --vedic-accent: #d97757;
-    --vedic-border: rgba(196, 163, 90, 0.22);
-
-    --glass-bg: rgba(28, 24, 32, 0.72);
-    --glass-border: rgba(196, 163, 90, 0.16);
-    --glass-edge: rgba(255, 248, 235, 0.08);
-    --glass-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
-    --glass-inset: inset 0 1px 0 var(--glass-edge);
-
-    --label: #e8e0d4;
-    --secondary-label: rgba(232, 224, 212, 0.62);
-    --tertiary-label: rgba(232, 224, 212, 0.4);
-
-    --separator: rgba(196, 163, 90, 0.14);
-
-    --surface-ctrl: rgba(232, 224, 212, 0.06);
-
-    --btn-primary-top: #e8dcc8;
-    --btn-primary-bottom: #c4a35a;
-    --btn-primary-hover: #f0e8d8;
-    --btn-stop-top: #8a7a68;
-    --btn-stop-bottom: #5c5248;
-    --btn-stop-hover: #9a8a78;
-
-    --focus-ring: rgba(212, 181, 106, 0.45);
-
-    --ink: #e8e0d4;
-    --ink-soft: #c4b8a8;
-
-    --blur-strength: 24px;
-  }
-}
+/* Legacy dark-mode override removed — tokens.css enforces single cosmic theme. */
 
 @media (prefers-reduced-motion: reduce) {
   .btn,
@@ -141,7 +90,7 @@
 }
 
 html {
-  scroll-padding-top: max(var(--space-2), env(safe-area-inset-top, 0px));
+  scroll-padding-top: max(var(--legacy-space-2), env(safe-area-inset-top, 0px));
 }
 
 body {
@@ -155,21 +104,14 @@ body {
 @supports not (backdrop-filter: blur(1px)) {
   .group,
   .how-it-works {
-    background: rgba(252, 248, 242, 0.96);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .group,
-    .how-it-works {
-      background: rgba(22, 18, 26, 0.98);
-    }
+    background: var(--color-surface-solid);
   }
 }
 
 /* Typography */
 .binaural__brand {
   text-align: center;
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--legacy-space-1);
 }
 
 .large-title {
@@ -224,18 +166,18 @@ body {
 #app {
   position: relative;
   z-index: 1;
-  max-width: 560px;
+  max-width: 880px;
   margin: 0 auto;
   min-height: 100svh;
   background: transparent;
-  padding: max(env(safe-area-inset-top, 0px), var(--space-3))
-    max(env(safe-area-inset-right, 0px), var(--space-2))
-    max(env(safe-area-inset-bottom, 0px), var(--space-4))
-    max(env(safe-area-inset-left, 0px), var(--space-2));
+  padding: max(env(safe-area-inset-top, 0px), var(--legacy-space-3))
+    max(env(safe-area-inset-right, 0px), var(--legacy-space-2))
+    max(env(safe-area-inset-bottom, 0px), var(--legacy-space-4))
+    max(env(safe-area-inset-left, 0px), var(--legacy-space-2));
 }
 
 html {
-  background: #14110e;
+  background: var(--color-bg);
 }
 
 /* Let the full-viewport Sri Yantra show through; surfaces use .card / .app__screen--padded */
@@ -249,18 +191,18 @@ body {
 }
 
 .binaural__header {
-  margin-bottom: var(--space-3);
-  padding-bottom: var(--space-2);
+  margin-bottom: var(--legacy-space-3);
+  padding-bottom: var(--legacy-space-2);
   border-bottom: 1px solid var(--vedic-border);
 }
 
 .binaural__lede {
-  margin: var(--space-2) 0 0;
+  margin: var(--legacy-space-2) 0 0;
   text-align: center;
 }
 
 .binaural__disclosure {
-  margin: var(--space-2) 0 0;
+  margin: var(--legacy-space-2) 0 0;
   text-align: center;
   max-width: 42rem;
   margin-inline: auto;
@@ -268,8 +210,8 @@ body {
 
 /* Disclosure */
 .how-it-works {
-  margin-top: var(--space-2);
-  padding: var(--space-2);
+  margin-top: var(--legacy-space-2);
+  padding: var(--legacy-space-2);
   text-align: left;
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(var(--blur-strength));
@@ -287,7 +229,7 @@ body {
   list-style: none;
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--legacy-space-1);
   padding: 6px 8px;
   margin: -6px -8px;
   border-radius: 8px;
@@ -332,8 +274,8 @@ body {
 }
 
 .how-it-works__body {
-  margin-top: var(--space-2);
-  padding-top: var(--space-2);
+  margin-top: var(--legacy-space-2);
+  padding-top: var(--legacy-space-2);
   border-top: 1px solid var(--separator);
 }
 
@@ -351,8 +293,8 @@ body {
 
 /* Grouped sections */
 .group {
-  padding: var(--space-2);
-  margin-bottom: var(--space-3);
+  padding: var(--legacy-space-2);
+  margin-bottom: var(--legacy-space-3);
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(var(--blur-strength));
   backdrop-filter: blur(var(--blur-strength));
@@ -368,7 +310,7 @@ body {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--vedic-gold);
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--legacy-space-2);
   padding-left: 2px;
 }
 
@@ -380,7 +322,7 @@ body {
 
 .group--sound .field {
   margin-bottom: 0;
-  padding: var(--space-2) 0;
+  padding: var(--legacy-space-2) 0;
   border-bottom: 1px solid var(--separator);
 }
 
@@ -396,8 +338,8 @@ body {
 .playback__meta {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  margin-top: var(--space-2);
+  gap: var(--legacy-space-1);
+  margin-top: var(--legacy-space-2);
 }
 
 .group--playback[data-playing='true'] {
@@ -419,7 +361,7 @@ body {
   cursor: pointer;
   width: 100%;
   min-height: 50px;
-  padding: 0 var(--space-2);
+  padding: 0 var(--legacy-space-2);
   border-radius: var(--radius-group);
   border: 1px solid rgba(0, 0, 0, 0.12);
   color: #fdfcfa;
@@ -546,7 +488,7 @@ body {
 }
 
 .playback-limits {
-  margin: var(--space-1) 0 0;
+  margin: var(--legacy-space-1) 0 0;
   text-align: center;
 }
 
@@ -566,19 +508,19 @@ body {
 }
 
 .playback-limits .limits {
-  margin-top: var(--space-1);
+  margin-top: var(--legacy-space-1);
   text-align: center;
 }
 
 .template-meta {
-  margin: var(--space-2) 0 0;
+  margin: var(--legacy-space-2) 0 0;
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--label);
 }
 
 .template-effect {
-  margin: var(--space-1) 0 0;
+  margin: var(--legacy-space-1) 0 0;
   font-size: 0.9375rem;
   line-height: 1.45;
   color: var(--secondary-label);
@@ -586,7 +528,7 @@ body {
 }
 
 .template-placeholder {
-  margin: var(--space-2) 0 0;
+  margin: var(--legacy-space-2) 0 0;
   font-size: 0.9375rem;
   line-height: 1.45;
   color: var(--tertiary-label);
@@ -595,24 +537,24 @@ body {
 }
 
 .library-note {
-  margin: var(--space-1) 0 0;
+  margin: var(--legacy-space-1) 0 0;
   text-align: left;
 }
 
 .library-disclaimer {
-  margin: var(--space-1) 0 var(--space-2);
+  margin: var(--legacy-space-1) 0 var(--legacy-space-2);
   opacity: 0.92;
 }
 
 /* Beat visualization — scroll-margin keeps panel clear of notch / URL bar when jumping */
 .viz-panel {
-  margin-bottom: var(--space-3);
-  scroll-margin-top: max(var(--space-3), env(safe-area-inset-top, 0px));
-  scroll-margin-bottom: var(--space-3);
+  margin-bottom: var(--legacy-space-3);
+  scroll-margin-top: max(var(--legacy-space-3), env(safe-area-inset-top, 0px));
+  scroll-margin-bottom: var(--legacy-space-3);
 }
 
 .viz-panel[open] {
-  padding-bottom: var(--space-1);
+  padding-bottom: var(--legacy-space-1);
 }
 
 .viz-panel__summary {
@@ -657,8 +599,8 @@ body {
 }
 
 .viz-tech {
-  margin-top: var(--space-2);
-  padding: var(--space-1) 0 0;
+  margin-top: var(--legacy-space-2);
+  padding: var(--legacy-space-1) 0 0;
   border-top: 1px solid rgba(196, 163, 90, 0.12);
 }
 
@@ -677,7 +619,7 @@ body {
 }
 
 .viz-panel--cosmic .gpu-status {
-  margin: var(--space-1) 0 0;
+  margin: var(--legacy-space-1) 0 0;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   line-height: 1.45;
@@ -711,13 +653,13 @@ body {
 }
 
 .viz-panel__inner {
-  margin-top: var(--space-2);
-  padding-top: var(--space-2);
+  margin-top: var(--legacy-space-2);
+  padding-top: var(--legacy-space-2);
   border-top: 1px solid var(--separator);
 }
 
 .viz-panel__lede {
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--legacy-space-2);
   text-align: left;
 }
 
@@ -752,8 +694,8 @@ body {
 }
 
 .planet-panel-wrap {
-  margin-top: var(--space-2);
-  padding: var(--space-2);
+  margin-top: var(--legacy-space-2);
+  padding: var(--legacy-space-2);
   border-radius: var(--radius-control);
   background: linear-gradient(
     165deg,
@@ -765,7 +707,7 @@ body {
 
 .planet-panel__title {
   font-family: var(--font-display);
-  margin: 0 0 var(--space-1);
+  margin: 0 0 var(--legacy-space-1);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -786,7 +728,7 @@ body {
 }
 
 .viz-panel__warn {
-  margin: var(--space-2) 0 0;
+  margin: var(--legacy-space-2) 0 0;
   text-align: left;
   color: var(--tertiary-label);
 }
@@ -802,18 +744,18 @@ body {
 }
 
 .safety {
-  margin: var(--space-3) 0 0;
+  margin: var(--legacy-space-3) 0 0;
   font-size: 0.8125rem;
   line-height: 1.45;
   color: var(--tertiary-label);
   max-width: 560px;
   margin-inline: auto;
-  padding: 0 var(--space-1);
+  padding: 0 var(--legacy-space-1);
 }
 
 .field {
   display: block;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--legacy-space-2);
 }
 
 .field:last-child {
@@ -922,7 +864,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1) var(--space-2);
+  gap: var(--legacy-space-1) var(--legacy-space-2);
 }
 
 .field--inline .field__label {
@@ -940,8 +882,8 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin-top: var(--space-2);
-  padding: var(--space-2);
+  margin-top: var(--legacy-space-2);
+  padding: var(--legacy-space-2);
   background: var(--surface-ctrl);
   border-radius: var(--radius-control);
   border: 1px solid var(--separator);
@@ -962,7 +904,7 @@ body {
 }
 
 .session-guide__lede {
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--legacy-space-2);
   text-align: left;
 }
 
@@ -974,26 +916,26 @@ body {
   font-family: var(--font-display);
   font-size: 1.2rem;
   font-weight: 600;
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--legacy-space-2);
   color: var(--vedic-gold);
   line-height: 1.35;
 }
 
 .session-guide__columns {
   display: grid;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  gap: var(--legacy-space-2);
+  margin-bottom: var(--legacy-space-2);
 }
 
 @media (min-width: 640px) {
   .session-guide__columns {
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-3);
+    gap: var(--legacy-space-3);
   }
 }
 
 .session-guide__column {
-  padding: var(--space-2);
+  padding: var(--legacy-space-2);
   border-radius: var(--radius-control);
   background: rgba(61, 52, 40, 0.04);
   border: 1px solid var(--separator);
@@ -1011,11 +953,11 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--tertiary-label);
-  margin: 0 0 var(--space-1);
+  margin: 0 0 var(--legacy-space-1);
 }
 
 .session-guide__label--inline {
-  margin-top: var(--space-2);
+  margin-top: var(--legacy-space-2);
 }
 
 .session-guide__column p {
@@ -1030,7 +972,7 @@ body {
 }
 
 .session-guide__list {
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--legacy-space-2);
   padding-left: 1.25rem;
   font-size: 0.9375rem;
   line-height: 1.5;
@@ -1049,7 +991,7 @@ body {
 }
 
 .session-guide__gate-hint {
-  margin: var(--space-1) 0 0;
+  margin: var(--legacy-space-1) 0 0;
   min-height: 1.25em;
   color: var(--vedic-accent);
 }

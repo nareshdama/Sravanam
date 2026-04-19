@@ -20,6 +20,11 @@ import {
   renderAdvancedTuning,
   wireAdvancedTuning,
 } from '../components/advancedTuning'
+import {
+  renderVedicMetadata,
+  hasVedicMetadata,
+} from '../components/vedicMetadataPanel'
+import { renderDailyProtocol } from '../components/dailyProtocol'
 import { engine } from '../app'
 import type { SoundLibraryMode } from '../data/vedicSoundLibrary'
 
@@ -58,7 +63,7 @@ export function renderSessionCard(root: HTMLElement): void {
     ? `
       <details class="disclosure" id="alt-templates">
         <summary>Choose a different template</summary>
-        <div style="padding-top: var(--space-sm); display: flex; flex-direction: column; gap: var(--space-sm)">
+        <div style="padding-top: var(--space-2); display: flex; flex-direction: column; gap: var(--space-2)">
           ${alternates.map((t) => `
             <button type="button" class="btn btn--ghost" style="min-height: 40px; font-size: 0.875rem" data-alt-template="${t.id}">
               ${brainwaveLabel(t.brainwave)} \u00B7 ${t.hzLabel} \u2014 ${t.useCase}
@@ -77,20 +82,29 @@ export function renderSessionCard(root: HTMLElement): void {
           <button type="button" class="session__back" id="session-back">\u2190 Back</button>
           <h2 class="display-card">${title}</h2>
           <p class="body-secondary">${subtitle}</p>
-          ${template ? `<p class="caption" style="margin-top: var(--space-xs)">${template.effect}</p>` : ''}
+          ${template ? `<p class="caption" style="margin-top: var(--space-1)">${template.effect}</p>` : ''}
         </div>
 
         <div class="card">
-          <p class="label-uppercase" style="margin-bottom: var(--space-sm)">Ambient bed</p>
+          <p class="label-uppercase" style="margin-bottom: var(--space-2)">Ambient bed</p>
           ${renderAmbientBedPicker(session.bedId, onBedChange)}
         </div>
 
         <div class="card">
-          <p class="label-uppercase" style="margin-bottom: var(--space-sm)">Session guide</p>
+          <p class="label-uppercase" style="margin-bottom: var(--space-2)">Session guide</p>
           <div class="session__guide" id="session-guide-content">
-            ${renderSessionGuideView(template, session.bedId, session.beatHz, session.carrierHz)}
+            ${renderSessionGuideView(template, session.bedId, session.beatHz, session.carrierHz, session.intentionId ?? undefined)}
           </div>
         </div>
+
+        ${template && hasVedicMetadata(template) ? `
+          <div class="card">
+            <p class="label-uppercase" style="margin-bottom: var(--space-2)">Vedic Practice Guide</p>
+            <div class="vedic-metadata-container" id="vedic-metadata-content">
+              ${renderVedicMetadata({ template, showSources: true, showChakra: true, showMantras: true, showBreathing: true, showPostures: true, showPracticeNotes: true })}
+            </div>
+          </div>
+        ` : ''}
 
         <div class="session__cta-area">
           <p
@@ -111,6 +125,7 @@ export function renderSessionCard(root: HTMLElement): void {
         ${alternatesHtml}
 
         ${renderAdvancedTuning()}
+        ${renderDailyProtocol()}
       </div>
     </div>
   `
@@ -161,7 +176,7 @@ function onBedChange(bed: SoundLibraryMode): void {
   if (guideEl) {
     const s = sessionStore.get()
     const template = s.templateId ? getTemplateById(s.templateId) ?? null : null
-    guideEl.innerHTML = renderSessionGuideView(template, s.bedId, s.beatHz, s.carrierHz)
+    guideEl.innerHTML = renderSessionGuideView(template, s.bedId, s.beatHz, s.carrierHz, s.intentionId ?? undefined)
     wireSessionGuideView(guideEl)
   }
 }

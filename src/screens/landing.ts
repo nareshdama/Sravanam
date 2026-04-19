@@ -19,7 +19,7 @@ export function renderLanding(root: HTMLElement): void {
         <div class="landing__content-shell">
           <div class="landing__content">
             <div class="landing__hero-text">
-              <h1 class="display-hero landing__title">S R A V A N A M</h1>
+              <h1 class="display-hero landing__title">SRAVANAM</h1>
               <div class="landing__tagline">
                 <p class="landing__tagline-line landing__tagline-line--lead" lang="sa-Latn">
                   Śravaṇam — attentive

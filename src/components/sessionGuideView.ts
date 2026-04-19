@@ -14,8 +14,9 @@ export function renderSessionGuideView(
   bedId: SoundLibraryMode,
   beatHz: number,
   carrierHz: number,
+  intentionId?: string,
 ): string {
-  const guide = buildSessionGuide(template, bedId, beatHz, carrierHz)
+  const guide = buildSessionGuide(template, bedId, beatHz, carrierHz, intentionId)
 
   // Build separate HTML for each tab
   const esc = (s: string): string =>
@@ -27,30 +28,57 @@ export function renderSessionGuideView(
 
   return `
     <div class="session-guide-view">
-      <p class="caption" style="margin-bottom: var(--space-sm)">${esc(guide.headline)}</p>
+      <p class="caption session-guide-view__headline">${esc(guide.headline)}</p>
 
-      <div class="tabs" role="tablist">
-        <button class="tabs__tab" role="tab" aria-selected="true" data-tab="vedic">
+      <div class="tabs" role="tablist" aria-label="Session guide perspectives">
+        <button
+          class="tabs__tab"
+          id="session-guide-tab-vedic"
+          role="tab"
+          aria-controls="session-guide-panel-vedic"
+          aria-selected="true"
+          data-tab="vedic"
+        >
           \u015Aruti-inspired
         </button>
-        <button class="tabs__tab" role="tab" aria-selected="false" data-tab="modern">
+        <button
+          class="tabs__tab"
+          id="session-guide-tab-modern"
+          role="tab"
+          aria-controls="session-guide-panel-modern"
+          aria-selected="false"
+          data-tab="modern"
+        >
           Modern clarity
         </button>
       </div>
 
-      <div class="session-guide-view__panel" data-panel="vedic">
+      <div
+        class="session-guide-view__panel"
+        id="session-guide-panel-vedic"
+        role="tabpanel"
+        aria-labelledby="session-guide-tab-vedic"
+        data-panel="vedic"
+      >
         ${vedicHtml}
       </div>
-      <div class="session-guide-view__panel" data-panel="modern" style="display: none">
+      <div
+        class="session-guide-view__panel"
+        id="session-guide-panel-modern"
+        role="tabpanel"
+        aria-labelledby="session-guide-tab-modern"
+        data-panel="modern"
+        hidden
+      >
         ${modernHtml}
       </div>
 
-      <h4 class="label-uppercase" style="margin-top: var(--space-md)">Benefits &amp; limits</h4>
-      <ul class="session-guide-view__benefits body-secondary" style="padding-left: 1.25rem; margin: var(--space-sm) 0">
+      <h4 class="label-uppercase session-guide-view__section-title">Benefits &amp; limits</h4>
+      <ul class="session-guide-view__benefits body-secondary">
         ${benefitsHtml}
       </ul>
 
-      <p class="caption"><strong>Practice:</strong> ${esc(guide.practice)}</p>
+      <p class="caption session-guide-view__practice"><strong>Practice &amp; precautions:</strong> ${esc(guide.practice)}</p>
     </div>
   `
 }
@@ -66,7 +94,7 @@ export function wireSessionGuideView(container: HTMLElement): void {
       tabs.forEach((t) => t.setAttribute('aria-selected', 'false'))
       tab.setAttribute('aria-selected', 'true')
       panels.forEach((p) => {
-        p.style.display = p.dataset.panel === target ? '' : 'none'
+        p.hidden = p.dataset.panel !== target
       })
     })
   })

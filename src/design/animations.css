@@ -1,74 +1,90 @@
 /*
- * Keyframes and motion.
- * Principle: everything breathes, nothing bounces.
+ * Motion — everything breathes; nothing bounces.
  */
 
-/* —— Gentle breath (idle glow on active elements) —— */
-
 @keyframes breathe {
-  0%, 100% {
-    transform: scale(0.998);
-  }
-  50% {
-    transform: scale(1.002);
-  }
+  0%, 100% { transform: scale(0.998); opacity: 0.9; }
+  50%      { transform: scale(1.004); opacity: 1; }
 }
-
-/* —— Playback pulse (status indicator) —— */
 
 @keyframes playback-pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.9);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.92); }
 }
-
-/* —— Gold glow pulse (active card/button accent) —— */
 
 @keyframes gold-glow {
-  0%, 100% {
-    box-shadow: 0 0 12px rgba(200, 162, 70, 0.2);
-  }
-  50% {
-    box-shadow: var(--shadow-gold-active);
-  }
+  0%, 100% { box-shadow: 0 0 16px -2px rgba(230, 198, 110, 0.22); }
+  50%      { box-shadow: 0 0 32px -2px rgba(230, 198, 110, 0.4); }
 }
-
-/* —— Fade in (screen entrance) —— */
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* —— Staggered card entrance —— */
+@keyframes fade-in-scale {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* —— Landing entrance —— */
+
+.landing--fullbg .landing__content {
+  animation: fade-in-scale 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.landing__hero-text {
+  animation: rise-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 200ms;
+}
+
+.landing__tagline {
+  animation: fade-in 700ms ease-out both;
+  animation-delay: 500ms;
+}
+
+.landing__cta {
+  animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 700ms;
+}
+
+.landing__disclaimer {
+  animation: fade-in 600ms ease-out both;
+  animation-delay: 950ms;
+}
+
+/* —— Padded screens entrance —— */
+
+.app__screen--padded {
+  animation: fade-in-scale 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* —— Intention cards stagger —— */
 
 .intention-card {
-  animation: fade-in var(--duration-deliberate) var(--ease-out) both;
+  animation: fade-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.intention-card:nth-child(1) { animation-delay: 0ms; }
-.intention-card:nth-child(2) { animation-delay: 60ms; }
-.intention-card:nth-child(3) { animation-delay: 120ms; }
-.intention-card:nth-child(4) { animation-delay: 180ms; }
+.intention-card:nth-child(1) { animation-delay:  40ms; }
+.intention-card:nth-child(2) { animation-delay:  90ms; }
+.intention-card:nth-child(3) { animation-delay: 140ms; }
+.intention-card:nth-child(4) { animation-delay: 190ms; }
+.intention-card:nth-child(5) { animation-delay: 240ms; }
+.intention-card:nth-child(6) { animation-delay: 290ms; }
+.intention-card:nth-child(7) { animation-delay: 340ms; }
+.intention-card:nth-child(8) { animation-delay: 390ms; }
+.intention-card:nth-child(9) { animation-delay: 440ms; }
 
-/* —— Reduced motion: no decorative motion; keep static gold on selection —— */
+/* —— Reduced motion —— */
 
 @media (prefers-reduced-motion: reduce) {
-  .intention-card {
-    animation: none;
-  }
-
+  .intention-card,
+  .app__screen--padded,
   .landing--fullbg .landing__content,
   .landing__content-shell,
   .landing__hero-text,

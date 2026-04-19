@@ -1,62 +1,97 @@
-# Sravanam — User guide
+# Sravanam — User Guide
 
-## What this app is for
+## What This App Is For
 
-Sravanam helps you **listen** to binaural beats (two slightly different tones in left and right ear) while optional ambient beds (Oṃ, nāda-like texture, cosmic noise) add atmosphere. A **session guide** explains each preset in both Vedic and modern language.
+Sravanam helps you listen to binaural beats — two slightly different tones sent to the left and right ear — with optional ambient beds and an immersive visual layer.
 
-**This is not medical treatment, therapy, or clinical neurofeedback.** Preset labels (delta, theta, alpha, beta) are informal listening aids. If you have sound sensitivity, epilepsy, or health concerns, consult a professional before use.
+It is a personal listening tool, not medical treatment, therapy, or clinical neurofeedback.
 
-## Before you listen
+Preset labels like delta, theta, alpha, beta, and gamma are informal listening aids, not clinical claims.
 
-1. **Use stereo headphones** — binaural beats require isolated left/right channels; speakers do not work the same way.  
-2. **Keep volume low** — start quiet; increase only if comfortable.  
-3. **Use in a safe, stationary setting** — not while driving or operating machinery.  
-4. **Personal listening** — the experience is tuned for one listener with headphones.
+## Before You Listen
 
-## Flow through the app
+1. Use stereo headphones
+2. Keep the volume low
+3. Use the app only in a safe, stationary setting
+4. Stop if the sound feels unpleasant, dizzying, or overstimulating
+
+## App Flow
 
 ### 1. Landing
 
-You see a static mandala, the title, and **Begin a session**. Optional: use **Skip to content** (keyboard) to jump past chrome.
+You’ll see the title, background visualization, and a `Begin a session` button.
 
-### 2. Intentions (“What draws you here?”)
+### 2. Intentions
 
-Pick one of four **intentions** — Rest, Calm, Focus, or Deep. Each maps to a default binaural template and ambient bed. Your choice sets frequencies for the session.
+Choose one of the 9 life-mode intentions, such as:
 
-### 3. Session card
+- Deep Sleep
+- Relax
+- Focus
+- Ultra Focus
+- Knowledge
+- Healing
+- Wealth
+- Love
+- Spiritual
 
-- **Title line** — intention, brainwave band, and frequency range.  
-- **Ambient bed** — choose None, Oṃ, Ākāśa (cosmic), or Nāda (where available).  
-- **Session guide** — tabs for **Vedic** and **Modern** copy about the current template.  
-- **I’m ready** — starts audio and moves you to immersive mode.  
-- **Advanced tuning** (optional) — carrier, beat, waveform, volume.  
-- **Choose a different template** — alternates allowed for your intention, if any.
+Each intention applies a default template and ambient bed.
 
-If audio cannot start (browser autoplay rules), an **error message** may appear after **I’m ready**; try tapping the button again after interacting with the page.
+### 3. Session Card
 
-### 4. Immersive mode
+The session card includes:
 
-- Full-screen **mandala** visualization.  
-- **Stop** — ends playback and returns to the session card.  
-- **Volume** slider.  
-- **Ephemeris** — optional panel with simplified tropical planetary positions (tap canvas or use the control to show/hide).  
-- **Fullscreen** / **Exit fullscreen** — standard browser fullscreen API.  
-- Controls **auto-hide** after a few seconds; move the pointer over the canvas to show them again.  
-- A line at the bottom shows intention, Hz label, elapsed time, and optional live channel frequencies.
+- current intention / template summary
+- ambient bed picker
+- tabbed session guide
+- optional Vedic metadata panel
+- `I'm ready` button
+- alternate templates
+- advanced tuning
+- daily protocol reference
 
-## URLs (optional)
+If audio cannot start because of browser autoplay rules, the app will show an error after you press `I'm ready`. Press the button again after interacting with the page.
 
-The app can sync the screen to the address hash:
+### 4. Immersive Mode
+
+Immersive mode includes:
+
+- full-screen mandala visualization
+- stop button
+- volume slider
+- ephemeris toggle
+- fullscreen toggle
+- elapsed session timer
+- live left/right/delta frequency readout
+
+Controls auto-hide after a few seconds and reappear when you move the pointer or touch the canvas.
+
+## Advanced Tuning
+
+Advanced tuning lets you adjust:
+
+- carrier frequency
+- beat frequency
+- waveform
+- volume
+- Saptaswar note snapping for the carrier
+
+The app clamps frequencies to safe Web Audio limits for the current device sample rate.
+
+## URLs
+
+The app syncs screen state to the URL hash:
 
 - `#/landing`
 - `#/intentions`
 - `#/session`
-- `#/immersive` — only if audio is already playing; otherwise you are sent to the session card.
+- `#/immersive`
 
-## Offline and updates
+If playback is not active, direct navigation to `#/immersive` is redirected back to the session screen.
 
-In production builds, a **service worker** may cache assets so a return visit loads faster. It does not replace a network connection for the first install. There is **no** custom “Add to home screen” prompt.
+## Offline And Privacy
 
-## Privacy
-
-No analytics or accounts are built into this app as shipped; preferences stay on your device (`localStorage`). Third-party fonts may load from Google Fonts when online (see `index.html`).
+- A service worker may cache assets in production for faster return visits.
+- Preferences are stored locally on your device with `localStorage`.
+- The current app shell does not load Google Fonts anymore.
+- No accounts or analytics are built into the shipped app.

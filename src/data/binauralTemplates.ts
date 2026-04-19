@@ -4,6 +4,8 @@
  * Delta/theta/alpha/beta/gamma labels are informal EEG-inspired shorthand, not clinical or śāstra categories.
  */
 
+import { VEDIC_FREQUENCIES } from './vedicFrequencies'
+
 export type Brainwave =
   | 'delta'
   | 'theta'
@@ -11,6 +13,19 @@ export type Brainwave =
   | 'beta'
   | 'gamma'
   | 'alpha-beta'
+
+export interface VedicSource {
+  text: string        // e.g., "Mandukya Upanishad"
+  verse?: string      // e.g., "1.1.1"
+  tradition?: string  // e.g., "Advaita", "Tantric"
+}
+
+export interface BreathingPattern {
+  name: string        // e.g., "Nāḍī Śodhana"
+  inhaleSec: number
+  holdSec: number
+  exhaleSec: number
+}
 
 export interface BinauralTemplate {
   id: string
@@ -25,6 +40,17 @@ export interface BinauralTemplate {
   defaultBeatHz: number
   /** Typical carrier for sine binaural beats (Hz) */
   recommendedCarrierHz: number
+
+  // Vedic metadata (all optional for backward compatibility)
+  vedicSources?: readonly VedicSource[]
+  associatedChakra?: string
+  mantras?: readonly string[]
+  breathingPattern?: BreathingPattern
+  postures?: readonly string[]
+  vedaVerification?: string
+  practiceNotes?: string
+  timeOfDay?: string
+  seasonalAlignment?: readonly string[]
 }
 
 export const DEFAULT_TEMPLATE_CARRIER_HZ = 200
@@ -199,8 +225,40 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
   },
 ] as const
 
+// Build index map for O(1) lookup across both existing and Vedic frequencies
+const TEMPLATE_INDEX = new Map<string, BinauralTemplate>()
+
+// Initialize with existing templates
+BINAURAL_TEMPLATES.forEach((t) => TEMPLATE_INDEX.set(t.id, t))
+
+// Register all 18 Vedic frequencies
+VEDIC_FREQUENCIES.forEach((f) => TEMPLATE_INDEX.set(f.id, f))
+
 export function getTemplateById(id: string): BinauralTemplate | undefined {
-  return BINAURAL_TEMPLATES.find((t) => t.id === id)
+  return TEMPLATE_INDEX.get(id)
+}
+
+export function registerTemplate(template: BinauralTemplate): void {
+  TEMPLATE_INDEX.set(template.id, template)
+}
+
+export function getAllTemplates(): BinauralTemplate[] {
+  return Array.from(TEMPLATE_INDEX.values())
+}
+
+export function getTemplatesByChakra(chakra: string): BinauralTemplate[] {
+  return Array.from(TEMPLATE_INDEX.values()).filter(
+    (t) => t.associatedChakra === chakra,
+  )
+}
+
+export function getTemplatesByFrequencyRange(
+  minHz: number,
+  maxHz: number,
+): BinauralTemplate[] {
+  return Array.from(TEMPLATE_INDEX.values()).filter(
+    (t) => !(t.beatHzMax < minHz || t.beatHzMin > maxHz),
+  )
 }
 
 export interface ResolvedTemplateFrequencies {

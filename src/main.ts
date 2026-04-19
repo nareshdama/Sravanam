@@ -11,9 +11,6 @@ import './design/components.css'
 import './design/screens.css'
 import './design/animations.css'
 
-/* Keep legacy styles for components that still reference them (viz panel, etc.) */
-import './style.css'
-
 /* App core */
 import { boot } from './app'
 import { initRouteSync } from './lib/routeSync'

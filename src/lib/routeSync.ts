@@ -4,7 +4,7 @@
  * Immersive requires active audio; otherwise falls back to session.
  */
 
-import { engine } from '../app'
+import { normalizeScreenTarget } from '../app'
 import { appStore, type Screen } from '../state/appState'
 import { viewTransition } from './viewTransition'
 
@@ -22,8 +22,7 @@ function parseHash(): Screen | null {
 }
 
 function sanitizeScreen(screen: Screen): Screen {
-  if (screen === 'immersive' && !engine.running) return 'session'
-  return screen
+  return normalizeScreenTarget(screen)
 }
 
 function hashForScreen(screen: Screen): string {

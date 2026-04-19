@@ -31,11 +31,53 @@ const EYE_CLOSED = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" 
   <path d="M18 30h12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
 </svg>`
 
+/** lightning — two angled bolts for ultra-focus / Spanda */
+const LIGHTNING = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <path d="M28 8l-8 14h8l-8 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M30 22l-4 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+</svg>`
+
+/** open-eye — Ajna / knowledge / vision */
+const OPEN_EYE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <path d="M10 24c4-8 10-12 14-12s10 4 14 12c-4 8-10 12-14 12S14 32 10 24z" stroke="currentColor" stroke-width="1.5"/>
+  <circle cx="24" cy="24" r="4" stroke="currentColor" stroke-width="1.2"/>
+  <circle cx="24" cy="24" r="1.5" fill="currentColor" opacity="0.8"/>
+</svg>`
+
+/** lotus — healing / Arogyam */
+const LOTUS = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <path d="M24 36c0-6-4-12-4-18 0 6-4 12-4 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  <path d="M24 36c0-6 4-12 4-18 0 6 4 12 4 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  <path d="M24 36c0-8-6-14-6-20 0 6-6 12-6 20" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.85"/>
+  <path d="M24 36c0-8 6-14 6-20 0 6 6 12 6 20" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.85"/>
+  <path d="M24 12v24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M16 38 Q24 32 32 38" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+</svg>`
+
+/** heart-lotus — love / Prema / Anahata */
+const HEART_LOTUS = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <path d="M24 34C24 34 12 26 12 18c0-4 3-6 6-6 2.5 0 4.5 1.5 6 4 1.5-2.5 3.5-4 6-4 3 0 6 2 6 6 0 8-12 16-12 16z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M21 30c1-2 3-3 3-3s2 1 3 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity="0.65"/>
+</svg>`
+
+/** crown-lotus — spiritual ascension / Turiya / Sahasrara */
+const CROWN_LOTUS = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <path d="M24 10 L24 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M24 10 L16 20 L8 16 L14 28 L34 28 L40 16 L32 20 Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+  <path d="M14 28 Q24 36 34 28" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+  <path d="M18 28 Q24 34 30 28" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity="0.7"/>
+</svg>`
+
 const BY_ID: Record<string, string> = {
   'moon-lotus': MOON_LOTUS,
   'leaf-spiral': LEAF_SPIRAL,
   'flame-single': FLAME_SINGLE,
   'eye-closed': EYE_CLOSED,
+  'lightning': LIGHTNING,
+  'open-eye': OPEN_EYE,
+  'lotus': LOTUS,
+  'heart-lotus': HEART_LOTUS,
+  'crown-lotus': CROWN_LOTUS,
 }
 
 export function getIntentionIllustrationSvg(illustrationId: string): string {

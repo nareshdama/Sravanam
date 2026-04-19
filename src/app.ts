@@ -10,14 +10,44 @@ import { loadPrefs, savePrefs } from './lib/persistence'
 import { prefersReducedMotion } from './lib/motionPreference'
 import { viewTransition } from './lib/viewTransition'
 import { appStore, type Screen } from './state/appState'
-import { sessionStore } from './state/sessionState'
+import { sessionStore, type SessionState } from './state/sessionState'
 
 export const engine = new BinauralEngine()
 
+function syncEngineFromSession(session: Readonly<SessionState>): void {
+  engine.setCarrierHz(session.carrierHz)
+  engine.setBeatHz(session.beatHz)
+  engine.setVolume(session.volume)
+  engine.setWave(session.wave)
+  engine.setSoundLibrary(session.bedId)
+}
+
+let lastSession = sessionStore.get()
+sessionStore.subscribe((session) => {
+  if (
+    session.carrierHz !== lastSession.carrierHz ||
+    session.beatHz !== lastSession.beatHz ||
+    session.volume !== lastSession.volume ||
+    session.wave !== lastSession.wave ||
+    session.bedId !== lastSession.bedId
+  ) {
+    syncEngineFromSession(session)
+  }
+  lastSession = session
+})
+
+export function normalizeScreenTarget(screen: Screen): Screen {
+  const { playing } = sessionStore.get()
+  if (playing && screen !== 'immersive') return 'immersive'
+  if (!playing && screen === 'immersive') return 'session'
+  return screen
+}
+
 /** Navigate to a screen with an optional view transition. */
 export function navigate(screen: Screen): void {
+  const target = normalizeScreenTarget(screen)
   viewTransition(() => {
-    appStore.set({ screen })
+    appStore.set({ screen: target })
   })
 }
 
@@ -59,9 +89,7 @@ export function applyIntention(intentionId: string): void {
     playing: false,
   })
 
-  engine.setCarrierHz(clamped.carrierHz)
-  engine.setBeatHz(clamped.beatHz)
-  engine.setSoundLibrary(intention.defaultBed)
+  syncEngineFromSession(sessionStore.get())
 }
 
 /** Apply a specific template (from alternate selection on session card). */
@@ -79,8 +107,7 @@ export function applyTemplate(templateId: string): void {
     beatHz: clamped.beatHz,
   })
 
-  engine.setCarrierHz(clamped.carrierHz)
-  engine.setBeatHz(clamped.beatHz)
+  syncEngineFromSession(sessionStore.get())
 }
 
 /** Start audio playback and enter immersive mode. */
@@ -88,12 +115,7 @@ export async function startSession(): Promise<void> {
   const session = sessionStore.get()
 
   sessionStore.set({ audioStartError: null })
-
-  engine.setCarrierHz(session.carrierHz)
-  engine.setBeatHz(session.beatHz)
-  engine.setVolume(session.volume)
-  engine.setWave(session.wave)
-  engine.setSoundLibrary(session.bedId)
+  syncEngineFromSession(session)
 
   try {
     await engine.start()
@@ -104,17 +126,27 @@ export async function startSession(): Promise<void> {
     return
   }
 
-  sessionStore.set({ playing: true, audioStartError: null })
+  const live = engine.getParams()
+  const liveBedId = engine.getSoundLibrary()
+  sessionStore.set({
+    playing: true,
+    audioStartError: null,
+    carrierHz: live.carrierHz,
+    beatHz: live.beatHz,
+    volume: live.volume,
+    wave: live.wave,
+    bedId: liveBedId,
+  })
   navigate('immersive')
 
   savePrefs({
     intentionId: session.intentionId,
     templateId: session.templateId,
-    bedId: session.bedId,
-    carrierHz: session.carrierHz,
-    beatHz: session.beatHz,
-    wave: session.wave,
-    volume: session.volume,
+    bedId: liveBedId,
+    carrierHz: live.carrierHz,
+    beatHz: live.beatHz,
+    wave: live.wave,
+    volume: live.volume,
   })
 }
 

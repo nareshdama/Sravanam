@@ -64,6 +64,28 @@ const MODERN_BY_BAND: Record<Brainwave, string> = {
     'High beat frequencies are understudied for casual use; start quiet and brief.',
 }
 
+/** Mode-specific Vedic context paragraph keyed by Life Mode intention ID. */
+const MODE_VEDIC: Partial<Record<string, string>> = {
+  'deep-sleep':
+    'Sushupti — the third state of consciousness (Mandukya Upanishad). The ego fully dissolves; the subconscious is maximally open. Delta frequencies support the deepest states of rest and reprogramming that occur during dreamless sleep.',
+  relax:
+    'Pratyahara — the fifth of Patanjali\'s eight limbs (Yoga Sutras 2.54). The withdrawal of senses from outer objects into pure awareness. Theta frequencies mirror the inward turn that Pratyahara cultivates.',
+  focus:
+    'Dharana — one-pointed concentration (Yoga Sutras 3.1). The sixth limb: fixing awareness on a single point without wavering. Alpha frequencies support the alert yet relaxed mind state that Dharana requires.',
+  'ultra-focus':
+    'Spanda — the divine tremor of Kashmir Shaivism (Spanda Karika). Shiva\'s consciousness in its most active creative expression. Gamma frequencies align with the peak cognitive intensity that Spanda describes.',
+  knowledge:
+    'Jnana — direct knowledge of reality (Adi Shankara, Vivekachudamani). Illumined intelligence beyond mere intellectual understanding. Saraswati\'s domain: the goddess of speech, knowledge, and the arts. These frequencies support deep learning absorption and intuitive knowing.',
+  healing:
+    'Arogyam — complete freedom from disease (Charaka Samhita, Dhanvantari tradition). Ayurveda teaches that sound vibration is primary medicine. The Solfeggio carrier frequencies (528, 432, 639 Hz) are applied here for cellular harmony and pranic restoration.',
+  wealth:
+    'Riddhi-Siddhi — the twin powers of Lakshmi (Lakshmi Tantra, Sri Sukta). Riddhi: material prosperity. Siddhi: perfection and attainment. These frequencies are aligned with Lakshmi Tattva (432 Hz = natural Sa, the root of abundance in the Gandharva Veda).',
+  love:
+    'Prema — unconditional divine love (Narada Bhakti Sutra). The Anahata chakra (unstruck sound) is the seat of all genuine love. 639 Hz aligns with the heart center; when Anahata opens fully, love and prosperity flow together as one unified field.',
+  spiritual:
+    'Turiya — the fourth state beyond waking, dreaming, and deep sleep (Mandukya Upanishad). The substratum of all three states; pure Sat-Chit-Ananda. Crown frequencies (963, 999 Hz) dissolve the boundary between individual consciousness and Brahman.',
+}
+
 const SOUND_VEDIC: Record<SoundLibraryMode, string> = {
   off:
     'You are hearing only the synthesized carrier pair and binaural difference—closest to a plain auditory experiment, without extra symbolic layering.',
@@ -94,6 +116,7 @@ export function buildSessionGuide(
   soundId: SoundLibraryMode,
   beatHz: number,
   carrierHz: number,
+  intentionId?: string,
 ): SessionGuideContent {
   const sound = getSoundLibraryEntry(soundId)
   const bw = bandForGuide(template, beatHz)
@@ -106,10 +129,35 @@ export function buildSessionGuide(
   const vedicParagraphs: string[] = []
   const modernParagraphs: string[] = []
 
+  // Prepend Life Mode context when an intentionId is provided
+  if (intentionId && MODE_VEDIC[intentionId]) {
+    vedicParagraphs.push(MODE_VEDIC[intentionId]!)
+  }
+
   if (template) {
     vedicParagraphs.push(
       `Preset “${template.hzLabel}” (${template.useCase}): ${template.effect}`,
     )
+
+    // Add Vedic metadata if available
+    if (template.vedicSources?.length) {
+      const sources = template.vedicSources
+        .map((s) => `${s.text}${s.verse ? ` (${s.verse})` : ''}`)
+        .join('; ')
+      vedicParagraphs.push(`Vedic sources: ${sources}`)
+    }
+
+    if (template.vedaVerification) {
+      vedicParagraphs.push(`Verification: ${template.vedaVerification}`)
+    }
+
+    if (template.associatedChakra) {
+      vedicParagraphs.push(`Associated chakra: ${template.associatedChakra}`)
+    }
+
+    if (template.mantras?.length) {
+      vedicParagraphs.push(`Mantras: ${template.mantras.join(' / ')}`)
+    }
   } else {
     vedicParagraphs.push(
       'No preset: classical treatises do not assign fixed virtues to arbitrary Hz pairs—use this as humble personal exploration, not śāstra.',
@@ -119,6 +167,22 @@ export function buildSessionGuide(
   vedicParagraphs.push(SOUND_VEDIC[soundId], VEDIC_BY_BAND[bw])
 
   modernParagraphs.push(SOUND_MODERN[soundId], MODERN_BY_BAND[bw])
+
+  // Add breathing and posture recommendations
+  if (template?.breathingPattern) {
+    const bp = template.breathingPattern
+    modernParagraphs.push(
+      `Recommended breathing: ${bp.name} (${bp.inhaleSec}s in, ${bp.holdSec}s hold, ${bp.exhaleSec}s out)`,
+    )
+  }
+
+  if (template?.postures?.length) {
+    modernParagraphs.push(`Suggested postures: ${template.postures.join('; ')}`)
+  }
+
+  if (template?.practiceNotes) {
+    modernParagraphs.push(`Practice notes: ${template.practiceNotes}`)
+  }
 
   if (!template) {
     modernParagraphs.unshift(
