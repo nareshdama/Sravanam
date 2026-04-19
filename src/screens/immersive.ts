@@ -183,6 +183,7 @@ export function renderImmersive(root: HTMLElement): void {
     e.stopPropagation()
     void toggleFullscreen(root.querySelector<HTMLElement>('#immersive-root') ?? undefined)
   })
+  unsubFullscreen?.()
   unsubFullscreen = onFullscreenChange((fs) => {
     appStore.set({ immersiveFullscreen: fs })
     syncMinimizeButton()

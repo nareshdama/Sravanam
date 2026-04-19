@@ -31,8 +31,9 @@ function hashForScreen(screen: Screen): string {
 
 /**
  * Call after {@link boot} so prefs and initial `screen` are set, before first paint.
+ * Returns a teardown function that removes all listeners and subscriptions.
  */
-export function initRouteSync(): void {
+export function initRouteSync(): () => void {
   const fromUrl = parseHash()
   if (fromUrl) {
     appStore.set({ screen: sanitizeScreen(fromUrl) })
@@ -44,16 +45,17 @@ export function initRouteSync(): void {
     )
   }
 
-  window.addEventListener('hashchange', () => {
+  const onHashChange = () => {
     const next = parseHash()
     if (!next) return
     const s = sanitizeScreen(next)
     if (s !== appStore.get().screen) {
       viewTransition(() => appStore.set({ screen: s }))
     }
-  })
+  }
+  window.addEventListener('hashchange', onHashChange)
 
-  appStore.subscribe((state) => {
+  const unsubStore = appStore.subscribe((state) => {
     const want = hashForScreen(state.screen)
     if (location.hash !== want) {
       history.replaceState(
@@ -63,4 +65,9 @@ export function initRouteSync(): void {
       )
     }
   })
+
+  return () => {
+    window.removeEventListener('hashchange', onHashChange)
+    unsubStore()
+  }
 }

@@ -252,7 +252,7 @@ export class BinauralEngine {
       if (ctx.state !== 'closed') {
         void ctx.close().catch(() => {})
       }
-      return
+      throw new Error('Audio start was interrupted. Please try again.')
     }
 
     this.attachResumeHandlers(ctx)

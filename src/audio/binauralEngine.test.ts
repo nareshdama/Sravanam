@@ -190,7 +190,7 @@ describe('BinauralEngine', () => {
     engine.stop()
 
     releaseResume()
-    await startPromise
+    await expect(startPromise).rejects.toThrow('Audio start was interrupted')
 
     expect(engine.running).toBe(false)
     expect(contexts[0]?.closeCalls).toBe(1)

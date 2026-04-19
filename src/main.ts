@@ -73,7 +73,8 @@ appStore.subscribe((state) => {
 
 // Boot the application, sync URL hash to screen, then render the initial screen
 boot()
-initRouteSync()
+const teardownRouteSync = initRouteSync()
+void teardownRouteSync // retained for potential cleanup; not called in normal SPA lifecycle
 
 if (globalVizEl) {
   mountGlobalVizLayer(globalVizEl)

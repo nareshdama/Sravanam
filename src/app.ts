@@ -23,18 +23,7 @@ function syncEngineFromSession(session: Readonly<SessionState>): void {
 }
 
 let lastSession = sessionStore.get()
-sessionStore.subscribe((session) => {
-  if (
-    session.carrierHz !== lastSession.carrierHz ||
-    session.beatHz !== lastSession.beatHz ||
-    session.volume !== lastSession.volume ||
-    session.wave !== lastSession.wave ||
-    session.bedId !== lastSession.bedId
-  ) {
-    syncEngineFromSession(session)
-  }
-  lastSession = session
-})
+let unsubSessionSync: (() => void) | null = null
 
 export function normalizeScreenTarget(screen: Screen): Screen {
   const { playing } = sessionStore.get()
@@ -162,6 +151,22 @@ export function stopSession(): void {
  * Called once from main.ts after styles are loaded.
  */
 export function boot(): void {
+  // Wire session→engine sync (replacing any prior subscription from a previous boot call)
+  unsubSessionSync?.()
+  lastSession = sessionStore.get()
+  unsubSessionSync = sessionStore.subscribe((session) => {
+    if (
+      session.carrierHz !== lastSession.carrierHz ||
+      session.beatHz !== lastSession.beatHz ||
+      session.volume !== lastSession.volume ||
+      session.wave !== lastSession.wave ||
+      session.bedId !== lastSession.bedId
+    ) {
+      syncEngineFromSession(session)
+    }
+    lastSession = session
+  })
+
   // Detect reduced motion
   appStore.set({ reducedMotion: prefersReducedMotion() })
 
