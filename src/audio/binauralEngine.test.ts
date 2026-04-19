@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { BinauralEngine, clampBinauralFrequencies } from './binauralEngine'
+import { BinauralEngine, clampBinauralFrequencies, getBinauralLimits } from './binauralEngine'
 import { getTemplateById, resolveTemplateFrequencies } from '../data/binauralTemplates'
 
 /** Minimal Web Audio mocks so `BinauralEngine` runs in Node without a browser. */
@@ -12,6 +12,29 @@ function createAudioParam(initial = 0) {
     },
     linearRampToValueAtTime(v: number) {
       p.value = v
+      return p
+    },
+    cancelScheduledValues() {
+      return p
+    },
+  }
+  return p
+}
+
+/** Variant that records every scheduling call so tests can assert ramp vs hard-set. */
+function createTrackingAudioParam(initial = 0) {
+  const calls: Array<{ method: string; value: number }> = []
+  const p = {
+    value: initial,
+    calls,
+    setValueAtTime(v: number, _t?: number) {
+      p.value = v
+      calls.push({ method: 'set', value: v })
+      return p
+    },
+    linearRampToValueAtTime(v: number, _t?: number) {
+      p.value = v
+      calls.push({ method: 'ramp', value: v })
       return p
     },
     cancelScheduledValues() {
@@ -210,5 +233,108 @@ describe('BinauralEngine', () => {
     expect(live.beatHz).toBeCloseTo(expected.beatHz, 8)
 
     engine.stop()
+  })
+
+  it('smooths frequency changes via linearRamp, not a hard setValueAtTime cut', async () => {
+    const trackingOscillators: Array<{ frequency: ReturnType<typeof createTrackingAudioParam> }> = []
+
+    const factory = () => {
+      const ctx = {
+        sampleRate: 48_000,
+        currentTime: 0 as number,
+        state: 'suspended' as AudioContextState,
+        destination: {} as AudioDestinationNode,
+        async resume() { ctx.state = 'running' as AudioContextState },
+        async close() { ctx.state = 'closed' as AudioContextState },
+        addEventListener() {},
+        removeEventListener() {},
+        createChannelMerger() { return { connect(d: AudioNode) { return d }, disconnect() {} } },
+        createGain() { return { connect(_d: AudioNode) { return _d }, gain: createAudioParam(0), disconnect() {} } },
+        createOscillator() {
+          const frequency = createTrackingAudioParam(0)
+          trackingOscillators.push({ frequency })
+          return { frequency, type: 'sine' as OscillatorType, connect() { return {} }, disconnect() {}, start() {}, stop() {} }
+        },
+      }
+      return ctx as unknown as AudioContext
+    }
+
+    const engine = new BinauralEngine(factory)
+    await engine.start()
+    engine.setCarrierHz(300)
+
+    const calls = trackingOscillators[0]!.frequency.calls
+    const anchorIdx = calls.findLastIndex((c) => c.method === 'set')
+    const rampIdx = calls.findLastIndex((c) => c.method === 'ramp')
+    expect(anchorIdx).toBeGreaterThanOrEqual(0)
+    expect(rampIdx).toBeGreaterThan(anchorIdx)
+    expect(trackingOscillators[0]!.frequency.value).toBeCloseTo(300, 8)
+
+    engine.stop()
+  })
+
+  it('smooths volume changes via linearRamp when setVolume is called while running', async () => {
+    let binauralGain: ReturnType<typeof createTrackingAudioParam> | null = null
+    let gainCount = 0
+
+    const factory = () => {
+      const ctx = {
+        sampleRate: 48_000,
+        currentTime: 0 as number,
+        state: 'suspended' as AudioContextState,
+        destination: {} as AudioDestinationNode,
+        async resume() { ctx.state = 'running' as AudioContextState },
+        async close() { ctx.state = 'closed' as AudioContextState },
+        addEventListener() {},
+        removeEventListener() {},
+        createChannelMerger() { return { connect(d: AudioNode) { return d }, disconnect() {} } },
+        createGain() {
+          gainCount++
+          // binauralGain is the 1st createGain call in startInternal
+          const gain = gainCount === 1 ? createTrackingAudioParam(0) : createAudioParam(0)
+          if (gainCount === 1) binauralGain = gain as ReturnType<typeof createTrackingAudioParam>
+          return { connect(_d: AudioNode) { return _d }, gain, disconnect() {} }
+        },
+        createOscillator() {
+          const frequency = createAudioParam(0)
+          return { frequency, type: 'sine' as OscillatorType, connect() { return {} }, disconnect() {}, start() {}, stop() {} }
+        },
+      }
+      return ctx as unknown as AudioContext
+    }
+
+    const engine = new BinauralEngine(factory)
+    await engine.start()
+    engine.setVolume(0.5)
+
+    const calls = binauralGain!.calls
+    const anchorIdx = calls.findLastIndex((c) => c.method === 'set')
+    const rampIdx = calls.findLastIndex((c) => c.method === 'ramp' && c.value === 0.5)
+    expect(anchorIdx).toBeGreaterThanOrEqual(0)
+    expect(rampIdx).toBeGreaterThan(anchorIdx)
+
+    engine.stop()
+  })
+
+  it('getBinauralLimits returns valid positive limits when sampleRate is 0 or NaN', () => {
+    for (const badSr of [0, -1, NaN, Infinity]) {
+      const limits = getBinauralLimits(badSr, 200)
+      expect(isFinite(limits.maxCarrierHz)).toBe(true)
+      expect(limits.maxCarrierHz).toBeGreaterThan(0)
+      expect(isFinite(limits.maxBeatHz)).toBe(true)
+      expect(limits.maxBeatHz).toBeGreaterThanOrEqual(0)
+      expect(limits.sampleRate).toBe(48_000)
+    }
+  })
+
+  it('resolveTemplateFrequencies falls back to template defaults when given NaN/Infinity inputs', () => {
+    const t = getTemplateById('gamma-40')!
+    for (const bad of [NaN, Infinity, -Infinity]) {
+      const r = resolveTemplateFrequencies(t, { carrierHz: bad, beatHz: bad })
+      expect(isFinite(r.carrierHz)).toBe(true)
+      expect(isFinite(r.beatHz)).toBe(true)
+      expect(r.carrierHz).toBe(t.recommendedCarrierHz)
+      expect(r.beatHz).toBe(t.defaultBeatHz)
+    }
   })
 })

@@ -275,13 +275,16 @@ export function resolveTemplateFrequencies(
   template: BinauralTemplate,
   options?: { beatHz?: number; carrierHz?: number },
 ): ResolvedTemplateFrequencies {
-  const carrierHz = options?.carrierHz ?? template.recommendedCarrierHz
+  const rawCarrier = options?.carrierHz
+  const carrierHz =
+    rawCarrier !== undefined && isFinite(rawCarrier)
+      ? rawCarrier
+      : template.recommendedCarrierHz
+
+  const optBeat = options?.beatHz
   const rawBeat =
-    options?.beatHz !== undefined
-      ? Math.min(
-          Math.max(options.beatHz, template.beatHzMin),
-          template.beatHzMax,
-        )
+    optBeat !== undefined && isFinite(optBeat)
+      ? Math.min(Math.max(optBeat, template.beatHzMin), template.beatHzMax)
       : template.defaultBeatHz
 
   return {

@@ -46,6 +46,8 @@ const DEFAULT_CARRIER = 200
 const DEFAULT_BEAT = 10
 const DEFAULT_VOLUME = 0.2
 const FADE_S = 0.06
+const FREQ_RAMP_S = 0.015   // 15 ms — smooth freq transitions, no slider click
+const VOLUME_RAMP_S = 0.008 // 8 ms — smooth volume drag, shorter than fade-in
 
 /** Praṇava-inspired partials (Hz) — modern additive synthesis. */
 const OM_FREQS = [136, 272, 408] as const
@@ -75,6 +77,7 @@ export function getBinauralLimits(
   sampleRate: number,
   carrierHz: number,
 ): BinauralLimits {
+  if (!isFinite(sampleRate) || sampleRate <= 0) sampleRate = 48_000
   const nq = nyquist(sampleRate) * NYQUIST_FACTOR
   const minCarrierHz = 1
   const maxCarrierHz = Math.max(minCarrierHz, nq - 1e-6)
@@ -204,7 +207,8 @@ export class BinauralEngine {
     if (this.binauralGain && this.context) {
       const t = this.context.currentTime
       this.binauralGain.gain.cancelScheduledValues(t)
-      this.binauralGain.gain.setValueAtTime(this.params.volume, t)
+      this.binauralGain.gain.setValueAtTime(this.binauralGain.gain.value, t)
+      this.binauralGain.gain.linearRampToValueAtTime(this.params.volume, t + VOLUME_RAMP_S)
     }
   }
 
@@ -337,6 +341,10 @@ export class BinauralEngine {
 
     if (typeof document !== 'undefined') {
       this.onVisibilityResume = () => {
+        if (ctx.state === 'closed') {
+          this.detachResumeHandlers(ctx)
+          return
+        }
         if (document.visibilityState === 'visible') {
           void ctx.resume().catch(() => {
             /* autoplay / policy */
@@ -348,6 +356,10 @@ export class BinauralEngine {
 
     if (typeof ctx.addEventListener === 'function') {
       this.onContextStateResume = () => {
+        if (ctx.state === 'closed') {
+          this.detachResumeHandlers(ctx)
+          return
+        }
         const st = ctx.state as AudioContextState | 'interrupted'
         if (st !== 'suspended' && st !== 'interrupted') return
         if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return
@@ -568,7 +580,9 @@ export class BinauralEngine {
     const now = ctx.currentTime
     oscL.frequency.cancelScheduledValues(now)
     oscR.frequency.cancelScheduledValues(now)
-    oscL.frequency.setValueAtTime(carrierHz, now)
-    oscR.frequency.setValueAtTime(carrierHz + beatHz, now)
+    oscL.frequency.setValueAtTime(oscL.frequency.value, now)
+    oscR.frequency.setValueAtTime(oscR.frequency.value, now)
+    oscL.frequency.linearRampToValueAtTime(carrierHz, now + FREQ_RAMP_S)
+    oscR.frequency.linearRampToValueAtTime(carrierHz + beatHz, now + FREQ_RAMP_S)
   }
 }

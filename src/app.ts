@@ -181,14 +181,21 @@ export function boot(): void {
     reducedMotionMq.addEventListener('change', reducedMotionHandler)
   }
 
-  // Restore persisted preferences into session state
+  // Restore persisted preferences into session state, clamped to current engine limits.
+  // engine.getLimits() uses 48 kHz as the pre-AudioContext default — a safe conservative bound;
+  // applyFrequencies() will re-clamp to the real device sample rate when audio actually starts.
   const prefs = loadPrefs()
+  const clampedPrefs = clampBinauralFrequencies(
+    engine.getLimits().sampleRate,
+    prefs.carrierHz,
+    prefs.beatHz,
+  )
   sessionStore.set({
     intentionId: prefs.intentionId,
     templateId: prefs.templateId,
     bedId: prefs.bedId,
-    carrierHz: prefs.carrierHz,
-    beatHz: prefs.beatHz,
+    carrierHz: clampedPrefs.carrierHz,
+    beatHz: clampedPrefs.beatHz,
     wave: prefs.wave,
     volume: prefs.volume,
   })

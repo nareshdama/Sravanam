@@ -39,6 +39,9 @@ function renderSaptaswarPicker(currentCarrierHz: number): string {
 
 export function renderAdvancedTuning(): string {
   const s = sessionStore.get()
+  const limits = engine.getLimits()
+  const carrierMax = limits.maxCarrierHz.toFixed(0)
+  const beatMax = Math.max(limits.maxBeatHz, 100).toFixed(2)
   return `
     <details class="disclosure" id="advanced-tuning">
       <summary>Advanced tuning</summary>
@@ -47,12 +50,12 @@ export function renderAdvancedTuning(): string {
         <label class="field">
           <span class="field__label">Carrier (Hz)</span>
           <input type="number" id="adv-carrier" min="1" step="any" value="${s.carrierHz}" />
-          <input type="range" id="adv-carrier-range" min="1" max="20000" step="1" value="${s.carrierHz}" />
+          <input type="range" id="adv-carrier-range" min="1" max="${carrierMax}" step="1" value="${s.carrierHz}" />
         </label>
         <label class="field">
           <span class="field__label">Beat / binaural difference (Hz)</span>
           <input type="number" id="adv-beat" min="0" step="any" value="${s.beatHz}" />
-          <input type="range" id="adv-beat-range" min="0" max="100" step="0.1" value="${s.beatHz}" />
+          <input type="range" id="adv-beat-range" min="0" max="${beatMax}" step="0.1" value="${s.beatHz}" />
         </label>
         <label class="field">
           <span class="field__label">Volume</span>
