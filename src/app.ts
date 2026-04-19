@@ -24,6 +24,8 @@ function syncEngineFromSession(session: Readonly<SessionState>): void {
 
 let lastSession = sessionStore.get()
 let unsubSessionSync: (() => void) | null = null
+let reducedMotionMq: MediaQueryList | null = null
+let reducedMotionHandler: ((e: MediaQueryListEvent) => void) | null = null
 
 export function normalizeScreenTarget(screen: Screen): Screen {
   const { playing } = sessionStore.get()
@@ -171,10 +173,12 @@ export function boot(): void {
   appStore.set({ reducedMotion: prefersReducedMotion() })
 
   if (typeof window !== 'undefined') {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    mq.addEventListener('change', (e) => {
-      appStore.set({ reducedMotion: e.matches })
-    })
+    if (reducedMotionMq && reducedMotionHandler) {
+      reducedMotionMq.removeEventListener('change', reducedMotionHandler)
+    }
+    reducedMotionMq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    reducedMotionHandler = (e) => { appStore.set({ reducedMotion: e.matches }) }
+    reducedMotionMq.addEventListener('change', reducedMotionHandler)
   }
 
   // Restore persisted preferences into session state

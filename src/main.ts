@@ -21,8 +21,10 @@ import { renderIntentionPicker, destroyIntentionPicker } from './screens/intenti
 import { renderSessionCard, destroySessionCard } from './screens/sessionCard'
 import { renderImmersive, destroyImmersive } from './screens/immersive'
 
-const screenRoot = document.querySelector<HTMLDivElement>('#app-screen')!
-const globalVizEl = document.querySelector<HTMLDivElement>('#app-global-viz')!
+const _screenRootEl = document.querySelector<HTMLDivElement>('#app-screen')
+if (!_screenRootEl) throw new Error('Missing #app-screen — check index.html')
+const screenRoot: HTMLDivElement = _screenRootEl
+const globalVizEl = document.querySelector<HTMLDivElement>('#app-global-viz')
 
 let currentScreen: Screen | null = null
 
@@ -73,14 +75,16 @@ appStore.subscribe((state) => {
 
 // Boot the application, sync URL hash to screen, then render the initial screen
 boot()
-const teardownRouteSync = initRouteSync()
-void teardownRouteSync // retained for potential cleanup; not called in normal SPA lifecycle
+initRouteSync()
 
 if (globalVizEl) {
   mountGlobalVizLayer(globalVizEl)
 }
 
-renderScreen(appStore.get().screen)
+// Only render if initRouteSync() hasn't already triggered a render via the subscription
+if (currentScreen === null) {
+  renderScreen(appStore.get().screen)
+}
 
 /** Part 7 — cache shell + assets for offline revisit (production only) */
 if (import.meta.env.PROD && typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {

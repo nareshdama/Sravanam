@@ -161,7 +161,7 @@ export function renderSessionCard(root: HTMLElement): void {
   root.querySelectorAll<HTMLButtonElement>('[data-alt-template]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.altTemplate
-      if (!id) return
+      if (!id || !root.isConnected) return
       applyTemplate(id)
       renderSessionCard(root) // Re-render with new template
     })

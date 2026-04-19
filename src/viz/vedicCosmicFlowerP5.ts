@@ -657,6 +657,7 @@ export function createVedicCosmicFlower(options: {
       lastPanelMs = 0
       let bootAttempts = 0
       const boot = () => {
+        if (!booting) return // stop() was called while waiting for mount width
         bootAttempts++
         const rect = mount.getBoundingClientRect()
         const cw = rect.width > 0 ? rect.width : mount.clientWidth
