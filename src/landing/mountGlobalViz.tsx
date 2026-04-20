@@ -4,6 +4,7 @@
 
 import { StrictMode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
+import { Analytics } from '@vercel/analytics/react'
 
 import { GlobalVizLayer } from './globalVizLayer'
 
@@ -14,6 +15,7 @@ export function mountGlobalVizLayer(container: HTMLElement): Root {
   root.render(
     <StrictMode>
       <GlobalVizLayer />
+      <Analytics />
     </StrictMode>,
   )
   return root
