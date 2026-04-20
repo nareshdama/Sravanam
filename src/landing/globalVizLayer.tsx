@@ -3,6 +3,7 @@
  */
 
 import { useEffect, useState } from 'react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 import { appStore } from '../state/appState'
 import { SriYantraMotionAnimation } from './SriYantraMotionAnimation'
@@ -18,16 +19,19 @@ export function GlobalVizLayer() {
     })
   }, [])
 
-  if (reducedMotion) return null
-  if (screen === 'immersive') return null
-
+  const shouldShowViz = !reducedMotion && screen !== 'immersive'
   const drive = screen === 'landing' ? 'page' : 'time'
 
   return (
-    <SriYantraMotionAnimation
-      drive={drive}
-      quality="medium"
-      style={{ width: '100%', height: '100%', minHeight: '100%' }}
-    />
+    <>
+      {shouldShowViz && (
+        <SriYantraMotionAnimation
+          drive={drive}
+          quality="medium"
+          style={{ width: '100%', height: '100%', minHeight: '100%' }}
+        />
+      )}
+      <SpeedInsights />
+    </>
   )
 }
