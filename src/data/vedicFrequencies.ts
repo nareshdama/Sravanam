@@ -1,8 +1,10 @@
 /**
- * 31 Vedic frequencies with rich metadata (sources, chakras, mantras, breathing patterns, postures).
- * Organized by frequency band and traditional significance.
- * Implements the Nāda Brahma system: 9 carrier frequencies, 12 named brainwave beats.
- * Complements the 15 existing binaural templates.
+ * 32 Vedic frequencies with rich metadata (sources, chakras, mantras, breathing patterns, postures).
+ * Carriers use the authentic Saptaswar/Natya Shastra just-intonation grid at Sa=432:
+ *   Sa 432, Ri 486, Ga 540, Ma 576, Pa 648, Dha 720, Ni 810, SA-octave 864.
+ * Plus 136.1 Hz (AUM M-kara drone, Mandukya Upanishad) and 200 Hz default binaural carrier.
+ * 528 Hz and 480 Hz are retained as sound-design carriers with explicit non-Vedic framing.
+ * Complements the 14 existing binaural templates.
  */
 
 import type { BinauralTemplate } from './binauralTemplates'
@@ -321,7 +323,7 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       { text: 'Hatha Yoga Pradipika', verse: 'Ch. 3', tradition: 'Tantra' },
     ],
     vedaVerification:
-      'Agni Bija — fire seed of Manipura; invokes Tejas. The transformative power that burns away ignorance and manifests will.',
+      '528 Hz is used here as a carrier for energizing breath practice, not a Vedic-authenticated frequency — the Solfeggio set has no traceable Sanskrit textual source. Carrier-evidence is limited but usable for a bright, activating mood; the Vedic content lies in the Agni bija (RAM) and Kapalabhati practice layered over it.',
     postures: [
       'Sukhasana; right hand in Agni Mudra (thumb over bent ring finger, other fingers extended); left palm on solar plexus',
     ],
@@ -353,7 +355,7 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       { text: 'Devi Bhagavata Purana', tradition: 'Tantra' },
     ],
     vedaVerification:
-      'Shiva-Shakti — cosmic stillness + active creation. The dance of being and becoming that manifests reality.',
+      '480 Hz = Ni(15/8) at Sa=256, or Ri(9/8) × 2 at Sa=256 (Natya Shastra microtonal grid). Used here as a mid-register neutral carrier; the Shiva-Shakti framing is interpretive, not a Hz-scriptural claim.',
     postures: [
       'Padmasana; Hakini Mudra (all 5 fingertips touching partner fingertips, both hands) at heart level',
     ],
@@ -368,24 +370,24 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Visualize golden light expanding from heart as you chant; hold each Bija for one full breath',
   },
 
-  // 13. Heart-Wealth Bridge (639 Hz carrier + 10 Hz alpha)
+  // 13. Heart Bridge (Pa 648 Hz carrier + 10 Hz alpha)
   {
-    id: 'vedic-heart-wealth-bridge-639',
-    hzLabel: '639 Hz · 10 Hz α',
+    id: 'vedic-heart-bridge-pa-648',
+    hzLabel: '648 Hz · 10 Hz α',
     brainwave: 'alpha',
-    useCase: 'Emotional harmony; love + financial abundance',
+    useCase: 'Emotional harmony; heart-centered alignment',
     effect:
-      'Anahata — love (Prema) is the highest force drawing Lakshmi. 639 Hz carrier with 10 Hz alpha entrainment supports heart opening and receptive abundance.',
+      'Pa (Panchama) — the perfect fifth (3/2 × Sa), described in the Natya Shastra as the inviolable sacred tone. 648 Hz carrier with 10 Hz alpha entrainment supports heart opening and receptive mood.',
     beatHzMin: 8,
     beatHzMax: 12,
     defaultBeatHz: 10,
-    recommendedCarrierHz: 639,
+    recommendedCarrierHz: 648,
     vedicSources: [
-      { text: 'Sat Chakra Nirupana', tradition: 'Tantra' },
-      { text: 'Narada Bhakti Sutra', tradition: 'Bhakti' },
+      { text: 'Natya Shastra', verse: 'Shruti S13 — Pa 3/2', tradition: 'Bharata Muni' },
+      { text: 'Gandharva Veda', tradition: 'Vedic music' },
     ],
     vedaVerification:
-      'Anahata — love (Prema) is the highest force drawing Lakshmi. The unstruck sound of the heart center.',
+      'Pa = 3/2 × Sa(432) = 648 Hz. Natya Shastra S13; the only svara explicitly called inviolable and never altered in any raga or ritual chant. The harmonic fifth is used here as a warm heart-themed carrier (CSV-supported sound-design choice).',
     postures: [
       'Sukhasana; both palms over heart center; Hridaya Mudra (index finger at base of thumb, middle + ring on thumb tip, pinky extended)',
     ],
@@ -400,21 +402,24 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Send loving-kindness to 3 people you hold resentment toward; feel forgiveness dissolve the block',
   },
 
-  // 14. Love-Money Fusion (639 Hz heart carrier + 10 Hz alpha)
+  // 14. Love Fusion (Pa 648 Hz heart carrier + 10 Hz alpha)
   {
-    id: 'vedic-love-money-fusion-528-639',
-    hzLabel: '639 Hz · 10 Hz α',
+    id: 'vedic-love-fusion-pa-648',
+    hzLabel: '648 Hz · 10 Hz α',
     brainwave: 'alpha',
-    useCase: 'Dual attraction of relationships and wealth',
+    useCase: 'Heart-centered bhakti; love and devotion',
     effect:
-      'Shreem + Kleem — abundance + attraction force of Lakshmi-Vishnu. 639 Hz heart carrier with 10 Hz alpha entrainment magnetizes love and prosperity.',
+      'Pa (Panchama) as the sacred fifth anchors bhakti practice. 648 Hz carrier with 10 Hz alpha entrainment holds attention at the heart center.',
     beatHzMin: 8,
     beatHzMax: 12,
     defaultBeatHz: 10,
-    recommendedCarrierHz: 639,
-    vedicSources: [{ text: 'Devi Upasana Tantra', tradition: 'Tantric' }],
+    recommendedCarrierHz: 648,
+    vedicSources: [
+      { text: 'Natya Shastra', verse: 'Shruti S13 — Pa 3/2', tradition: 'Bharata Muni' },
+      { text: 'Narada Bhakti Sutra', tradition: 'Bhakti' },
+    ],
     vedaVerification:
-      'Shreem + Kleem — abundance + attraction. The unified field where love and wealth merge as one energy.',
+      'Pa = 3/2 × Sa(432) = 648 Hz (Natya Shastra S13). Historically-attested tuning; the 639 Hz Solfeggio carrier used in earlier versions has no Vedic textual source and has been replaced with the authentic perfect-fifth ratio.',
     postures: [
       'Padmasana; Yoni Mudra (interlaced fingers, index + thumb form triangle over lower abdomen)',
     ],
@@ -429,24 +434,24 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Visualize pink (love) and gold (wealth) light merging at the heart as one unified field',
   },
 
-  // 15. Lucky Gate (777 Hz carrier + 40 Hz gamma)
+  // 15. Fortune Gate (Dha 720 Hz carrier + 40 Hz gamma)
   {
-    id: 'vedic-lucky-gate-777',
-    hzLabel: '777 Hz · 40 Hz γ',
+    id: 'vedic-fortune-gate-dha-720',
+    hzLabel: '720 Hz · 40 Hz γ',
     brainwave: 'gamma',
-    useCase: 'Fortune consciousness; opportunity opening',
+    useCase: 'Active recognition; opportunity orientation',
     effect:
-      'Sapta (7) — 7 chakras, 7 notes, 7 planes; 777 = all layers activated. 777 Hz carrier with 40 Hz gamma entrainment for active fortune recognition.',
+      'Dha (Dhaivata) — the major sixth (5/3 × Sa), upper-register resonance in the Natya Shastra. 720 Hz carrier with 40 Hz gamma entrainment for alert recognition.',
     beatHzMin: 35,
     beatHzMax: 40,
     defaultBeatHz: 40,
-    recommendedCarrierHz: 777,
+    recommendedCarrierHz: 720,
     vedicSources: [
+      { text: 'Natya Shastra', verse: 'Shruti S16 — Dha 5/3', tradition: 'Bharata Muni' },
       { text: 'Rigveda', verse: 'Sapta Rishis' },
-      { text: 'Chandogya Upanishad', tradition: 'Vedanta' },
     ],
     vedaVerification:
-      'Sapta (7) — 7 chakras, 7 notes, 7 planes; 777 = all layers activated. The sacred number of cosmic order.',
+      'Dha = 5/3 × Sa(432) = 720 Hz. Natya Shastra S16. The 777 Hz carrier used in earlier versions was pure numerology (7×7×7) with no Vedic textual basis; replaced with the authentic Dha just-intonation ratio.',
     postures: [
       'Sukhasana; spine straight; Prithvi Mudra (ring finger + thumb; grounding into material world)',
     ],
@@ -461,23 +466,24 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Weekly practice (Fridays — Venus day of fortune); take 49 breaths total (7x7)',
   },
 
-  // 16. Aishwarya Gate (888 Hz carrier + 8 Hz alpha)
+  // 16. Aishwarya Octave (864 Hz carrier + 8 Hz alpha)
   {
-    id: 'vedic-aishwarya-gate-888',
-    hzLabel: '888 Hz · 8 Hz α',
+    id: 'vedic-aishwarya-octave-864',
+    hzLabel: '864 Hz · 8 Hz α',
     brainwave: 'alpha',
-    useCase: 'Clears poverty karma; activates divine opulence',
+    useCase: 'Receptive opulence practice; Lakshmi ritual',
     effect:
-      'Shani (Saturn) governs 8; dissolves Daridra Yoga across 3 karma planes. 888 Hz carrier with 8 Hz alpha entrainment (8-themed) for receptive clearing of abundance blockages.',
+      'Upper octave of Sa (2 × 432) completes the Saptaswar cycle. 864 Hz carrier with 8 Hz alpha entrainment for receptive ritual practice.',
     beatHzMin: 8,
     beatHzMax: 8,
     defaultBeatHz: 8,
-    recommendedCarrierHz: 888,
+    recommendedCarrierHz: 864,
     vedicSources: [
+      { text: 'Natya Shastra', verse: 'Shruti S22 — 2/1 octave', tradition: 'Bharata Muni' },
       { text: 'Brihat Parashara Hora Shastra', tradition: 'Jyotisha' },
     ],
     vedaVerification:
-      'Shani (Saturn) governs 8; dissolves Daridra Yoga. The karmic clearing force that removes obstacles to prosperity.',
+      '864 Hz = 2 × Sa(432). Natya Shastra S22 (perfect octave doubling). The 888 Hz Saturn numerology used previously has no Vedic textual source and has been replaced with the authentic octave.',
     postures: [
       'Vajrasana (thunderbolt/kneeling pose); Shani Mudra (middle finger extended, others folded)',
     ],
@@ -492,24 +498,24 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Saturdays at sunset; sesame oil lamp; black sesame seeds offered; face West (Saturn\'s direction)',
   },
 
-  // 17. Lakshmi Ashta Stack (888 Hz carrier + 8 Hz alpha)
+  // 17. Lakshmi Octave Stack (864 Hz carrier + 8 Hz alpha)
   {
-    id: 'vedic-lakshmi-stack-8-88-888',
-    hzLabel: '888 Hz · 8 Hz α',
+    id: 'vedic-lakshmi-stack-octave-864',
+    hzLabel: '864 Hz · 8 Hz α',
     brainwave: 'alpha',
-    useCase: 'Full Lakshmi blessing across all 3 consciousness levels',
+    useCase: 'Full Sri Sukta recitation; Lakshmi practice',
     effect:
-      'Trikona — subconscious + Manipura fire + cosmic Mahalakshmi. 888 Hz cosmic carrier with 8 Hz subconscious-border entrainment (8-themed across all planes).',
+      'Upper octave of Sa (2 × 432) encompasses the full Saptaswar cycle; used here as the carrier for a complete Lakshmi ritual stack.',
     beatHzMin: 8,
     beatHzMax: 8,
     defaultBeatHz: 8,
-    recommendedCarrierHz: 888,
+    recommendedCarrierHz: 864,
     vedicSources: [
+      { text: 'Sri Sukta', verse: 'Rigveda 5 Khila (16 verses)', tradition: 'Vedic hymn' },
       { text: 'Lakshmi Tantra', tradition: 'Tantric' },
-      { text: 'Sri Sukta', verse: 'Rigveda', tradition: 'Vedic hymn' },
     ],
     vedaVerification:
-      'Trikona — subconscious + Manipura fire + cosmic Mahalakshmi. The complete invocation of Lakshmi across all planes of consciousness.',
+      '864 Hz = 2 × Sa(432). Natya Shastra S22; Rigvedic Sri Sukta is traditionally chanted in the Sa–Pa range, and the upper octave provides a bright carrier for its 16 verses.',
     postures: [
       'Padmasana; Lotus Mudra — both hands at heart, wrists touching, fingers open like a blooming lotus',
     ],
@@ -524,25 +530,26 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Place Shri Yantra in front; offer lotus or yellow flowers; recite all 16 verses of Sri Sukta',
   },
 
-  // 19. Vāk Siddhi (741 Hz carrier + 40 Hz gamma)
+  // 19. Vāk Siddhi (Pa 648 Hz — Vishuddha, 40 Hz gamma)
   {
-    id: 'vedic-vak-siddhi-741',
-    hzLabel: '741 Hz · 40 Hz γ',
+    id: 'vedic-vak-siddhi-pa-648',
+    hzLabel: '648 Hz · 40 Hz γ',
     brainwave: 'gamma',
-    useCase: 'Speech power; Vāksiddhi; Saraswati activation',
+    useCase: 'Speech clarity practice; Saraswati sadhana',
     effect:
-      'Vāk Siddhi — the perfection of speech; words become reality. 741 Hz carrier with 40 Hz gamma entrainment for Vishuddha clarity.',
+      'Pa (Panchama) — Vishuddha chakra\'s svara in the Gandharva/chakra mapping. 648 Hz throat-centered carrier with 40 Hz gamma entrainment for alert articulation work.',
     beatHzMin: 35,
     beatHzMax: 40,
     defaultBeatHz: 40,
-    recommendedCarrierHz: 741,
+    recommendedCarrierHz: 648,
     associatedChakra: 'Vishuddha — Throat',
     vedicSources: [
+      { text: 'Natya Shastra', verse: 'Shruti S13 — Pa 3/2', tradition: 'Bharata Muni' },
       { text: 'Rigveda', verse: '4 levels of Vak', tradition: 'Vedic' },
       { text: 'Saraswati Rahasya Upanishad', tradition: 'Shakta' },
     ],
     vedaVerification:
-      '741 Hz: 7+4+1=12→3 — Family of 3 (Brahma/creation/speech). Brahma\'s creative word; the Vāk that spoke the Vedas into existence. Vishuddha chakra: purification of thought into truth.',
+      'Pa = 3/2 × Sa(432) = 648 Hz. Natya Shastra S13; the Gandharva Veda chakra-svara mapping assigns Pa to Vishuddha (throat). The 741 Hz Solfeggio carrier used previously has no Vedic textual source.',
     postures: [
       'Siddhasana; Chin Mudra (index + thumb — consciousness union); spine perfectly vertical',
     ],
@@ -558,25 +565,25 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     timeOfDay: 'Brahma Muhurta (4–6 AM) after mauna',
   },
 
-  // 20. Ajna Vision (852 Hz carrier + 7.83 Hz Schumann theta)
+  // 20. Ajna Vision (Dha 720 Hz — Ajna, 7.83 Hz Schumann theta)
   {
-    id: 'vedic-ajna-vision-852',
-    hzLabel: '852 Hz · 7.83 Hz θ',
+    id: 'vedic-ajna-vision-dha-720',
+    hzLabel: '720 Hz · 7.83 Hz θ',
     brainwave: 'theta',
-    useCase: 'Third eye activation; intuition; inner vision',
+    useCase: 'Third eye practice; inner attention',
     effect:
-      'Ajna — command center of the subtle body; the eye of Shiva opens. 852 Hz carrier with 7.83 Hz Schumann theta for intuitive, receptive inner seeing.',
+      'Dha (Dhaivata) — the Gandharva/chakra mapping assigns Dha to Ajna (third eye). 720 Hz upper-register carrier with 7.83 Hz Schumann theta for receptive inner attention.',
     beatHzMin: 7.83,
     beatHzMax: 7.83,
     defaultBeatHz: 7.83,
-    recommendedCarrierHz: 852,
+    recommendedCarrierHz: 720,
     associatedChakra: 'Ajna — Third Eye',
     vedicSources: [
+      { text: 'Natya Shastra', verse: 'Shruti S16 — Dha 5/3', tradition: 'Bharata Muni' },
       { text: 'Sat Chakra Nirupana', tradition: 'Tantra' },
-      { text: 'Shiva Purana', tradition: 'Shaiva' },
     ],
     vedaVerification:
-      '852 Hz: 8+5+2=15→6 — Family of 6 (Shukra/Venus/creative intelligence). Ajna chakra: seat of Jnana (wisdom) and Vijnana (direct knowing). The pineal resonance frequency of the Rishi tradition.',
+      'Dha = 5/3 × Sa(432) = 720 Hz. Natya Shastra S16; the Gandharva chakra-svara mapping places Dha at Ajna. The 852 Hz Solfeggio carrier used previously has no Vedic textual source. Schumann 7.83 Hz is a real geophysical ELF phenomenon, used here only as a binaural beat analogy.',
     postures: [
       'Padmasana; Shambhavi Mudra (soft upward gaze between eyebrows; eyes half-open)',
     ],
@@ -592,25 +599,26 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     timeOfDay: 'Dawn; face East',
   },
 
-  // 21. Parabrahman (999 Hz carrier + 4.84 Hz theta-phi)
+  // 21. Parabrahman (864 Hz upper octave + 4.84 Hz theta-phi)
   {
-    id: 'vedic-parabrahman-999',
-    hzLabel: '999 Hz · 4.84 Hz θ',
+    id: 'vedic-parabrahman-octave-864',
+    hzLabel: '864 Hz · 4.84 Hz θ',
     brainwave: 'theta',
-    useCase: 'Ego dissolution; Turiya state; Moksha approach',
+    useCase: 'Witness-consciousness practice; silent inquiry',
     effect:
-      'Parabrahman — beyond all attributes; the Absolute beyond the Absolute. 999 Hz carrier with 4.84 Hz (Schumann ÷ Φ) deep theta for dissolution into pure Sat-Chit-Ananda.',
+      'Upper octave of Sa (2 × 432) — perfect doubling; in Vedic cosmology the octave represents completion transcending the individual notes. 864 Hz carrier with 4.84 Hz (Schumann ÷ Φ) deep theta.',
     beatHzMin: 4.84,
     beatHzMax: 4.84,
     defaultBeatHz: 4.84,
-    recommendedCarrierHz: 999,
+    recommendedCarrierHz: 864,
     associatedChakra: 'Sahasrara — Crown (Beyond Form)',
     vedicSources: [
+      { text: 'Natya Shastra', verse: 'Shruti S22 — 2/1 octave', tradition: 'Bharata Muni' },
       { text: 'Mandukya Upanishad', verse: 'Turiya', tradition: 'Advaita' },
       { text: 'Ashtavakra Gita', tradition: 'Advaita Vedanta' },
     ],
     vedaVerification:
-      '999 Hz: 9+9+9=27→9 — Family of 9 (Brahman/completion/infinity). 27×37; Brahma cubed (3³). The frequency that dissolves the seeker into the sought. Neti Neti — not this, not this — until only That remains.',
+      '864 Hz = 2 × Sa(432). Natya Shastra S22 (perfect octave). The 999 Hz carrier used previously was numerology; replaced with the authentic octave doubling. Turiya is a state (Mandukya Upanishad) — no specific Hz is scripturally prescribed; the carrier is a symbolic anchor, not a metaphysical claim.',
     postures: [
       'Padmasana or Siddhasana; Khechari Mudra (tongue folded to palate); hands in lap, palms up',
     ],
@@ -922,24 +930,26 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     timeOfDay: 'Ultra Focus sessions; mid-day peak energy',
   },
 
-  // 18. Brahmarandhra Crown (963 Hz carrier + 7.83 Hz Schumann theta)
+  // 18. Brahmarandhra Crown (Ni 810 Hz — Sahasrara, 7.83 Hz Schumann theta)
   {
-    id: 'vedic-brahmarandhra-crown-963',
-    hzLabel: '963 Hz · 7.83 Hz θ',
+    id: 'vedic-brahmarandhra-crown-ni-810',
+    hzLabel: '810 Hz · 7.83 Hz θ',
     brainwave: 'theta',
-    useCase: 'Peak consciousness; dissolves scarcity at the source',
+    useCase: 'Crown practice; non-dual witness sadhana',
     effect:
-      'Sahasrara — Turiya state; Atman merges with Brahman; scarcity = Maya, dissolved here. 963 Hz crown carrier with 7.83 Hz Schumann theta entrainment for quiet witness consciousness.',
+      'Ni (Nishada) — the major seventh (15/8 × Sa), the highest svara before the octave. Gandharva/chakra mapping assigns Ni to Sahasrara. 810 Hz carrier with 7.83 Hz Schumann theta for quiet witness-attention.',
     beatHzMin: 7.83,
     beatHzMax: 7.83,
     defaultBeatHz: 7.83,
-    recommendedCarrierHz: 963,
+    recommendedCarrierHz: 810,
+    associatedChakra: 'Sahasrara — Crown',
     vedicSources: [
+      { text: 'Natya Shastra', verse: 'Shruti S20 — Ni 15/8', tradition: 'Bharata Muni' },
       { text: 'Sat Chakra Nirupana', tradition: 'Tantra' },
       { text: 'Brihadaranyaka Upanishad', tradition: 'Vedanta' },
     ],
     vedaVerification:
-      'Sahasrara — Turiya state; Atman merges with Brahman. Scarcity consciousness dissolves as the individual realizes their infinite nature.',
+      'Ni = 15/8 × Sa(432) = 810 Hz. Natya Shastra S20; the Gandharva chakra-svara mapping places Ni at Sahasrara. The 963 Hz Solfeggio carrier used previously has no Vedic textual source. Schumann 7.83 Hz is a geophysical ELF reference, used here only as a binaural-beat analogy.',
     postures: [
       'Shavasana or Padmasana; Mahamudra of consciousness — Khechari Mudra (tongue folded back toward palate)',
     ],
@@ -952,6 +962,36 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     },
     practiceNotes:
       'Experience the silence between the beats as the true frequency; remain as pure witness. This is the state of non-duality.',
+  },
+
+  // 32. AUM M-kara Drone (136.1 Hz carrier + 1 Hz delta) — Mandukya Upanishad
+  {
+    id: 'vedic-aum-drone-136.1',
+    hzLabel: '136.1 Hz · 1 Hz δ',
+    brainwave: 'delta',
+    useCase: 'Sleep drone; M-kara hum anchor',
+    effect:
+      'M-kara — the nasal "mmm" of AUM as described in the Mandukya Upanishad, traditionally associated with the Prajna (deep sleep) state. 136.1 Hz is the low-register hum commonly used in cranial-resonance studies and temple drone practice.',
+    beatHzMin: 1,
+    beatHzMax: 1,
+    defaultBeatHz: 1,
+    recommendedCarrierHz: 136.1,
+    vedicSources: [
+      { text: 'Mandukya Upanishad', verse: 'M-kara / Prajna state', tradition: 'Advaita' },
+    ],
+    vedaVerification:
+      'The Mandukya Upanishad describes AUM as four matras (A-U-M-silence); M-kara corresponds to Prajna (deep sleep). 136.1 Hz is not scripturally specified but is the widely-used nasal-drone pitch attested in cranial-bone acoustic studies and traditional temple bell/Om-drone tuning.',
+    postures: ['Shavasana — flat on back, arms at sides, palms up'],
+    mantras: ['AUM — rest on the M-kara hum; let the "mmm" settle in the nasal cavity'],
+    breathingPattern: {
+      name: 'Slow sleep breath',
+      inhaleSec: 4,
+      holdSec: 0,
+      exhaleSec: 6,
+    },
+    practiceNotes:
+      'Room speaker at low volume; lie down 20 min before sleep; let the drone carry attention into the M-kara hum and on into Prajna.',
+    timeOfDay: 'Pre-sleep; night-long drone',
   },
 ] as const
 

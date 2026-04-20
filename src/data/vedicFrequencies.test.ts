@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { VEDIC_FREQUENCIES, getVedicFrequencyById } from './vedicFrequencies'
 
 describe('vedicFrequencies', () => {
-  it('has exactly 31 Vedic frequency entries', () => {
-    expect(VEDIC_FREQUENCIES).toHaveLength(31)
+  it('has exactly 32 Vedic frequency entries', () => {
+    expect(VEDIC_FREQUENCIES).toHaveLength(32)
   })
 
   it('all entries have unique IDs', () => {

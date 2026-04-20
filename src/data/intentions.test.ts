@@ -44,7 +44,7 @@ describe('intentions', () => {
     expect(ids).toContain('vedic-beta-execution-23.49')
 
     const spiritual = getIntentionById('spiritual')!
-    expect(getIntentionTemplateIds(spiritual)).toContain('vedic-parabrahman-999')
+    expect(getIntentionTemplateIds(spiritual)).toContain('vedic-parabrahman-octave-864')
   })
 
   it('each intention has a unique ID', () => {

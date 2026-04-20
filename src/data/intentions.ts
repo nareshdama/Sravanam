@@ -116,8 +116,8 @@ export const INTENTIONS: readonly Intention[] = [
     brainwaves: ['theta', 'alpha', 'gamma'],
     defaultTemplateId: 'vedic-theta-aum-7.83',
     alternateTemplateIds: [
-      'vedic-ajna-vision-852',
-      'vedic-vak-siddhi-741',
+      'vedic-ajna-vision-dha-720',
+      'vedic-vak-siddhi-pa-648',
       'vedic-jupiter-prosperity-7-8',
       'vedic-alpha-phi-12.67',
     ],
@@ -131,13 +131,13 @@ export const INTENTIONS: readonly Intention[] = [
     id: 'healing',
     title: 'Healing',
     subtitle: 'Arogyam — Dhanvantari',
-    description: 'Solfeggio carriers support cellular repair and bodily vitality.',
+    description: 'Activating-carrier practice paired with heart-centered breath.',
     icon: '\u2665', // heart
     brainwaves: ['alpha'],
     defaultTemplateId: 'vedic-agni-transformation-528',
     alternateTemplateIds: [
       'vedic-lakshmi-nada-432',
-      'vedic-heart-wealth-bridge-639',
+      'vedic-heart-bridge-pa-648',
       'vedic-manifestation-stack-432-528',
     ],
     defaultBed: 'om',
@@ -157,10 +157,10 @@ export const INTENTIONS: readonly Intention[] = [
     alternateTemplateIds: [
       'vedic-manifestation-stack-432-528',
       'vedic-sankalpa-6.32',
-      'vedic-aishwarya-gate-888',
-      'vedic-lucky-gate-777',
-      'vedic-lakshmi-stack-8-88-888',
-      'vedic-love-money-fusion-528-639',
+      'vedic-aishwarya-octave-864',
+      'vedic-fortune-gate-dha-720',
+      'vedic-lakshmi-stack-octave-864',
+      'vedic-love-fusion-pa-648',
     ],
     defaultBed: 'om',
     color: '#7a5c00',
@@ -175,9 +175,9 @@ export const INTENTIONS: readonly Intention[] = [
     description: 'Heart-centered frequencies dissolve separation and open divine love.',
     icon: '\u2764', // red heart
     brainwaves: ['alpha'],
-    defaultTemplateId: 'vedic-heart-wealth-bridge-639',
+    defaultTemplateId: 'vedic-heart-bridge-pa-648',
     alternateTemplateIds: [
-      'vedic-love-money-fusion-528-639',
+      'vedic-love-fusion-pa-648',
       'vedic-lakshmi-nada-432',
     ],
     defaultBed: 'om',
@@ -193,10 +193,10 @@ export const INTENTIONS: readonly Intention[] = [
     description: 'Crown frequencies dissolve the ego and approach Moksha.',
     icon: '\u2609', // sun circle
     brainwaves: ['gamma'],
-    defaultTemplateId: 'vedic-brahmarandhra-crown-963',
+    defaultTemplateId: 'vedic-brahmarandhra-crown-ni-810',
     alternateTemplateIds: [
-      'vedic-parabrahman-999',
-      'vedic-ajna-vision-852',
+      'vedic-parabrahman-octave-864',
+      'vedic-ajna-vision-dha-720',
       'vedic-gamma-sovereignty-30-100',
     ],
     defaultBed: 'nada',

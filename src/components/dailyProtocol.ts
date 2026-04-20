@@ -18,7 +18,7 @@ const DAILY_PROTOCOL: readonly ProtocolSlot[] = [
     endHour: 4.5,
     label: '4:00–4:30 AM (Brahma Muhurta)',
     mode: 'Spiritual + Knowledge',
-    freqStack: '963 Hz → 852 Hz + 432 Hz',
+    freqStack: '810 Hz Ni → 720 Hz Dha + 432 Hz Sa',
     duration: '30 min',
   },
   {
@@ -66,7 +66,7 @@ const DAILY_PROTOCOL: readonly ProtocolSlot[] = [
     endHour: 14,
     label: '1:00–2:00 PM',
     mode: 'Relax + Recovery',
-    freqStack: '7.83 Hz + 396 Hz',
+    freqStack: '7.83 Hz + 432 Hz Sa',
     duration: 'Break',
   },
   {
@@ -82,7 +82,7 @@ const DAILY_PROTOCOL: readonly ProtocolSlot[] = [
     endHour: 19,
     label: '6:00–7:00 PM',
     mode: 'Relax + Decompress',
-    freqStack: '7.83 Hz + 396 Hz carrier',
+    freqStack: '7.83 Hz + 432 Hz Sa carrier',
     duration: '30 min',
   },
   {
@@ -90,7 +90,7 @@ const DAILY_PROTOCOL: readonly ProtocolSlot[] = [
     endHour: 20,
     label: '7:00–8:00 PM',
     mode: 'Love + Wealth',
-    freqStack: '528 Hz + 639 Hz',
+    freqStack: '528 Hz + 648 Hz Pa',
     duration: '20 min',
   },
   {
@@ -98,7 +98,7 @@ const DAILY_PROTOCOL: readonly ProtocolSlot[] = [
     endHour: 21,
     label: '8:00–9:00 PM',
     mode: 'Wind Down',
-    freqStack: '432 Hz + 174 Hz',
+    freqStack: '432 Hz Sa + 136.1 Hz AUM drone',
     duration: '30 min',
   },
   {
@@ -114,7 +114,7 @@ const DAILY_PROTOCOL: readonly ProtocolSlot[] = [
     endHour: 28, // wraps past midnight (28 = 4 AM next day)
     label: '10:00 PM onward',
     mode: 'Deep Sleep',
-    freqStack: '3 Hz Delta + 396 Hz carrier',
+    freqStack: '3 Hz Delta + 136.1 Hz AUM drone',
     duration: 'All night',
   },
 ]

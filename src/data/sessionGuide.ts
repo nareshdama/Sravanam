@@ -77,13 +77,13 @@ const MODE_VEDIC: Partial<Record<string, string>> = {
   knowledge:
     'Jnana — direct knowledge of reality (Adi Shankara, Vivekachudamani). Illumined intelligence beyond mere intellectual understanding. Saraswati\'s domain: the goddess of speech, knowledge, and the arts. These frequencies support deep learning absorption and intuitive knowing.',
   healing:
-    'Arogyam — complete freedom from disease (Charaka Samhita, Dhanvantari tradition). Ayurveda teaches that sound vibration is primary medicine. The Solfeggio carrier frequencies (528, 432, 639 Hz) are applied here for cellular harmony and pranic restoration.',
+    'Arogyam — complete freedom from disease (Charaka Samhita, Dhanvantari tradition). Ayurveda teaches that sound vibration is primary medicine. 432 Hz Sa (Gandharva Veda) is the Vedic-authenticated anchor; 648 Hz Pa (Natya Shastra S13, the inviolable fifth) provides heart-centered resonance; 528 Hz is a sound-design carrier used for activating breath practice (not a Vedic frequency).',
   wealth:
     'Riddhi-Siddhi — the twin powers of Lakshmi (Lakshmi Tantra, Sri Sukta). Riddhi: material prosperity. Siddhi: perfection and attainment. These frequencies are aligned with Lakshmi Tattva (432 Hz = natural Sa, the root of abundance in the Gandharva Veda).',
   love:
-    'Prema — unconditional divine love (Narada Bhakti Sutra). The Anahata chakra (unstruck sound) is the seat of all genuine love. 639 Hz aligns with the heart center; when Anahata opens fully, love and prosperity flow together as one unified field.',
+    'Prema — unconditional divine love (Narada Bhakti Sutra). The Anahata chakra (unstruck sound) is the seat of all genuine love. 648 Hz Pa (the perfect fifth from Sa=432, Natya Shastra S13) anchors the heart center as a harmonic carrier.',
   spiritual:
-    'Turiya — the fourth state beyond waking, dreaming, and deep sleep (Mandukya Upanishad). The substratum of all three states; pure Sat-Chit-Ananda. Crown frequencies (963, 999 Hz) dissolve the boundary between individual consciousness and Brahman.',
+    'Turiya — the fourth state beyond waking, dreaming, and deep sleep (Mandukya Upanishad). The substratum of all three states; pure Sat-Chit-Ananda. 810 Hz Ni (Sahasrara) and 864 Hz (upper octave of Sa) are the Vedically-authenticated crown carriers, from the Natya Shastra Shruti grid.',
 }
 
 const SOUND_VEDIC: Record<SoundLibraryMode, string> = {

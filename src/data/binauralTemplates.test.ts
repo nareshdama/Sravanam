@@ -15,8 +15,8 @@ describe('binauralTemplates', () => {
     expect(BINAURAL_TEMPLATES).toHaveLength(14)
   })
 
-  it('combined library has 45 total templates (14 existing + 31 Vedic)', () => {
-    expect(getAllTemplates()).toHaveLength(45)
+  it('combined library has 46 total templates (14 existing + 32 Vedic)', () => {
+    expect(getAllTemplates()).toHaveLength(46)
   })
 
   it('each template default beat lies within its band', () => {
@@ -80,13 +80,13 @@ describe('combined template library (existing + Vedic)', () => {
     expect(getTemplateById('nonexistent-template')).toBeUndefined()
   })
 
-  it('all 45 templates have unique IDs', () => {
+  it('all 46 templates have unique IDs', () => {
     const all = getAllTemplates()
     const ids = all.map((t) => t.id)
-    expect(new Set(ids).size).toBe(45)
+    expect(new Set(ids).size).toBe(46)
   })
 
-  it('all 45 templates have valid default beat frequencies', () => {
+  it('all 46 templates have valid default beat frequencies', () => {
     for (const t of getAllTemplates()) {
       expect(t.defaultBeatHz).toBeGreaterThanOrEqual(t.beatHzMin - 1e-9)
       expect(t.defaultBeatHz).toBeLessThanOrEqual(t.beatHzMax + 1e-9)
@@ -107,7 +107,7 @@ describe('combined template library (existing + Vedic)', () => {
   })
 
   it('Vedic templates have Vedic metadata fields', () => {
-    const vedic = getTemplateById('vedic-heart-wealth-bridge-639')!
+    const vedic = getTemplateById('vedic-heart-bridge-pa-648')!
     expect(vedic).toBeDefined()
     expect(vedic.vedicSources).toBeDefined()
     expect(vedic.mantras).toBeDefined()
