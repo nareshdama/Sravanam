@@ -124,6 +124,13 @@ export class BinauralEngine {
   private startPromise: Promise<void> | null = null
   private onVisibilityResume: (() => void) | null = null
   private onContextStateResume: (() => void) | null = null
+  /** True while startInternal() initial fade-in is in progress; prevents ramp cancellation. */
+  private startingUp = false
+
+  /** Called when AudioContext becomes suspended/interrupted (e.g. iOS audio interruption). */
+  onSuspended: (() => void) | null = null
+  /** Called when AudioContext returns to running state. */
+  onResumed: (() => void) | null = null
 
   private params: BinauralParams = {
     carrierHz: DEFAULT_CARRIER,
@@ -204,11 +211,18 @@ export class BinauralEngine {
 
   setVolume(linear: number): void {
     this.params.volume = Math.min(1, Math.max(0, linear))
-    if (this.binauralGain && this.context) {
+    if (this.binauralGain && this.context && !this.startingUp) {
       const t = this.context.currentTime
       this.binauralGain.gain.cancelScheduledValues(t)
       this.binauralGain.gain.setValueAtTime(this.binauralGain.gain.value, t)
       this.binauralGain.gain.linearRampToValueAtTime(this.params.volume, t + VOLUME_RAMP_S)
+    }
+  }
+
+  /** Resume a suspended AudioContext — must be called inside a user gesture on iOS Safari. */
+  resumeContext(): void {
+    if (this.context && this.context.state !== 'running') {
+      void this.context.resume().catch(() => {})
     }
   }
 
@@ -238,17 +252,19 @@ export class BinauralEngine {
     }
     if (this.oscL) return
 
+    this.startingUp = true
     const ctx = this.createAudioContext()
     this.context = ctx
     try {
       await ctx.resume()
     } catch {
+      this.startingUp = false
       if (this.context === ctx) {
         this.teardown(ctx)
       } else if (ctx.state !== 'closed') {
         void ctx.close().catch(() => {})
       }
-      throw new Error('AudioContext could not start (often autoplay policy ? interact with the page and try again).')
+      throw new Error('AudioContext could not start — tap anywhere on the page first, then try again.')
     }
 
     // `stop()` may have run while `resume()` was pending.
@@ -297,6 +313,7 @@ export class BinauralEngine {
     this.playbackStartTime = t
     oscL.start(t)
     oscR.start(t)
+    this.startingUp = false
 
     this.applyLibraryLayer()
   }
@@ -361,9 +378,13 @@ export class BinauralEngine {
           return
         }
         const st = ctx.state as AudioContextState | 'interrupted'
-        if (st !== 'suspended' && st !== 'interrupted') return
-        if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return
-        void ctx.resume().catch(() => {})
+        if (st === 'suspended' || st === 'interrupted') {
+          this.onSuspended?.()
+          if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return
+          void ctx.resume().catch(() => {})
+        } else if (st === 'running') {
+          this.onResumed?.()
+        }
       }
       ctx.addEventListener('statechange', this.onContextStateResume)
     }

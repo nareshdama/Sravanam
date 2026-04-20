@@ -674,6 +674,27 @@ body::before {
   height: 100% !important;
 }
 
+.immersive__audio-banner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-full);
+  background: var(--color-immersive-surface);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  backdrop-filter: blur(24px) saturate(140%);
+  border: 0.5px solid var(--color-border-light);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--color-warm-light);
+  cursor: pointer;
+  z-index: 20;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .immersive__controls {
   position: absolute;
   bottom: max(env(safe-area-inset-bottom, 0px), var(--space-5));

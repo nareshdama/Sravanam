@@ -56,7 +56,7 @@ export function loadPrefs(): PersistedPrefs {
           ? (parsed.wave as OscillatorType)
           : DEFAULTS.wave,
       volume:
-        typeof parsed.volume === 'number' && parsed.volume >= 0 && parsed.volume <= 1
+        typeof parsed.volume === 'number' && parsed.volume >= 0.05 && parsed.volume <= 1
           ? parsed.volume
           : DEFAULTS.volume,
     }

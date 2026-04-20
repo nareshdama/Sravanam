@@ -35,6 +35,7 @@ let sessionTimer: ReturnType<typeof setInterval> | null = null
 let ephemerisTimer: ReturnType<typeof setInterval> | null = null
 let liveFreqTimer: ReturnType<typeof setInterval> | null = null
 let unsubFullscreen: (() => void) | null = null
+let audioBanner: HTMLElement | null = null
 
 function loadVizModule(): Promise<typeof import('../viz/vedicCosmicFlowerP5')> {
   if (!vizModulePromise) {
@@ -81,6 +82,10 @@ export function renderImmersive(root: HTMLElement): void {
         <span class="immersive__live-freq mono" id="immersive-live-freq" aria-live="polite"></span>
       </p>
 
+      <div class="immersive__audio-banner" id="immersive-audio-banner" style="display:none" role="alert">
+        Audio paused by browser &mdash; tap to resume
+      </div>
+
       <div class="immersive__controls" id="immersive-controls">
         <button type="button" class="btn-icon" id="immersive-stop" aria-label="Stop">
           \u25A0
@@ -107,6 +112,13 @@ export function renderImmersive(root: HTMLElement): void {
   `
 
   wireAppHome(root)
+
+  audioBanner = root.querySelector<HTMLElement>('#immersive-audio-banner')!
+  audioBanner.addEventListener('click', () => { engine.resumeContext() })
+  audioBanner.addEventListener('touchstart', () => { engine.resumeContext() }, { passive: true })
+
+  engine.onSuspended = () => { if (audioBanner) audioBanner.style.display = '' }
+  engine.onResumed = () => { if (audioBanner) audioBanner.style.display = 'none' }
 
   const canvasMount = root.querySelector<HTMLElement>('#immersive-canvas')!
   const controlsEl = root.querySelector<HTMLElement>('#immersive-controls')!
@@ -251,6 +263,10 @@ export function renderImmersive(root: HTMLElement): void {
 }
 
 export function destroyImmersive(): void {
+  engine.onSuspended = null
+  engine.onResumed = null
+  audioBanner = null
+
   vizControl?.stop()
   vizControl = null
   staticVizFallback?.stop()
