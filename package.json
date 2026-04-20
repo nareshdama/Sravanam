@@ -35,6 +35,7 @@
   "dependencies": {
     "@react-three/drei": "^9.117.3",
     "@react-three/fiber": "^8.17.14",
+    "@vercel/analytics": "^2.0.1",
     "astronomy-engine": "^2.1.19",
     "p5": "1.7.0",
     "react": "^18.3.1",
