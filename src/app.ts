@@ -9,6 +9,14 @@ import { getIntentionById } from './data/intentions'
 import { loadPrefs, savePrefs } from './lib/persistence'
 import { prefersReducedMotion } from './lib/motionPreference'
 import { viewTransition } from './lib/viewTransition'
+import {
+  acquireWakeLock,
+  clearMediaSession,
+  releaseWakeLock,
+  setMediaSessionHandlers,
+  setMediaSessionMetadata,
+  setMediaSessionPlaybackState,
+} from './pwa/mediaSession'
 import { appStore, type Screen } from './state/appState'
 import { sessionStore, type SessionState } from './state/sessionState'
 
@@ -128,6 +136,22 @@ export async function startSession(): Promise<void> {
     wave: live.wave,
     bedId: liveBedId,
   })
+
+  // Native-app polish: lock-screen tile + keep display lit during meditation.
+  const intention = session.intentionId ? getIntentionById(session.intentionId) : null
+  const template = session.templateId ? getTemplateById(session.templateId) : null
+  setMediaSessionMetadata({
+    title: intention?.title ?? 'Meditation',
+    artist: template?.hzLabel ?? `${live.beatHz.toFixed(2)} Hz`,
+    album: 'Sravanam',
+  })
+  setMediaSessionHandlers({
+    onPause: () => stopSession(),
+    onStop: () => stopSession(),
+  })
+  setMediaSessionPlaybackState('playing')
+  void acquireWakeLock()
+
   navigate('immersive')
 
   savePrefs({
@@ -145,6 +169,9 @@ export async function startSession(): Promise<void> {
 export function stopSession(): void {
   engine.stop()
   sessionStore.set({ playing: false })
+  setMediaSessionPlaybackState('none')
+  clearMediaSession()
+  void releaseWakeLock()
   navigate('session')
 }
 
