@@ -48,6 +48,14 @@ const DEFAULTS: PersistedPrefs = {
 /** In-memory fallback when localStorage is unavailable or full. */
 let memoryFallback: PersistedPrefs | null = null
 
+function discardStoredPrefs(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch (e) {
+    reportError('persistence:discard', e, { severity: 'warn' })
+  }
+}
+
 function safeGetItem(key: string): string | null {
   try {
     return localStorage.getItem(key)
@@ -117,7 +125,7 @@ function validate(raw: Record<string, unknown>): PersistedPrefs {
     volume:
       typeof raw.volume === 'number' &&
       isFinite(raw.volume) &&
-      raw.volume >= 0.05 &&
+      raw.volume >= 0 &&
       raw.volume <= 1
         ? raw.volume
         : DEFAULTS.volume,
@@ -133,10 +141,14 @@ export function loadPrefs(): PersistedPrefs {
   let parsed: Record<string, unknown>
   try {
     const decoded = JSON.parse(raw) as unknown
-    if (!isRawPrefs(decoded)) return { ...DEFAULTS }
+    if (!isRawPrefs(decoded)) {
+      discardStoredPrefs()
+      return { ...DEFAULTS }
+    }
     parsed = decoded
   } catch (e) {
     reportError('persistence:parse', e, { severity: 'warn', context: { rawLen: raw.length } })
+    discardStoredPrefs()
     return { ...DEFAULTS }
   }
 

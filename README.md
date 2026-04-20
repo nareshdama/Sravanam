@@ -10,6 +10,8 @@ All audio is synthesized live in the browser with the Web Audio API. There are n
 |-----|----------|
 | [User guide](docs/USER_GUIDE.md) | Anyone using the app |
 | [Development](docs/DEVELOPMENT.md) | Contributors — setup, tests, repo layout, before-push checklist |
+| [Production release QA](docs/RELEASE_QA.md) | Release owners — RC gates, manual certification matrix, signoff rules |
+| [Product + architecture QA](docs/PRODUCT_ARCH_QA.md) | Designers and engineers — recurring rubric for product quality and architectural integrity |
 | [Docs index](docs/README.md) | Short map of the docs set |
 | [Contributing](CONTRIBUTING.md) | PR expectations and links |
 | [Rebuild plan](REBUILD-PLAN.md) | Product and architecture history |

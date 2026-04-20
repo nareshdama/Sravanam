@@ -36,11 +36,13 @@ export const INTENTIONS: readonly Intention[] = [
     description: 'Delta waves invite the deepest subconscious reprogramming during sleep.',
     icon: '\u263D', // crescent moon
     brainwaves: ['delta'],
-    defaultTemplateId: 'vedic-delta-seed-0.98',
+    defaultTemplateId: 'vedic-deep-sleep-aum-136.1',
     alternateTemplateIds: [
       'vedic-delta-healing-3',
+      'vedic-aum-drone-136.1',
       'vedic-deep-delta-3.2',
       'vedic-delta-seed-0.5-4',
+      'vedic-delta-seed-0.98',
     ],
     defaultBed: 'om',
     color: '#2a3a5c',
@@ -55,12 +57,14 @@ export const INTENTIONS: readonly Intention[] = [
     description: 'Theta frequencies dissolve stress and open the inner space.',
     icon: '\u2766', // fleuron
     brainwaves: ['theta'],
-    defaultTemplateId: 'vedic-theta-phi-4.84',
+    defaultTemplateId: 'vedic-theta-relax-sa-432',
     alternateTemplateIds: [
+      'vedic-sleep-onset-aum-136.1',
       'vedic-sankalpa-6.32',
       'vedic-theta-aum-7.83',
       'vedic-lipton-theta-6',
       'vedic-sankalpa-theta-4-8',
+      'vedic-theta-phi-4.84',
     ],
     defaultBed: 'om',
     color: '#3d5a47',
@@ -75,12 +79,14 @@ export const INTENTIONS: readonly Intention[] = [
     description: 'Alpha-beta frequencies support sustained concentration and flow.',
     icon: '\u2736', // six-pointed star
     brainwaves: ['alpha', 'beta'],
-    defaultTemplateId: 'vedic-alpha-clarity-10',
+    defaultTemplateId: 'vedic-smr-focus-sa-432',
     alternateTemplateIds: [
+      'vedic-beta-attention-sa-432',
+      'vedic-alpha-clarity-10',
       'vedic-alpha-phi-12.67',
       'vedic-beta-execution-23.49',
-      'vedic-billionaire-brain-10',
       'vedic-beta-execution-12-30',
+      'vedic-billionaire-brain-10',
     ],
     defaultBed: 'off',
     color: '#8b6914',
@@ -95,8 +101,9 @@ export const INTENTIONS: readonly Intention[] = [
     description: 'Gamma frequencies unlock peak cognition and visionary thinking.',
     icon: '\u26A1', // lightning bolt
     brainwaves: ['gamma', 'beta'],
-    defaultTemplateId: 'vedic-spanda-power-40',
+    defaultTemplateId: 'vedic-fortune-gate-dha-720',
     alternateTemplateIds: [
+      'vedic-spanda-power-40',
       'vedic-beta-sharp-33.18',
       'vedic-gamma-ashta-62.64',
       'vedic-gamma-sovereignty-30-100',
@@ -134,10 +141,10 @@ export const INTENTIONS: readonly Intention[] = [
     description: 'Activating-carrier practice paired with heart-centered breath.',
     icon: '\u2665', // heart
     brainwaves: ['alpha'],
-    defaultTemplateId: 'vedic-agni-transformation-528',
+    defaultTemplateId: 'vedic-heart-bridge-pa-648',
     alternateTemplateIds: [
+      'vedic-agni-transformation-528',
       'vedic-lakshmi-nada-432',
-      'vedic-heart-bridge-pa-648',
       'vedic-manifestation-stack-432-528',
     ],
     defaultBed: 'om',

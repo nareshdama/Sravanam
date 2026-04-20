@@ -17,8 +17,12 @@ export function createStore<T extends object>(
   let state: T = { ...initial }
   const listeners = new Set<Listener<T>>()
 
+  function snapshot(): Readonly<T> {
+    return Object.freeze({ ...state })
+  }
+
   function notify(): void {
-    const frozen = Object.freeze({ ...state })
+    const frozen = snapshot()
     for (const fn of listeners) {
       fn(frozen)
     }
@@ -26,7 +30,7 @@ export function createStore<T extends object>(
 
   return {
     get(): Readonly<T> {
-      return state
+      return snapshot()
     },
 
     set(partial: Partial<T>): void {

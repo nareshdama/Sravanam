@@ -162,6 +162,41 @@ describe('BinauralEngine', () => {
     engine.stop()
   })
 
+  it('guide-calibrated presets preserve left/right/delta channel math', async () => {
+    const guideCases = [
+      ['vedic-deep-sleep-aum-136.1', 136.1, 3],
+      ['vedic-theta-aum-7.83', 432, 7.83],
+      ['vedic-heart-bridge-pa-648', 648, 10],
+      ['vedic-fortune-gate-dha-720', 720, 40],
+      ['vedic-brahmarandhra-crown-ni-810', 810, 7.83],
+      ['vedic-aishwarya-octave-864', 864, 8],
+    ] as const
+
+    for (const [id, expectedCarrierHz, expectedBeatHz] of guideCases) {
+      const template = getTemplateById(id)!
+      const resolved = resolveTemplateFrequencies(template)
+      const { factory, oscillators } = createMockAudioContextFactory(48_000)
+      const engine = new BinauralEngine(factory)
+      engine.setCarrierHz(resolved.carrierHz)
+      engine.setBeatHz(resolved.beatHz)
+      await engine.start()
+
+      expect(resolved.carrierHz, id).toBeCloseTo(expectedCarrierHz, 8)
+      expect(resolved.beatHz, id).toBeCloseTo(expectedBeatHz, 8)
+      expect(oscillators[0]!.frequency.value, id).toBeCloseTo(expectedCarrierHz, 8)
+      expect(oscillators[1]!.frequency.value, id).toBeCloseTo(
+        expectedCarrierHz + expectedBeatHz,
+        8,
+      )
+      expect(
+        oscillators[1]!.frequency.value - oscillators[0]!.frequency.value,
+        id,
+      ).toBeCloseTo(expectedBeatHz, 8)
+
+      engine.stop()
+    }
+  })
+
   it('exposes audio clock and playback start time while running', async () => {
     const { factory } = createMockAudioContextFactory(48_000)
     const engine = new BinauralEngine(factory)
@@ -324,6 +359,16 @@ describe('BinauralEngine', () => {
       expect(isFinite(limits.maxBeatHz)).toBe(true)
       expect(limits.maxBeatHz).toBeGreaterThanOrEqual(0)
       expect(limits.sampleRate).toBe(48_000)
+    }
+  })
+
+  it('clampBinauralFrequencies returns finite defaults for NaN and Infinity inputs', () => {
+    for (const bad of [NaN, Infinity, -Infinity]) {
+      const clamped = clampBinauralFrequencies(48_000, bad, bad)
+      expect(isFinite(clamped.carrierHz)).toBe(true)
+      expect(isFinite(clamped.beatHz)).toBe(true)
+      expect(clamped.carrierHz).toBeGreaterThan(0)
+      expect(clamped.beatHz).toBeGreaterThanOrEqual(0)
     }
   })
 

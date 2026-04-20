@@ -8,7 +8,7 @@ npm run check
 
 Runs `npm run build` (TypeScript + Vite) then `npm run test` (Vitest). Same commands execute in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
-**End-to-end smoke (optional, requires one-time browser install):**
+**End-to-end smoke (required for release candidates, requires one-time browser install):**
 
 ```bash
 npx playwright install chromium
@@ -18,6 +18,10 @@ npm run test:e2e
 This builds the app, serves `vite preview`, and runs [e2e/smoke.spec.ts](e2e/smoke.spec.ts) (main p5 canvas `#beat-viz canvas.p5Canvas` — p5 can add extra offscreen canvases).
 
 After `npm run check`, you can run E2E without rebuilding: `npm run test:e2e:only` (requires `dist/` from a prior build).
+
+For the full production release workflow, platform certification matrix, and signoff rules, use [docs/RELEASE_QA.md](docs/RELEASE_QA.md).
+
+For recurring product-design and architecture review on major changes, use [docs/PRODUCT_ARCH_QA.md](docs/PRODUCT_ARCH_QA.md).
 
 ## Unit test coverage
 
@@ -33,7 +37,11 @@ After `npm run check`, you can run E2E without rebuilding: `npm run test:e2e:onl
 
 ## Manual checklist (browser)
 
-Use `npm run dev`, DevTools **Console** (errors) and **Network** (failed chunks).
+Use `npm run dev` for local bug-finding, plus DevTools **Console** (errors) and **Network** (failed chunks).
+
+For production release QA, use `npm run preview` instead. PWA, caching, install prompts, and offline behavior are only representative in the production build. See [docs/RELEASE_QA.md](docs/RELEASE_QA.md).
+
+If the change is structurally important, pair this bug-finding checklist with the recurring rubric in [docs/PRODUCT_ARCH_QA.md](docs/PRODUCT_ARCH_QA.md).
 
 ### Visualization (`#beat-viz`, p5)
 

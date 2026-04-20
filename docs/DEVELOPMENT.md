@@ -30,6 +30,8 @@ npm run check
 
 - `npm run dev` starts the Vite dev server at `http://localhost:5173`
 - `npm run check` runs the recommended local quality gate before push
+- production release certification lives in [RELEASE_QA.md](RELEASE_QA.md)
+- recurring product-design and architecture review lives in [PRODUCT_ARCH_QA.md](PRODUCT_ARCH_QA.md)
 
 ## Project Layout
 
@@ -82,6 +84,10 @@ npm run check
 npm run test:e2e
 ```
 
+For release candidates, use the full production QA workflow in [RELEASE_QA.md](RELEASE_QA.md), including `npm run preview`, platform certification, and signoff evidence capture.
+
+For major product, flow, or architecture changes, also run the recurring rubric in [PRODUCT_ARCH_QA.md](PRODUCT_ARCH_QA.md).
+
 ## Architecture Notes
 
 - Audio is synthesized in-browser with the Web Audio API.
@@ -97,6 +103,36 @@ npm run test:e2e
 2. Run `npm run test:e2e` if you changed navigation, audio, or immersive flow
 3. Review `git status`
 4. Update docs when behavior or architecture changed
+
+## Production Release QA
+
+Release candidates use a stricter workflow than normal before-push checks.
+
+- Required automated gates:
+  - `npm run check`
+  - `npm run test:e2e`
+- Required release approval signal:
+  - green CI on Node 22
+- Required manual certification:
+  - Chrome desktop full pass
+  - Safari on iPhone full pass
+  - lighter spot checks on secondary browsers when available
+
+Use [RELEASE_QA.md](RELEASE_QA.md) as the source of truth for release stages, blocking rules, and signoff evidence.
+
+## Product Design And Architectural QA
+
+Major changes should be reviewed for both user experience quality and architectural integrity.
+
+Use [PRODUCT_ARCH_QA.md](PRODUCT_ARCH_QA.md) when the change affects:
+
+- screen flow or content hierarchy
+- state or routing behavior
+- audio lifecycle or immersive mode
+- design tokens, motion, or interaction patterns
+- PWA or runtime shell behavior
+
+Use [PRODUCT_ARCH_QA_TEMPLATE.md](PRODUCT_ARCH_QA_TEMPLATE.md) to record the scorecard, findings, owners, and signoff.
 
 ## Troubleshooting
 

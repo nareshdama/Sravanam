@@ -99,11 +99,16 @@ function closeContextSafely(ctx: AudioContext, scope: string, context?: Record<s
 
 const NYQUIST_FACTOR = 0.49
 
+function sanitizeFiniteHz(value: number, fallback: number): number {
+  return isFinite(value) ? value : fallback
+}
+
 export function getBinauralLimits(
   sampleRate: number,
   carrierHz: number,
 ): BinauralLimits {
   if (!isFinite(sampleRate) || sampleRate <= 0) sampleRate = 48_000
+  carrierHz = sanitizeFiniteHz(carrierHz, DEFAULT_CARRIER)
   const nq = nyquist(sampleRate) * NYQUIST_FACTOR
   const minCarrierHz = 1
   const maxCarrierHz = Math.max(minCarrierHz, nq - 1e-6)
@@ -124,6 +129,8 @@ export function clampBinauralFrequencies(
   carrierHz: number,
   beatHz: number,
 ): { carrierHz: number; beatHz: number } {
+  carrierHz = sanitizeFiniteHz(carrierHz, DEFAULT_CARRIER)
+  beatHz = sanitizeFiniteHz(beatHz, DEFAULT_BEAT)
   const lim = getBinauralLimits(sampleRate, carrierHz)
   const c = Math.min(Math.max(carrierHz, lim.minCarrierHz), lim.maxCarrierHz)
   const lim2 = getBinauralLimits(sampleRate, c)

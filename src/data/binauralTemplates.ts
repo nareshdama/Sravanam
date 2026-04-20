@@ -132,9 +132,9 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     id: 'theta-7.83',
     hzLabel: '7.83 Hz',
     brainwave: 'theta',
-    useCase: 'Movement practice',
+    useCase: 'Meditative anchor',
     effect:
-      'Schumann resonances are a real geophysical ELF phenomenon in the Earth–ionosphere cavity; headphone binaural tones are not that electromagnetic signal — only a popular analogy. Not grounding therapy or medical care.',
+      'OM-mode meditative anchor at the Schumann reference frequency. Schumann resonances are a real geophysical ELF phenomenon in the Earth–ionosphere cavity; headphone binaural tones are not that electromagnetic signal — only a popular analogy. Not grounding therapy or medical care.',
     beatHzMin: 7.83,
     beatHzMax: 7.83,
     defaultBeatHz: 7.83,
@@ -192,9 +192,9 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     id: 'beta-20',
     hzLabel: '20 Hz',
     brainwave: 'beta',
-    useCase: 'Focus',
+    useCase: 'Beta attention mode',
     effect:
-      'May feel more alert or “woken up” for some people during active thinking — subjective and short sessions are prudent.',
+      'Defensible beta-band target for active attention. May feel more alert or “woken up” for some people during active thinking — subjective and short sessions are prudent.',
     beatHzMin: 20,
     beatHzMax: 20,
     defaultBeatHz: 20,

@@ -1,8 +1,10 @@
 /**
- * 32 Vedic frequencies with rich metadata (sources, chakras, mantras, breathing patterns, postures).
+ * 37 Vedic frequencies with rich metadata (sources, chakras, mantras, breathing patterns, postures).
  * Carriers use the authentic Saptaswar/Natya Shastra just-intonation grid at Sa=432:
  *   Sa 432, Ri 486, Ga 540, Ma 576, Pa 648, Dha 720, Ni 810, SA-octave 864.
  * Plus 136.1 Hz (AUM M-kara drone, Mandukya Upanishad) and 200 Hz default binaural carrier.
+ * Guide-calibrated presets keep the app model explicit: left = carrier, right = carrier + beat,
+ * and the perceived binaural difference = beat.
  * 528 Hz and 480 Hz are retained as sound-design carriers with explicit non-Vedic framing.
  * Complements the 14 existing binaural templates.
  */
@@ -992,6 +994,151 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     practiceNotes:
       'Room speaker at low volume; lie down 20 min before sleep; let the drone carry attention into the M-kara hum and on into Prajna.',
     timeOfDay: 'Pre-sleep; night-long drone',
+  },
+  {
+    id: 'vedic-deep-sleep-aum-136.1',
+    hzLabel: '136.1 Hz · 3 Hz δ',
+    brainwave: 'delta',
+    useCase: 'Guide-calibrated deep sleep; delta repair with AUM drone support',
+    effect:
+      "Deep Sleep — the guide pairs a 3 Hz delta target with the 136.1 Hz M-kara drone for the clearest sleep-oriented carrier + beat preset in the app.",
+    beatHzMin: 3,
+    beatHzMax: 3,
+    defaultBeatHz: 3,
+    recommendedCarrierHz: 136.1,
+    vedicSources: [
+      { text: 'Mandukya Upanishad', verse: 'M-kara / Prajna state', tradition: 'Advaita' },
+      { text: 'Charaka Samhita', tradition: 'Ayurveda' },
+    ],
+    vedaVerification:
+      "This preset encodes the guide's exact deep-sleep calibration: carrierHz = 136.1 and beatHz = 3, so the engine should render left = 136.1 Hz, right = 139.1 Hz, and Δ = 3 Hz.",
+    postures: ['Shavasana — flat on back, arms at sides, palms up'],
+    mantras: ['AUM — let the M-kara hum soften into sleep'],
+    breathingPattern: {
+      name: 'Slow sleep breath',
+      inhaleSec: 4,
+      holdSec: 0,
+      exhaleSec: 6,
+    },
+    practiceNotes:
+      'Use 20–30 min before sleep with low volume. This keeps the guide pairing explicit instead of defaulting the 3 Hz beat to the generic 200 Hz carrier.',
+    timeOfDay: 'Pre-sleep',
+  },
+  {
+    id: 'vedic-theta-relax-sa-432',
+    hzLabel: '432 Hz · 5 Hz θ',
+    brainwave: 'theta',
+    useCase: 'Guide-calibrated relaxation; evening decompression',
+    effect:
+      "Theta Relaxation — the guide's 5 Hz unwind target carried by Sa at 432 Hz for grounded decompression before meditation or sleep.",
+    beatHzMin: 5,
+    beatHzMax: 5,
+    defaultBeatHz: 5,
+    recommendedCarrierHz: 432,
+    vedicSources: [
+      { text: 'Gandharva Veda', tradition: 'Vedic music' },
+      { text: 'Vastu Shastra', tradition: 'Sacred geometry' },
+    ],
+    vedaVerification:
+      "The guide rounds the relaxation target to 5 Hz and treats 432 Hz as the grounding tonic. In app terms the preset resolves to left = 432 Hz, right = 437 Hz, and Δ = 5 Hz.",
+    postures: ['Sukhasana or upright chair posture'],
+    mantras: ['So Hum — inhale "So", exhale "Hum"'],
+    breathingPattern: {
+      name: 'Evening unwind breath',
+      inhaleSec: 4,
+      holdSec: 0,
+      exhaleSec: 5,
+    },
+    practiceNotes:
+      'Use for evening wind-down, breathwork, or post-work decompression. Keep the tone low and let the 5 Hz pulse pace the session.',
+    timeOfDay: 'Evening',
+  },
+  {
+    id: 'vedic-sleep-onset-aum-136.1',
+    hzLabel: '136.1 Hz · 6 Hz θ',
+    brainwave: 'theta',
+    useCase: 'Guide-calibrated sleep onset; NSDR and body scan',
+    effect:
+      "Sleep-Onset Meditation — the guide's 6 Hz hypnagogic target paired with the 136.1 Hz AUM drone for reclined meditation and NSDR.",
+    beatHzMin: 6,
+    beatHzMax: 6,
+    defaultBeatHz: 6,
+    recommendedCarrierHz: 136.1,
+    vedicSources: [
+      { text: 'Mandukya Upanishad', verse: 'M-kara / Prajna state', tradition: 'Advaita' },
+      { text: 'Rigveda', verse: '4 levels of Vak', tradition: 'Vedic' },
+    ],
+    vedaVerification:
+      "The guide recommends the 136.1 Hz drone beneath the 6 Hz upper-theta target. This preset encodes that exact pair so the app no longer falls back to a generic carrier for the sleep-onset use case.",
+    postures: ['Shavasana or reclined NSDR posture'],
+    mantras: ['AUM — one chant, then listen'],
+    breathingPattern: {
+      name: 'Body-scan breath',
+      inhaleSec: 4,
+      holdSec: 0,
+      exhaleSec: 6,
+    },
+    practiceNotes:
+      'Use for body-scan meditation, NSDR, or guided visualization. The binaural target stays 6 Hz while the carrier remains anchored to the low AUM drone.',
+    timeOfDay: 'Evening or pre-sleep',
+  },
+  {
+    id: 'vedic-smr-focus-sa-432',
+    hzLabel: '432 Hz · 12.5 Hz SMR',
+    brainwave: 'alpha-beta',
+    useCase: 'Guide-calibrated focused calm; studying and deep work',
+    effect:
+      "SMR Focus — the guide's 12.5 Hz sensorimotor rhythm target anchored to 432 Hz for steady, alert concentration.",
+    beatHzMin: 12.5,
+    beatHzMax: 12.5,
+    defaultBeatHz: 12.5,
+    recommendedCarrierHz: 432,
+    vedicSources: [
+      { text: 'Gandharva Veda', tradition: 'Vedic music' },
+      { text: 'Vastu Shastra', tradition: 'Sacred geometry' },
+    ],
+    vedaVerification:
+      "This preset encodes the guide's exact SMR pairing: carrierHz = 432 and beatHz = 12.5, which the engine renders as left = 432 Hz, right = 444.5 Hz, and Δ = 12.5 Hz.",
+    postures: ['Upright seated posture; shoulders relaxed; feet grounded'],
+    mantras: ['Om Gam Ganapataye Namaha — silent pre-session invocation'],
+    breathingPattern: {
+      name: 'Steady focus breath',
+      inhaleSec: 4,
+      holdSec: 0,
+      exhaleSec: 4,
+    },
+    practiceNotes:
+      'Use for study, coding, reading, or any still-body / active-mind session. Leave Advanced Tuning as an override rather than the default path.',
+    timeOfDay: 'Work sessions',
+  },
+  {
+    id: 'vedic-beta-attention-sa-432',
+    hzLabel: '432 Hz · 20 Hz β',
+    brainwave: 'beta',
+    useCase: 'Guide-calibrated alert attention; active tasks and decisions',
+    effect:
+      "Beta Attention — the guide's clean 20 Hz beta target paired with 432 Hz Sa for active outward focus without pushing into harsher high-beta territory.",
+    beatHzMin: 20,
+    beatHzMax: 20,
+    defaultBeatHz: 20,
+    recommendedCarrierHz: 432,
+    vedicSources: [
+      { text: 'Bhagavad Gita', verse: 'Ch. 3 — Karma Yoga', tradition: 'Yoga' },
+      { text: 'Gandharva Veda', tradition: 'Vedic music' },
+    ],
+    vedaVerification:
+      "The guide defines beta attention at 20 Hz. This preset keeps that exact beat with a 432 Hz anchor, so the live readout should show left = 432 Hz, right = 452 Hz, and Δ = 20 Hz.",
+    postures: ['Seated at desk or standing prep posture before action'],
+    mantras: ['Kriyat Shakti Pradayini — silent invocation of action-power'],
+    breathingPattern: {
+      name: 'Active attention breath',
+      inhaleSec: 4,
+      holdSec: 1,
+      exhaleSec: 4,
+    },
+    practiceNotes:
+      'Use before active tasks, exercise, or decision-making. If it feels too activating, step back to the 12.5 Hz SMR preset.',
+    timeOfDay: 'Daytime active work',
   },
 ] as const
 

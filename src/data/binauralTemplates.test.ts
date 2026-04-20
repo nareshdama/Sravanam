@@ -15,8 +15,8 @@ describe('binauralTemplates', () => {
     expect(BINAURAL_TEMPLATES).toHaveLength(14)
   })
 
-  it('combined library has 46 total templates (14 existing + 32 Vedic)', () => {
-    expect(getAllTemplates()).toHaveLength(46)
+  it('combined library has 51 total templates (14 existing + 37 Vedic)', () => {
+    expect(getAllTemplates()).toHaveLength(51)
   })
 
   it('each template default beat lies within its band', () => {
@@ -80,16 +80,37 @@ describe('combined template library (existing + Vedic)', () => {
     expect(getTemplateById('nonexistent-template')).toBeUndefined()
   })
 
-  it('all 46 templates have unique IDs', () => {
+  it('all 51 templates have unique IDs', () => {
     const all = getAllTemplates()
     const ids = all.map((t) => t.id)
-    expect(new Set(ids).size).toBe(46)
+    expect(new Set(ids).size).toBe(51)
   })
 
-  it('all 46 templates have valid default beat frequencies', () => {
+  it('all 51 templates have valid default beat frequencies', () => {
     for (const t of getAllTemplates()) {
       expect(t.defaultBeatHz).toBeGreaterThanOrEqual(t.beatHzMin - 1e-9)
       expect(t.defaultBeatHz).toBeLessThanOrEqual(t.beatHzMax + 1e-9)
+    }
+  })
+
+  it('guide-calibrated presets resolve to the exact carrier + beat pairs from the document', () => {
+    const guidePairs = [
+      ['vedic-deep-sleep-aum-136.1', 136.1, 3],
+      ['vedic-theta-relax-sa-432', 432, 5],
+      ['vedic-sleep-onset-aum-136.1', 136.1, 6],
+      ['vedic-theta-aum-7.83', 432, 7.83],
+      ['vedic-lakshmi-nada-432', 432, 10],
+      ['vedic-smr-focus-sa-432', 432, 12.5],
+      ['vedic-beta-attention-sa-432', 432, 20],
+      ['vedic-fortune-gate-dha-720', 720, 40],
+    ] as const
+
+    for (const [id, carrierHz, beatHz] of guidePairs) {
+      const template = getTemplateById(id)
+      expect(template, id).toBeDefined()
+      const resolved = resolveTemplateFrequencies(template!)
+      expect(resolved.carrierHz, id).toBeCloseTo(carrierHz, 8)
+      expect(resolved.beatHz, id).toBeCloseTo(beatHz, 8)
     }
   })
 

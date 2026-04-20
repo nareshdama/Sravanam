@@ -52,4 +52,15 @@ describe('createStore', () => {
     expect(a).toHaveBeenCalledTimes(1)
     expect(b).toHaveBeenCalledTimes(1)
   })
+
+  it('returns an immutable snapshot from get()', () => {
+    const store = createStore({ count: 1 })
+    const snapshot = store.get()
+
+    expect(Object.isFrozen(snapshot)).toBe(true)
+    expect(() => {
+      ;(snapshot as { count: number }).count = 9
+    }).toThrow()
+    expect(store.get().count).toBe(1)
+  })
 })

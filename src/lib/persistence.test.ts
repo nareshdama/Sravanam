@@ -69,6 +69,16 @@ describe('persistence', () => {
     })
   })
 
+  it('preserves a muted volume across save and reload', () => {
+    savePrefs({
+      volume: 0,
+      carrierHz: 180,
+      beatHz: 6,
+    })
+
+    expect(loadPrefs().volume).toBe(0)
+  })
+
   it('merges partial saves with previous values', () => {
     savePrefs({ carrierHz: 220, volume: 0.5 })
     savePrefs({ beatHz: 7.83 })
@@ -80,6 +90,13 @@ describe('persistence', () => {
   it('ignores invalid JSON and returns defaults', () => {
     localStorage.setItem('sravanam_prefs', '{not json')
     expect(loadPrefs().bedId).toBe('off')
+    expect(localStorage.getItem('sravanam_prefs')).toBeNull()
+  })
+
+  it('discards non-object stored values and returns defaults', () => {
+    localStorage.setItem('sravanam_prefs', JSON.stringify('not-an-object'))
+    expect(loadPrefs().bedId).toBe('off')
+    expect(localStorage.getItem('sravanam_prefs')).toBeNull()
   })
 
   it('sanitizes unknown bedId and wave values', () => {

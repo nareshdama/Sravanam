@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { VEDIC_FREQUENCIES, getVedicFrequencyById } from './vedicFrequencies'
 
 describe('vedicFrequencies', () => {
-  it('has exactly 32 Vedic frequency entries', () => {
-    expect(VEDIC_FREQUENCIES).toHaveLength(32)
+  it('has exactly 37 Vedic frequency entries', () => {
+    expect(VEDIC_FREQUENCIES).toHaveLength(37)
   })
 
   it('all entries have unique IDs', () => {
@@ -120,5 +120,22 @@ describe('vedicFrequencies', () => {
   it('all entries have practice notes for guidance', () => {
     const withNotes = VEDIC_FREQUENCIES.filter((f) => f.practiceNotes)
     expect(withNotes.length).toBeGreaterThan(10)
+  })
+
+  it('includes guide-calibrated exact carrier + beat presets', () => {
+    const exactGuidePresets = [
+      ['vedic-deep-sleep-aum-136.1', 136.1, 3],
+      ['vedic-theta-relax-sa-432', 432, 5],
+      ['vedic-sleep-onset-aum-136.1', 136.1, 6],
+      ['vedic-smr-focus-sa-432', 432, 12.5],
+      ['vedic-beta-attention-sa-432', 432, 20],
+    ] as const
+
+    for (const [id, carrierHz, beatHz] of exactGuidePresets) {
+      const preset = getVedicFrequencyById(id)
+      expect(preset, id).toBeDefined()
+      expect(preset?.recommendedCarrierHz, id).toBeCloseTo(carrierHz, 8)
+      expect(preset?.defaultBeatHz, id).toBeCloseTo(beatHz, 8)
+    }
   })
 })

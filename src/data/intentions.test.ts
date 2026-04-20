@@ -27,7 +27,7 @@ describe('intentions', () => {
     const sleep = getIntentionById('deep-sleep')
     expect(sleep).toBeDefined()
     expect(sleep!.title).toBe('Deep Sleep')
-    expect(sleep!.defaultTemplateId).toBe('vedic-delta-seed-0.98')
+    expect(sleep!.defaultTemplateId).toBe('vedic-deep-sleep-aum-136.1')
   })
 
   it('getIntentionById returns undefined for unknown', () => {
@@ -39,9 +39,9 @@ describe('intentions', () => {
   it('getIntentionTemplateIds includes default + alternates', () => {
     const focus = getIntentionById('focus')!
     const ids = getIntentionTemplateIds(focus)
-    expect(ids[0]).toBe('vedic-alpha-clarity-10')
+    expect(ids[0]).toBe('vedic-smr-focus-sa-432')
+    expect(ids).toContain('vedic-beta-attention-sa-432')
     expect(ids).toContain('vedic-alpha-phi-12.67')
-    expect(ids).toContain('vedic-beta-execution-23.49')
 
     const spiritual = getIntentionById('spiritual')!
     expect(getIntentionTemplateIds(spiritual)).toContain('vedic-parabrahman-octave-864')
