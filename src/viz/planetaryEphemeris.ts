@@ -75,8 +75,35 @@ export function formatPlanetPanelText(snapshots: PlanetSnapshot[]): string {
     .join('\n')
 }
 
+/**
+ * astronomy-engine's GeoVector + Ecliptic is ~1–2 ms per body on a phone.
+ * 9 bodies × several call-sites (2s panel tick + per-frame smoother) can
+ * exceed a frame budget. Planetary positions change slowly enough that a
+ * minute-granularity cache is visually identical to live values; consumers
+ * that need higher resolution pass an explicit Date.
+ */
+const EPHEMERIS_CACHE_MS = 60_000
+const snapshotCache = new Map<number, PlanetSnapshot[]>()
+const SNAPSHOT_CACHE_MAX = 8 // ~8 minutes of history worth of entries
+const CURRENT_EPHEMERIS_THROTTLE_MS = 2_000
+
+let currentSnapshotCache:
+  | {
+      atMs: number
+      snapshots: PlanetSnapshot[]
+    }
+  | null = null
+
+function cacheBucket(date: Date): number {
+  return Math.floor(date.getTime() / EPHEMERIS_CACHE_MS)
+}
+
 export function getPlanetSnapshots(date: Date = new Date()): PlanetSnapshot[] {
-  return VIZ_PLANETS.map((p) => {
+  const bucket = cacheBucket(date)
+  const cached = snapshotCache.get(bucket)
+  if (cached) return cached
+
+  const snapshots = VIZ_PLANETS.map((p) => {
     const lonDeg = geocentricEclipticLongitude(p.body, date)
     const { sign, deg, min } = tropicalZodiacFromLongitude(lonDeg)
     return {
@@ -89,6 +116,32 @@ export function getPlanetSnapshots(date: Date = new Date()): PlanetSnapshot[] {
       minInSign: min,
     }
   })
+
+  snapshotCache.set(bucket, snapshots)
+  if (snapshotCache.size > SNAPSHOT_CACHE_MAX) {
+    // Evict the oldest bucket (Maps preserve insertion order).
+    const oldestKey = snapshotCache.keys().next().value
+    if (oldestKey !== undefined) snapshotCache.delete(oldestKey)
+  }
+  return snapshots
+}
+
+/**
+ * Shared "live now" ephemeris snapshot for UI/visual consumers.
+ * Planetary motion is slow enough that reusing a snapshot for ~2s is visually
+ * indistinguishable while avoiding repeated wall-clock lookups across loops.
+ */
+export function getCurrentPlanetSnapshots(now: Date = new Date()): PlanetSnapshot[] {
+  const atMs = now.getTime()
+  if (currentSnapshotCache && atMs - currentSnapshotCache.atMs < CURRENT_EPHEMERIS_THROTTLE_MS) {
+    return currentSnapshotCache.snapshots
+  }
+  const snapshots = getPlanetSnapshots(now)
+  currentSnapshotCache = {
+    atMs,
+    snapshots,
+  }
+  return snapshots
 }
 
 /** Canvas angle (radians): 0° Aries at top, zodiac runs counterclockwise. */

@@ -14,6 +14,7 @@
  */
 
 import type { SoundLibraryMode } from '../data/vedicSoundLibrary'
+import { reportError } from '../lib/errorReport'
 
 export type BinauralWaveType = OscillatorType
 
@@ -67,8 +68,33 @@ const LIBRARY_GAIN: Record<Exclude<SoundLibraryMode, 'off'>, number> = {
 const COSMIC_BUFFER_SECONDS = 4
 const MAX_COSMIC_BUFFER_FRAMES = 480_000
 
+/**
+ * Cache the raw random samples keyed by frame count.
+ * A 4s buffer at 48kHz = 192,000 floats filled via Math.random in a hot loop —
+ * regenerating per session is ~8–15 ms on a mid-tier phone. Cache it.
+ * We cache the Float32Array (not the AudioBuffer) because AudioBuffers are
+ * bound to a specific AudioContext and cannot be reused across contexts.
+ */
+const cosmicNoiseSampleCache = new Map<number, Float32Array>()
+
+function getCosmicNoiseSamples(frames: number): Float32Array {
+  const cached = cosmicNoiseSampleCache.get(frames)
+  if (cached) return cached
+  const samples = new Float32Array(frames)
+  for (let i = 0; i < frames; i++) samples[i] = Math.random() * 2 - 1
+  cosmicNoiseSampleCache.set(frames, samples)
+  return samples
+}
+
 function nyquist(sr: number): number {
   return sr / 2
+}
+
+function closeContextSafely(ctx: AudioContext, scope: string, context?: Record<string, unknown>): void {
+  if (ctx.state === 'closed') return
+  void ctx.close().catch((e) => {
+    reportError(scope, e, { severity: 'warn', context })
+  })
 }
 
 const NYQUIST_FACTOR = 0.49
@@ -222,7 +248,9 @@ export class BinauralEngine {
   /** Resume a suspended AudioContext — must be called inside a user gesture on iOS Safari. */
   resumeContext(): void {
     if (this.context && this.context.state !== 'running') {
-      void this.context.resume().catch(() => {})
+      void this.context.resume().catch((e) => {
+        reportError('audio:resumeContext', e, { severity: 'warn' })
+      })
     }
   }
 
@@ -257,21 +285,23 @@ export class BinauralEngine {
     this.context = ctx
     try {
       await ctx.resume()
-    } catch {
+    } catch (e) {
+      reportError('audio:start', e, {
+        severity: 'warn',
+        context: { state: ctx.state, reason: 'resume-rejected' },
+      })
       this.startingUp = false
       if (this.context === ctx) {
         this.teardown(ctx)
-      } else if (ctx.state !== 'closed') {
-        void ctx.close().catch(() => {})
+      } else {
+        closeContextSafely(ctx, 'audio:closeAfterFailedStart', { state: ctx.state })
       }
       throw new Error('AudioContext could not start — tap anywhere on the page first, then try again.')
     }
 
     // `stop()` may have run while `resume()` was pending.
     if (this.context !== ctx) {
-      if (ctx.state !== 'closed') {
-        void ctx.close().catch(() => {})
-      }
+      closeContextSafely(ctx, 'audio:closeAfterInterruptedStart', { state: ctx.state })
       throw new Error('Audio start was interrupted. Please try again.')
     }
 
@@ -363,8 +393,11 @@ export class BinauralEngine {
           return
         }
         if (document.visibilityState === 'visible') {
-          void ctx.resume().catch(() => {
-            /* autoplay / policy */
+          void ctx.resume().catch((e) => {
+            reportError('audio:resumeOnVisibility', e, {
+              severity: 'warn',
+              context: { state: ctx.state },
+            })
           })
         }
       }
@@ -381,7 +414,12 @@ export class BinauralEngine {
         if (st === 'suspended' || st === 'interrupted') {
           this.onSuspended?.()
           if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return
-          void ctx.resume().catch(() => {})
+          void ctx.resume().catch((e) => {
+            reportError('audio:resumeOnStateChange', e, {
+              severity: 'warn',
+              context: { state: st },
+            })
+          })
         } else if (st === 'running') {
           this.onResumed?.()
         }
@@ -441,7 +479,7 @@ export class BinauralEngine {
     this.libraryGain = null
     this.masterGain = null
     if (closeContext && closeContext.state !== 'closed') {
-      void closeContext.close()
+      closeContextSafely(closeContext, 'audio:teardownCloseContext', { state: closeContext.state })
     }
     this.context = null
     this.playbackStartTime = null
@@ -552,10 +590,7 @@ export class BinauralEngine {
         MAX_COSMIC_BUFFER_FRAMES,
       )
       const buffer = ctx.createBuffer(1, frames, ctx.sampleRate)
-      const ch = buffer.getChannelData(0)
-      for (let i = 0; i < frames; i++) {
-        ch[i] = Math.random() * 2 - 1
-      }
+      buffer.getChannelData(0).set(getCosmicNoiseSamples(frames))
       const src = ctx.createBufferSource()
       src.buffer = buffer
       src.loop = true

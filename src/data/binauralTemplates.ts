@@ -227,6 +227,7 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
 
 // Build index map for O(1) lookup across both existing and Vedic frequencies
 const TEMPLATE_INDEX = new Map<string, BinauralTemplate>()
+const RESOLVED_TEMPLATE_CACHE = new Map<string, ResolvedTemplateFrequencies>()
 
 // Initialize with existing templates
 BINAURAL_TEMPLATES.forEach((t) => TEMPLATE_INDEX.set(t.id, t))
@@ -240,6 +241,7 @@ export function getTemplateById(id: string): BinauralTemplate | undefined {
 
 export function registerTemplate(template: BinauralTemplate): void {
   TEMPLATE_INDEX.set(template.id, template)
+  RESOLVED_TEMPLATE_CACHE.clear()
 }
 
 export function getAllTemplates(): BinauralTemplate[] {
@@ -287,9 +289,15 @@ export function resolveTemplateFrequencies(
       ? Math.min(Math.max(optBeat, template.beatHzMin), template.beatHzMax)
       : template.defaultBeatHz
 
-  return {
+  const cacheKey = `${template.id}|${carrierHz}|${rawBeat}`
+  const cached = RESOLVED_TEMPLATE_CACHE.get(cacheKey)
+  if (cached) return cached
+
+  const resolved = {
     templateId: template.id,
     carrierHz,
     beatHz: rawBeat,
   }
+  RESOLVED_TEMPLATE_CACHE.set(cacheKey, resolved)
+  return resolved
 }

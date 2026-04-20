@@ -1,5 +1,5 @@
 import p5 from 'p5'
-import { formatPlanetPanelText, getPlanetSnapshots } from './planetaryEphemeris'
+import { formatPlanetPanelText, getCurrentPlanetSnapshots } from './planetaryEphemeris'
 
 const PHI = 1.618033988749
 const CHAKRA: [number, number, number][] = [
@@ -207,7 +207,7 @@ export function createVedicCosmicFlower(options: {
         const now = p.millis()
         if (now - lastPanelMs > 900) {
           lastPanelMs = now
-          planetPanel.textContent = formatPlanetPanelText(getPlanetSnapshots(new Date()))
+          planetPanel.textContent = formatPlanetPanelText(getCurrentPlanetSnapshots())
         }
       }
 

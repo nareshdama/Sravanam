@@ -734,6 +734,15 @@ input[type='range']::-moz-range-thumb {
   animation: pwa-banner-in 0.36s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.pwa-banner--top {
+  bottom: auto;
+  top: max(env(safe-area-inset-top, 0px), var(--space-3));
+}
+
+.pwa-banner--bottom {
+  top: auto;
+}
+
 .pwa-banner__text {
   flex: 1;
   min-width: 0;
@@ -771,6 +780,35 @@ input[type='range']::-moz-range-thumb {
 
 .pwa-banner__dismiss:hover,
 .pwa-banner__dismiss:focus-visible { opacity: 1; }
+
+.pwa-banner--offline {
+  opacity: 0.88;
+  font-size: 0.78rem;
+  padding: var(--space-2) var(--space-4);
+}
+
+.pwa-banner--online {
+  opacity: 0.92;
+  font-size: 0.78rem;
+  padding: var(--space-2) var(--space-4);
+  border-color: rgba(94, 234, 212, 0.3);
+  color: #dcfdf7;
+}
+
+.pwa-banner--error {
+  border-color: rgba(255, 120, 120, 0.35);
+  color: #ffd6d6;
+}
+
+.pwa-banner--error .pwa-banner__btn {
+  border-color: rgba(255, 120, 120, 0.35);
+  background: rgba(255, 120, 120, 0.15);
+}
+
+.pwa-banner--error .pwa-banner__btn:hover,
+.pwa-banner--error .pwa-banner__btn:focus-visible {
+  background: rgba(255, 120, 120, 0.25);
+}
 
 @keyframes pwa-banner-in {
   from { opacity: 0; transform: translate(-50%, 12px); }

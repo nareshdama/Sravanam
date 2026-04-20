@@ -1,5 +1,9 @@
 import type { BinauralEngine } from '../audio/binauralEngine'
-import { getPlanetSnapshots, longitudeToCanvasAngle, type PlanetSnapshot } from './planetaryEphemeris'
+import {
+  getCurrentPlanetSnapshots,
+  longitudeToCanvasAngle,
+  type PlanetSnapshot,
+} from './planetaryEphemeris'
 import { PlanetLongitudeSmoother } from './planetMotion'
 import { drawSriChakra, SRICHAKRA_ROTATION_PERIOD_SEC } from './sriChakraDraw'
 
@@ -433,7 +437,7 @@ export function createBeatVisualization(options: {
       lastWallSec === null ? 1 / 60 : Math.min(0.12, Math.max(1e-4, wallNow - lastWallSec))
     lastWallSec = wallNow
 
-    const raw = getPlanetSnapshots(new Date())
+    const raw = getCurrentPlanetSnapshots()
     const smoothLons = planetSmoother.update(
       raw.map((s) => s.lonDeg),
       dtWall,
@@ -511,7 +515,7 @@ export function createBeatVisualization(options: {
       lastWallSec === null ? 1 / 60 : Math.min(0.12, Math.max(1e-4, wallNow - lastWallSec))
     lastWallSec = wallNow
 
-    const raw = getPlanetSnapshots(new Date())
+    const raw = getCurrentPlanetSnapshots()
     const smoothLons = planetSmoother.update(
       raw.map((s) => s.lonDeg),
       dtWall,
@@ -561,7 +565,7 @@ export function createBeatVisualization(options: {
       lastAudioTime = null
       lastWallSec = null
       sriSpinStartSec = performance.now() / 1000
-      planetSmoother.reset(getPlanetSnapshots(new Date()).map((s) => s.lonDeg))
+      planetSmoother.reset(getCurrentPlanetSnapshots().map((s) => s.lonDeg))
       resize()
       rafId = requestAnimationFrame(loop)
     },

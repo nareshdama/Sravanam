@@ -9,6 +9,8 @@
  *   Graceful no-op on unsupported browsers (Safari < 16.4, Firefox Android).
  */
 
+import { reportError } from '../lib/errorReport'
+
 interface WakeLockSentinelLike {
   release: () => Promise<void>
   addEventListener: (type: string, cb: () => void) => void
@@ -45,8 +47,8 @@ export function setMediaSessionMetadata(meta: SessionMetadata): void {
       album: meta.album ?? 'Sravanam',
       artwork: meta.artwork ?? DEFAULT_ARTWORK,
     })
-  } catch {
-    /* older browsers */
+  } catch (e) {
+    reportError('mediaSession:metadata', e, { severity: 'warn' })
   }
 }
 
@@ -57,8 +59,8 @@ export function setMediaSessionHandlers(handlers: MediaSessionHandlers): void {
     navigator.mediaSession.setActionHandler('play', handlers.onPlay ?? null)
     navigator.mediaSession.setActionHandler('pause', handlers.onPause ?? null)
     navigator.mediaSession.setActionHandler('stop', handlers.onStop ?? null)
-  } catch {
-    /* unsupported action — ignore */
+  } catch (e) {
+    reportError('mediaSession:handlers', e, { severity: 'warn' })
   }
 }
 
@@ -76,8 +78,8 @@ export function clearMediaSession(): void {
     for (const action of ['play', 'pause', 'stop'] as const) {
       navigator.mediaSession.setActionHandler(action, null)
     }
-  } catch {
-    /* */
+  } catch (e) {
+    reportError('mediaSession:clear', e, { severity: 'warn' })
   }
 }
 
@@ -87,7 +89,7 @@ export async function acquireWakeLock(): Promise<void> {
   const wl = (navigator as { wakeLock?: { request: (type: 'screen') => Promise<WakeLockSentinelLike> } }).wakeLock
   if (!wl) return
   try {
-    wakeLock = await wl.request('screen')
+    wakeLock = (await wl.request('screen')) as WakeLockSentinelLike
     // If the tab is backgrounded, the OS auto-releases the lock. Re-acquire on return.
     wakeLockReacquireHandler = () => {
       if (document.visibilityState === 'visible' && wakeLock === null) {
@@ -98,8 +100,8 @@ export async function acquireWakeLock(): Promise<void> {
     wakeLock.addEventListener('release', () => {
       wakeLock = null
     })
-  } catch {
-    /* user denied / policy */
+  } catch (e) {
+    reportError('wakeLock:acquire', e, { severity: 'warn' })
   }
 }
 
@@ -111,8 +113,8 @@ export async function releaseWakeLock(): Promise<void> {
   if (wakeLock) {
     try {
       await wakeLock.release()
-    } catch {
-      /* already released */
+    } catch (e) {
+      reportError('wakeLock:release', e, { severity: 'warn' })
     }
     wakeLock = null
   }

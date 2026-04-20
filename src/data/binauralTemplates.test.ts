@@ -54,6 +54,13 @@ describe('binauralTemplates', () => {
     const r = resolveTemplateFrequencies(t, { beatHz: 99 })
     expect(r.beatHz).toBe(2)
   })
+
+  it('memoizes resolved frequencies for identical inputs', () => {
+    const t = getTemplateById('gamma-40')!
+    const a = resolveTemplateFrequencies(t, { carrierHz: 200, beatHz: 40 })
+    const b = resolveTemplateFrequencies(t, { carrierHz: 200, beatHz: 40 })
+    expect(a).toBe(b)
+  })
 })
 
 describe('combined template library (existing + Vedic)', () => {

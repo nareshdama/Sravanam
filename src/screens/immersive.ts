@@ -16,11 +16,12 @@ import {
   toggleFullscreen,
 } from '../lib/fullscreen'
 import { prefersReducedMotion } from '../lib/motionPreference'
+import { reportError } from '../lib/errorReport'
 import { createStaticMandala, type StaticMandalaController } from '../viz/staticMandala'
 import type { VedicCosmicControllers } from '../viz/vedicCosmicFlowerP5'
 import {
   formatPlanetPanelText,
-  getPlanetSnapshots,
+  getCurrentPlanetSnapshots,
 } from '../viz/planetaryEphemeris'
 
 /** Part 6 — floating controls auto-hide (~4s), reappear on pointer activity */
@@ -214,13 +215,13 @@ export function renderImmersive(root: HTMLElement): void {
   }, 1000)
 
   // Ephemeris updates
-  planetPanel.textContent = formatPlanetPanelText(getPlanetSnapshots())
+  planetPanel.textContent = formatPlanetPanelText(getCurrentPlanetSnapshots())
   ephemerisTimer = setInterval(() => {
-    planetPanel.textContent = formatPlanetPanelText(getPlanetSnapshots())
+    planetPanel.textContent = formatPlanetPanelText(getCurrentPlanetSnapshots())
   }, 2000)
 
   function mountStaticFallback(reason: unknown): void {
-    console.error('Immersive p5 visualization unavailable', reason)
+    reportError('immersive:vizFallback', reason, { severity: 'warn' })
     if (!canvasMount.isConnected) return
     vizControl?.stop()
     vizControl = null
@@ -283,6 +284,8 @@ export function destroyImmersive(): void {
   unsubFullscreen = null
   // Exit fullscreen if active
   if (isFullscreen()) {
-    void document.exitFullscreen().catch(() => {})
+    void document.exitFullscreen().catch((e) => {
+      reportError('immersive:exitFullscreen', e, { severity: 'warn' })
+    })
   }
 }

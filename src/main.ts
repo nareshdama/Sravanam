@@ -13,6 +13,7 @@ import './design/animations.css'
 
 /* App core */
 import { boot } from './app'
+import { installGlobalErrorBoundary } from './lib/globalErrorBoundary'
 import { initRouteSync } from './lib/routeSync'
 import { appStore, type Screen } from './state/appState'
 import { mountGlobalVizLayer } from './landing/mountGlobalViz'
@@ -21,6 +22,8 @@ import { renderLanding, destroyLanding } from './screens/landing'
 import { renderIntentionPicker, destroyIntentionPicker } from './screens/intentionPicker'
 import { renderSessionCard, destroySessionCard } from './screens/sessionCard'
 import { renderImmersive, destroyImmersive } from './screens/immersive'
+
+installGlobalErrorBoundary()
 
 const _screenRootEl = document.querySelector<HTMLDivElement>('#app-screen')
 if (!_screenRootEl) throw new Error('Missing #app-screen — check index.html')

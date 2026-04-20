@@ -10,12 +10,37 @@
  */
 
 import { registerSW } from 'virtual:pwa-register'
+import { hideAppBanner, showAppBanner } from '../lib/appBanner'
+import { reportError } from '../lib/errorReport'
+
+const OFFLINE_GRACE_MS = 1500 // suppress flicker on brief drops
+
+let offlineTimer: ReturnType<typeof setTimeout> | null = null
+let wasOffline = false
 
 let deferredInstallPrompt: BeforeInstallPromptEvent | null = null
+let pwaInitialized = false
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
+
+function safeLocalStorageGet(key: string): string | null {
+  try {
+    return localStorage.getItem(key)
+  } catch (e) {
+    reportError('pwa:storageRead', e, { severity: 'warn', context: { key } })
+    return null
+  }
+}
+
+function safeLocalStorageSet(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value)
+  } catch (e) {
+    reportError('pwa:storageWrite', e, { severity: 'warn', context: { key } })
+  }
 }
 
 function isStandalone(): boolean {
@@ -37,64 +62,108 @@ function isIosSafari(): boolean {
 }
 
 function renderUpdateBanner(onReload: () => void): HTMLElement {
-  const el = document.createElement('div')
-  el.className = 'pwa-banner pwa-banner--update'
-  el.setAttribute('role', 'status')
-  el.innerHTML = `
-    <span class="pwa-banner__text">A new version of Sravanam is ready.</span>
-    <button type="button" class="pwa-banner__btn" id="pwa-reload">Reload</button>
-    <button type="button" class="pwa-banner__dismiss" id="pwa-dismiss" aria-label="Dismiss">\u00D7</button>
-  `
-  document.body.appendChild(el)
-  el.querySelector<HTMLButtonElement>('#pwa-reload')!.addEventListener('click', () => {
-    el.remove()
-    onReload()
-  })
-  el.querySelector<HTMLButtonElement>('#pwa-dismiss')!.addEventListener('click', () => {
-    el.remove()
-  })
-  return el
+  return showAppBanner({
+    id: 'pwa-update',
+    variant: 'update',
+    message: 'A new version of Sravanam is ready.',
+    action: {
+      label: 'Reload',
+      onClick: () => {
+        hideAppBanner('pwa-update')
+        onReload()
+      },
+    },
+  })!
 }
 
 function renderInstallBanner(onInstall: () => void): HTMLElement {
-  const el = document.createElement('div')
-  el.className = 'pwa-banner pwa-banner--install'
-  el.setAttribute('role', 'status')
-  el.innerHTML = `
-    <span class="pwa-banner__text">Install Sravanam for a fuller, distraction-free practice.</span>
-    <button type="button" class="pwa-banner__btn" id="pwa-install">Install</button>
-    <button type="button" class="pwa-banner__dismiss" id="pwa-install-dismiss" aria-label="Dismiss">\u00D7</button>
-  `
-  document.body.appendChild(el)
-  el.querySelector<HTMLButtonElement>('#pwa-install')!.addEventListener('click', () => {
-    el.remove()
-    onInstall()
-  })
-  el.querySelector<HTMLButtonElement>('#pwa-install-dismiss')!.addEventListener('click', () => {
-    el.remove()
-    localStorage.setItem('sravanam_install_dismissed', String(Date.now()))
-  })
-  return el
+  return showAppBanner({
+    id: 'pwa-install',
+    variant: 'install',
+    message: 'Install Sravanam for a fuller, distraction-free practice.',
+    action: {
+      label: 'Install',
+      onClick: () => {
+        hideAppBanner('pwa-install')
+        onInstall()
+      },
+    },
+    onDismiss: () => {
+      safeLocalStorageSet('sravanam_install_dismissed', String(Date.now()))
+    },
+  })!
 }
 
 function renderIosHint(): HTMLElement {
-  const el = document.createElement('div')
-  el.className = 'pwa-banner pwa-banner--install'
-  el.setAttribute('role', 'status')
-  el.innerHTML = `
-    <span class="pwa-banner__text">Tap <b>Share</b> &rarr; <b>Add to Home Screen</b> to install.</span>
-    <button type="button" class="pwa-banner__dismiss" id="pwa-ios-dismiss" aria-label="Dismiss">\u00D7</button>
-  `
-  document.body.appendChild(el)
-  el.querySelector<HTMLButtonElement>('#pwa-ios-dismiss')!.addEventListener('click', () => {
-    el.remove()
-    localStorage.setItem('sravanam_ios_hint_dismissed', String(Date.now()))
+  return showAppBanner({
+    id: 'pwa-ios-hint',
+    variant: 'install',
+    message: 'Tap Share → Add to Home Screen to install.',
+    onDismiss: () => {
+      safeLocalStorageSet('sravanam_ios_hint_dismissed', String(Date.now()))
+    },
+  })!
+}
+
+function showOfflineBanner(): void {
+  wasOffline = true
+  showAppBanner({
+    id: 'network-status',
+    variant: 'offline',
+    position: 'top',
+    dismissible: false,
+    message: 'You’re offline. The app keeps running from cache.',
   })
-  return el
+}
+
+function hideOfflineBanner(): void {
+  if (offlineTimer) {
+    clearTimeout(offlineTimer)
+    offlineTimer = null
+  }
+  hideAppBanner('network-status')
+}
+
+function showOnlineToast(): void {
+  showAppBanner({
+    id: 'network-status',
+    variant: 'online',
+    position: 'top',
+    autoDismissMs: 2500,
+    message: 'Back online.',
+  })
+}
+
+function wireOnlineOfflineDetection(): void {
+  if (typeof window === 'undefined') return
+
+  const handleOffline = (): void => {
+    if (offlineTimer) return
+    // Grace period so a 500ms dropout doesn't flash a banner
+    offlineTimer = setTimeout(() => {
+      offlineTimer = null
+      if (!navigator.onLine) showOfflineBanner()
+    }, OFFLINE_GRACE_MS)
+  }
+
+  const handleOnline = (): void => {
+    hideOfflineBanner()
+    if (wasOffline) {
+      wasOffline = false
+      showOnlineToast()
+    }
+  }
+
+  window.addEventListener('offline', handleOffline)
+  window.addEventListener('online', handleOnline)
+
+  // Respect the initial state
+  if (!navigator.onLine) handleOffline()
 }
 
 export function initPwa(): void {
-  if (typeof window === 'undefined') return
+  if (typeof window === 'undefined' || pwaInitialized) return
+  pwaInitialized = true
 
   // 1) Service worker registration + update detection
   const updateSW = registerSW({
@@ -107,16 +176,18 @@ export function initPwa(): void {
       // Could surface a toast; silent for now — offline is a capability, not an event.
     },
     onRegisterError(error) {
-      console.warn('[pwa] SW registration failed', error)
+      reportError('pwa:register', error, { severity: 'warn' })
     },
   })
+
+  wireOnlineOfflineDetection()
 
   // 2) Install prompt (Android / desktop Chrome)
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault()
     deferredInstallPrompt = e as BeforeInstallPromptEvent
     if (isStandalone()) return
-    const dismissed = localStorage.getItem('sravanam_install_dismissed')
+    const dismissed = safeLocalStorageGet('sravanam_install_dismissed')
     // Re-show every 14 days max
     if (dismissed && Date.now() - Number(dismissed) < 14 * 24 * 3600 * 1000) return
     // Defer briefly so it doesn't collide with initial page motion
@@ -133,7 +204,7 @@ export function initPwa(): void {
 
   // 3) iOS one-time hint (no beforeinstallprompt on Safari)
   if (isIosSafari() && !isStandalone()) {
-    const dismissed = localStorage.getItem('sravanam_ios_hint_dismissed')
+    const dismissed = safeLocalStorageGet('sravanam_ios_hint_dismissed')
     if (!dismissed || Date.now() - Number(dismissed) > 30 * 24 * 3600 * 1000) {
       setTimeout(() => {
         if (!isStandalone()) renderIosHint()
