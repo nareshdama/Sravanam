@@ -242,14 +242,14 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
   // 9. Gamma Sovereignty
   {
     id: 'vedic-gamma-sovereignty-30-100',
-    hzLabel: '30–100 Hz',
+    hzLabel: '30–40 Hz',
     brainwave: 'gamma',
     useCase: 'Spiritual power; peak awareness',
     effect:
-      'Pashyanti-vak — visionary sound; realm of Rishis. The speech of the seers; divine vision made manifest.',
+      'Pashyanti-vak — visionary sound; realm of Rishis. Beat capped at 40 Hz — binaural fusion breaks down above ~40 Hz; higher values are perceived as two separate tones rather than an entraining beat.',
     beatHzMin: 30,
-    beatHzMax: 100,
-    defaultBeatHz: 60,
+    beatHzMax: 40,
+    defaultBeatHz: 40,
     recommendedCarrierHz: 200,
     vedicSources: [
       { text: 'Mandukya Upanishad', tradition: 'Vedanta' },
@@ -271,18 +271,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Fixed candle 2 ft away at eye level; no blinking; tears are normal and cleansing; do in darkness',
   },
 
-  // 10. Lakshmi Nada (432 Hz - Natural tuning)
+  // 10. Lakshmi Nada (432 Hz carrier + 10 Hz alpha)
   {
     id: 'vedic-lakshmi-nada-432',
-    hzLabel: '432 Hz',
+    hzLabel: '432 Hz · 10 Hz α',
     brainwave: 'alpha',
     useCase: 'Natural universal resonance; cosmic abundance',
     effect:
-      'Natural tuning of Sa (Shadja) — aligned with Lakshmi Tattva. The frequency of natural harmony.',
-    beatHzMin: 432,
-    beatHzMax: 432,
-    defaultBeatHz: 432,
-    recommendedCarrierHz: 216,
+      'Natural tuning of Sa (Shadja) — aligned with Lakshmi Tattva. 432 Hz carrier with 10 Hz alpha entrainment for relaxed receptive abundance.',
+    beatHzMin: 8,
+    beatHzMax: 12,
+    defaultBeatHz: 10,
+    recommendedCarrierHz: 432,
     vedicSources: [
       { text: 'Gandharva Veda', tradition: 'Vedic music' },
       { text: 'Sama Veda', tradition: 'Vedic chants' },
@@ -304,18 +304,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     timeOfDay: 'Brahma Muhurta (dawn)',
   },
 
-  // 11. Agni Transformation (528 Hz - Love/Transformation)
+  // 11. Agni Transformation (528 Hz carrier + 10 Hz alpha)
   {
     id: 'vedic-agni-transformation-528',
-    hzLabel: '528 Hz',
+    hzLabel: '528 Hz · 10 Hz α',
     brainwave: 'alpha',
     useCase: 'Pranic fire; transformation; manifestation',
     effect:
-      'Agni Bija — fire seed of Manipura; invokes Tejas. The transformative power of divine fire.',
-    beatHzMin: 528,
-    beatHzMax: 528,
-    defaultBeatHz: 528,
-    recommendedCarrierHz: 264,
+      'Agni Bija — fire seed of Manipura; invokes Tejas. 528 Hz carrier with 10 Hz alpha entrainment for transformation in a calm, focused state.',
+    beatHzMin: 8,
+    beatHzMax: 12,
+    defaultBeatHz: 10,
+    recommendedCarrierHz: 528,
     vedicSources: [
       { text: 'Atharva Veda', tradition: 'Fire rituals' },
       { text: 'Hatha Yoga Pradipika', verse: 'Ch. 3', tradition: 'Tantra' },
@@ -336,18 +336,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Focus awareness on solar plexus; feel heat building; visualize golden sun radiating power outward',
   },
 
-  // 12. Manifestation Stack (432 + 528 Hz)
+  // 12. Manifestation (480 Hz midpoint carrier + 10 Hz alpha)
   {
     id: 'vedic-manifestation-stack-432-528',
-    hzLabel: '432 Hz + 528 Hz',
+    hzLabel: '480 Hz · 10 Hz α',
     brainwave: 'alpha',
     useCase: 'Combined cosmic + transformation carrier',
     effect:
-      'Shiva-Shakti — cosmic stillness + active creation manifesting reality. The balance of being and becoming.',
-    beatHzMin: 432,
-    beatHzMax: 528,
-    defaultBeatHz: 480,
-    recommendedCarrierHz: 240,
+      'Shiva-Shakti — cosmic stillness + active creation. 480 Hz carrier (midpoint of 432 and 528) with 10 Hz alpha entrainment balances being and becoming.',
+    beatHzMin: 8,
+    beatHzMax: 12,
+    defaultBeatHz: 10,
+    recommendedCarrierHz: 480,
     vedicSources: [
       { text: 'Samkhya Karika', tradition: 'Philosophy' },
       { text: 'Devi Bhagavata Purana', tradition: 'Tantra' },
@@ -368,18 +368,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Visualize golden light expanding from heart as you chant; hold each Bija for one full breath',
   },
 
-  // 13. Heart-Wealth Bridge (639 Hz)
+  // 13. Heart-Wealth Bridge (639 Hz carrier + 10 Hz alpha)
   {
     id: 'vedic-heart-wealth-bridge-639',
-    hzLabel: '639 Hz',
+    hzLabel: '639 Hz · 10 Hz α',
     brainwave: 'alpha',
     useCase: 'Emotional harmony; love + financial abundance',
     effect:
-      'Anahata — love (Prema) is the highest force drawing Lakshmi. Where the heart opens, wealth naturally flows.',
-    beatHzMin: 639,
-    beatHzMax: 639,
-    defaultBeatHz: 639,
-    recommendedCarrierHz: 319.5,
+      'Anahata — love (Prema) is the highest force drawing Lakshmi. 639 Hz carrier with 10 Hz alpha entrainment supports heart opening and receptive abundance.',
+    beatHzMin: 8,
+    beatHzMax: 12,
+    defaultBeatHz: 10,
+    recommendedCarrierHz: 639,
     vedicSources: [
       { text: 'Sat Chakra Nirupana', tradition: 'Tantra' },
       { text: 'Narada Bhakti Sutra', tradition: 'Bhakti' },
@@ -400,18 +400,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Send loving-kindness to 3 people you hold resentment toward; feel forgiveness dissolve the block',
   },
 
-  // 14. Love-Money Fusion (528 + 639 Hz)
+  // 14. Love-Money Fusion (639 Hz heart carrier + 10 Hz alpha)
   {
     id: 'vedic-love-money-fusion-528-639',
-    hzLabel: '528 Hz + 639 Hz',
+    hzLabel: '639 Hz · 10 Hz α',
     brainwave: 'alpha',
     useCase: 'Dual attraction of relationships and wealth',
     effect:
-      'Shreem + Kleem — abundance + attraction force of Lakshmi-Vishnu. Love magnetizes prosperity.',
-    beatHzMin: 528,
-    beatHzMax: 639,
-    defaultBeatHz: 583.5,
-    recommendedCarrierHz: 290,
+      'Shreem + Kleem — abundance + attraction force of Lakshmi-Vishnu. 639 Hz heart carrier with 10 Hz alpha entrainment magnetizes love and prosperity.',
+    beatHzMin: 8,
+    beatHzMax: 12,
+    defaultBeatHz: 10,
+    recommendedCarrierHz: 639,
     vedicSources: [{ text: 'Devi Upasana Tantra', tradition: 'Tantric' }],
     vedaVerification:
       'Shreem + Kleem — abundance + attraction. The unified field where love and wealth merge as one energy.',
@@ -429,18 +429,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Visualize pink (love) and gold (wealth) light merging at the heart as one unified field',
   },
 
-  // 15. Lucky Gate (777 Hz)
+  // 15. Lucky Gate (777 Hz carrier + 40 Hz gamma)
   {
     id: 'vedic-lucky-gate-777',
-    hzLabel: '777 Hz',
+    hzLabel: '777 Hz · 40 Hz γ',
     brainwave: 'gamma',
     useCase: 'Fortune consciousness; opportunity opening',
     effect:
-      'Sapta (7) — 7 chakras, 7 notes, 7 planes; 777 = all layers activated. The gateway to fortune.',
-    beatHzMin: 777,
-    beatHzMax: 777,
-    defaultBeatHz: 777,
-    recommendedCarrierHz: 388.5,
+      'Sapta (7) — 7 chakras, 7 notes, 7 planes; 777 = all layers activated. 777 Hz carrier with 40 Hz gamma entrainment for active fortune recognition.',
+    beatHzMin: 35,
+    beatHzMax: 40,
+    defaultBeatHz: 40,
+    recommendedCarrierHz: 777,
     vedicSources: [
       { text: 'Rigveda', verse: 'Sapta Rishis' },
       { text: 'Chandogya Upanishad', tradition: 'Vedanta' },
@@ -461,18 +461,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Weekly practice (Fridays — Venus day of fortune); take 49 breaths total (7x7)',
   },
 
-  // 16. Aishwarya Gate (888 Hz)
+  // 16. Aishwarya Gate (888 Hz carrier + 8 Hz alpha)
   {
     id: 'vedic-aishwarya-gate-888',
-    hzLabel: '888 Hz',
-    brainwave: 'gamma',
+    hzLabel: '888 Hz · 8 Hz α',
+    brainwave: 'alpha',
     useCase: 'Clears poverty karma; activates divine opulence',
     effect:
-      'Shani (Saturn) governs 8; dissolves Daridra Yoga across 3 karma planes. Clearing blockages to abundance.',
-    beatHzMin: 888,
-    beatHzMax: 888,
-    defaultBeatHz: 888,
-    recommendedCarrierHz: 444,
+      'Shani (Saturn) governs 8; dissolves Daridra Yoga across 3 karma planes. 888 Hz carrier with 8 Hz alpha entrainment (8-themed) for receptive clearing of abundance blockages.',
+    beatHzMin: 8,
+    beatHzMax: 8,
+    defaultBeatHz: 8,
+    recommendedCarrierHz: 888,
     vedicSources: [
       { text: 'Brihat Parashara Hora Shastra', tradition: 'Jyotisha' },
     ],
@@ -492,18 +492,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Saturdays at sunset; sesame oil lamp; black sesame seeds offered; face West (Saturn\'s direction)',
   },
 
-  // 17. 8+88+888 Lakshmi Stack
+  // 17. Lakshmi Ashta Stack (888 Hz carrier + 8 Hz alpha)
   {
     id: 'vedic-lakshmi-stack-8-88-888',
-    hzLabel: '8 Hz + 88 Hz + 888 Hz',
-    brainwave: 'gamma',
+    hzLabel: '888 Hz · 8 Hz α',
+    brainwave: 'alpha',
     useCase: 'Full Lakshmi blessing across all 3 consciousness levels',
     effect:
-      'Trikona — subconscious + Manipura fire + cosmic Mahalakshmi. Complete abundance manifestation.',
+      'Trikona — subconscious + Manipura fire + cosmic Mahalakshmi. 888 Hz cosmic carrier with 8 Hz subconscious-border entrainment (8-themed across all planes).',
     beatHzMin: 8,
-    beatHzMax: 888,
-    defaultBeatHz: 300,
-    recommendedCarrierHz: 200,
+    beatHzMax: 8,
+    defaultBeatHz: 8,
+    recommendedCarrierHz: 888,
     vedicSources: [
       { text: 'Lakshmi Tantra', tradition: 'Tantric' },
       { text: 'Sri Sukta', verse: 'Rigveda', tradition: 'Vedic hymn' },
@@ -524,18 +524,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Place Shri Yantra in front; offer lotus or yellow flowers; recite all 16 verses of Sri Sukta',
   },
 
-  // 19. Vāk Siddhi (741 Hz — Throat/Speech)
+  // 19. Vāk Siddhi (741 Hz carrier + 40 Hz gamma)
   {
     id: 'vedic-vak-siddhi-741',
-    hzLabel: '741 Hz',
+    hzLabel: '741 Hz · 40 Hz γ',
     brainwave: 'gamma',
     useCase: 'Speech power; Vāksiddhi; Saraswati activation',
     effect:
-      'Vāk Siddhi — the perfection of speech; words become reality. Vishuddha purified; what is spoken manifests.',
-    beatHzMin: 741,
-    beatHzMax: 741,
-    defaultBeatHz: 741,
-    recommendedCarrierHz: 370.5,
+      'Vāk Siddhi — the perfection of speech; words become reality. 741 Hz carrier with 40 Hz gamma entrainment for Vishuddha clarity.',
+    beatHzMin: 35,
+    beatHzMax: 40,
+    defaultBeatHz: 40,
+    recommendedCarrierHz: 741,
     associatedChakra: 'Vishuddha — Throat',
     vedicSources: [
       { text: 'Rigveda', verse: '4 levels of Vak', tradition: 'Vedic' },
@@ -558,18 +558,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     timeOfDay: 'Brahma Muhurta (4–6 AM) after mauna',
   },
 
-  // 20. Ajna Vision (852 Hz — Third Eye)
+  // 20. Ajna Vision (852 Hz carrier + 7.83 Hz Schumann theta)
   {
     id: 'vedic-ajna-vision-852',
-    hzLabel: '852 Hz',
-    brainwave: 'gamma',
+    hzLabel: '852 Hz · 7.83 Hz θ',
+    brainwave: 'theta',
     useCase: 'Third eye activation; intuition; inner vision',
     effect:
-      'Ajna — command center of the subtle body; the eye of Shiva opens. Inner knowing beyond sensory perception.',
-    beatHzMin: 852,
-    beatHzMax: 852,
-    defaultBeatHz: 852,
-    recommendedCarrierHz: 426,
+      'Ajna — command center of the subtle body; the eye of Shiva opens. 852 Hz carrier with 7.83 Hz Schumann theta for intuitive, receptive inner seeing.',
+    beatHzMin: 7.83,
+    beatHzMax: 7.83,
+    defaultBeatHz: 7.83,
+    recommendedCarrierHz: 852,
     associatedChakra: 'Ajna — Third Eye',
     vedicSources: [
       { text: 'Sat Chakra Nirupana', tradition: 'Tantra' },
@@ -592,18 +592,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     timeOfDay: 'Dawn; face East',
   },
 
-  // 21. Parabrahman (999 Hz — Beyond Form)
+  // 21. Parabrahman (999 Hz carrier + 4.84 Hz theta-phi)
   {
     id: 'vedic-parabrahman-999',
-    hzLabel: '999 Hz',
-    brainwave: 'gamma',
+    hzLabel: '999 Hz · 4.84 Hz θ',
+    brainwave: 'theta',
     useCase: 'Ego dissolution; Turiya state; Moksha approach',
     effect:
-      'Parabrahman — beyond all attributes; the Absolute beyond the Absolute. All form dissolves into pure Sat-Chit-Ananda.',
-    beatHzMin: 999,
-    beatHzMax: 999,
-    defaultBeatHz: 999,
-    recommendedCarrierHz: 499.5,
+      'Parabrahman — beyond all attributes; the Absolute beyond the Absolute. 999 Hz carrier with 4.84 Hz (Schumann ÷ Φ) deep theta for dissolution into pure Sat-Chit-Ananda.',
+    beatHzMin: 4.84,
+    beatHzMax: 4.84,
+    defaultBeatHz: 4.84,
+    recommendedCarrierHz: 999,
     associatedChakra: 'Sahasrara — Crown (Beyond Form)',
     vedicSources: [
       { text: 'Mandukya Upanishad', verse: 'Turiya', tradition: 'Advaita' },
@@ -743,23 +743,23 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     timeOfDay: 'Evening; anytime stress arises',
   },
 
-  // 26. Sankalpa (6.32 Hz — Schumann × Φ ÷ 2)
+  // 26. Sankalpa (6.33 Hz — Schumann × Φ ÷ 2)
   {
     id: 'vedic-sankalpa-6.32',
-    hzLabel: '6.32 Hz',
+    hzLabel: '6.33 Hz',
     brainwave: 'theta',
     useCase: 'Intention planting; Sankalpa Shakti activation',
     effect:
-      'Sankalpa — Schumann × Φ ÷ 2 (7.83 × 1.618 ÷ 2). The precise frequency of Sankalpa Shakti: creative intention power.',
-    beatHzMin: 6.32,
-    beatHzMax: 6.32,
-    defaultBeatHz: 6.32,
+      'Sankalpa — Schumann × Φ ÷ 2 (7.83 × 1.618 ÷ 2 ≈ 6.33). The precise frequency of Sankalpa Shakti: creative intention power.',
+    beatHzMin: 6.33,
+    beatHzMax: 6.33,
+    defaultBeatHz: 6.33,
     recommendedCarrierHz: 432,
     vedicSources: [
       { text: 'Chandogya Upanishad', verse: '3.14.1 — Sankalpa Brahman', tradition: 'Vedanta' },
     ],
     vedaVerification:
-      'Schumann × Φ ÷ 2 = 6.32 Hz. Chandogya Upanishad: "One becomes what one deeply intends (Sankalpa)." The creative power of sacred intention planted in deep theta.',
+      'Schumann × Φ ÷ 2 = 7.83 × 1.618 ÷ 2 ≈ 6.33 Hz. Chandogya Upanishad: "One becomes what one deeply intends (Sankalpa)." The creative power of sacred intention planted in deep theta.',
     postures: ['Sukhasana; Chin Mudra; or Nadi Shodhana breathing position'],
     mantras: ['[Your Sankalpa] — state in present tense as vibration, not words'],
     breathingPattern: {
@@ -922,18 +922,18 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     timeOfDay: 'Ultra Focus sessions; mid-day peak energy',
   },
 
-  // 18. Brahmarandhra Crown (963 Hz)
+  // 18. Brahmarandhra Crown (963 Hz carrier + 7.83 Hz Schumann theta)
   {
     id: 'vedic-brahmarandhra-crown-963',
-    hzLabel: '963 Hz',
-    brainwave: 'gamma',
+    hzLabel: '963 Hz · 7.83 Hz θ',
+    brainwave: 'theta',
     useCase: 'Peak consciousness; dissolves scarcity at the source',
     effect:
-      'Sahasrara — Turiya state; Atman merges with Brahman; scarcity = Maya, dissolved here. Pure enlightenment frequency.',
-    beatHzMin: 963,
-    beatHzMax: 963,
-    defaultBeatHz: 963,
-    recommendedCarrierHz: 481.5,
+      'Sahasrara — Turiya state; Atman merges with Brahman; scarcity = Maya, dissolved here. 963 Hz crown carrier with 7.83 Hz Schumann theta entrainment for quiet witness consciousness.',
+    beatHzMin: 7.83,
+    beatHzMax: 7.83,
+    defaultBeatHz: 7.83,
+    recommendedCarrierHz: 963,
     vedicSources: [
       { text: 'Sat Chakra Nirupana', tradition: 'Tantra' },
       { text: 'Brihadaranyaka Upanishad', tradition: 'Vedanta' },

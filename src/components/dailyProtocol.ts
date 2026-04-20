@@ -106,7 +106,7 @@ const DAILY_PROTOCOL: readonly ProtocolSlot[] = [
     endHour: 22,
     label: '9:00–10:00 PM',
     mode: 'Pre-Sleep Programming',
-    freqStack: '6.32 Hz Theta + Sankalpa',
+    freqStack: '6.33 Hz Theta + Sankalpa',
     duration: '20 min',
   },
   {

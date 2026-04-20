@@ -116,7 +116,7 @@ export const LIFE_MODES: readonly LifeMode[] = [
         durationMin: 25,
       },
       {
-        beatHz: 6.32,
+        beatHz: 6.33,
         carrierHz: 432,
         templateId: 'vedic-sankalpa-6.32',
         purpose: 'Emotional release',
@@ -344,7 +344,7 @@ export const LIFE_MODES: readonly LifeMode[] = [
         durationMin: 30,
       },
       {
-        beatHz: 6.32,
+        beatHz: 6.33,
         carrierHz: 432,
         templateId: 'vedic-sankalpa-6.32',
         purpose: 'Subconscious wealth programming',

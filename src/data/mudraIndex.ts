@@ -22,7 +22,7 @@ export const MUDRA_INDEX: readonly Mudra[] = [
     sanskrit: 'Chin Mudrā',
     devanagari: '\u0909\u0902',
     meaning: 'Consciousness union — index finger + thumb touching',
-    bestFrequencies: [7.83, 432, 6.32, 4.84],
+    bestFrequencies: [7.83, 432, 6.33, 4.84],
   },
   {
     name: 'Gyan Mudra',
