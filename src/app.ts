@@ -28,6 +28,7 @@ function syncEngineFromSession(session: Readonly<SessionState>): void {
   engine.setVolume(session.volume)
   engine.setWave(session.wave)
   engine.setSoundLibrary(session.bedId)
+  engine.setDurationMinutes(session.durationMinutes)
 }
 
 let lastSession = sessionStore.get()
@@ -72,6 +73,11 @@ export function applyIntention(intentionId: string): void {
 
   const template = getTemplateById(intention.defaultTemplateId)
   if (!template) return
+
+  // BUG 9 fix: stop the engine first if it is still running, so state stays in sync.
+  if (engine.running) {
+    engine.stop()
+  }
 
   const sr = engine.getLimits().sampleRate
   const resolved = resolveTemplateFrequencies(template, {
@@ -137,6 +143,10 @@ export async function startSession(): Promise<void> {
     bedId: liveBedId,
   })
 
+  // BUG 10 fix: navigate only after playing:true is committed to the store,
+  // so an error-recovery path cannot race the immersive transition.
+  navigate('immersive')
+
   // Native-app polish: lock-screen tile + keep display lit during meditation.
   const intention = session.intentionId ? getIntentionById(session.intentionId) : null
   const template = session.templateId ? getTemplateById(session.templateId) : null
@@ -152,8 +162,6 @@ export async function startSession(): Promise<void> {
   setMediaSessionPlaybackState('playing')
   void acquireWakeLock()
 
-  navigate('immersive')
-
   savePrefs({
     intentionId: session.intentionId,
     templateId: session.templateId,
@@ -162,6 +170,7 @@ export async function startSession(): Promise<void> {
     beatHz: live.beatHz,
     wave: live.wave,
     volume: live.volume,
+    durationMinutes: session.durationMinutes,
   })
 }
 
@@ -225,8 +234,13 @@ export function boot(): void {
     beatHz: clampedPrefs.beatHz,
     wave: prefs.wave,
     volume: prefs.volume,
+    durationMinutes: prefs.durationMinutes,
   })
 
   // Start on landing screen
   appStore.set({ screen: 'landing' })
+  
+  engine.onAutoSessionEnd = () => {
+    stopSession()
+  }
 }

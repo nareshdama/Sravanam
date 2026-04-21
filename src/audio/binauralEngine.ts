@@ -164,6 +164,11 @@ export class BinauralEngine {
   onSuspended: (() => void) | null = null
   /** Called when AudioContext returns to running state. */
   onResumed: (() => void) | null = null
+  /** Called when the scheduled duration elapses and the wind-down completes. */
+  onAutoSessionEnd: (() => void) | null = null
+
+  private durationTimer: ReturnType<typeof setTimeout> | null = null
+  private durationMinutes: number | null = null
 
   private params: BinauralParams = {
     carrierHz: DEFAULT_CARRIER,
@@ -252,6 +257,10 @@ export class BinauralEngine {
     }
   }
 
+  setDurationMinutes(mins: number | null): void {
+    this.durationMinutes = mins
+  }
+
   /** Resume a suspended AudioContext — must be called inside a user gesture on iOS Safari. */
   resumeContext(): void {
     if (this.context && this.context.state !== 'running') {
@@ -308,6 +317,7 @@ export class BinauralEngine {
 
     // `stop()` may have run while `resume()` was pending.
     if (this.context !== ctx) {
+      this.startingUp = false
       closeContextSafely(ctx, 'audio:closeAfterInterruptedStart', { state: ctx.state })
       throw new Error('Audio start was interrupted. Please try again.')
     }
@@ -352,7 +362,34 @@ export class BinauralEngine {
     oscR.start(t)
     this.startingUp = false
 
+    // BUG 2 fix: if setVolume() was called during the startingUp window the ramp
+    // was silently dropped. Re-apply the current volume if it diverged from fade-in.
+    if (binauralGain.gain.value !== this.params.volume) {
+      const tv = ctx.currentTime
+      binauralGain.gain.cancelScheduledValues(tv)
+      binauralGain.gain.setValueAtTime(binauralGain.gain.value, tv)
+      binauralGain.gain.linearRampToValueAtTime(this.params.volume, tv + VOLUME_RAMP_S)
+    }
+
     this.applyLibraryLayer()
+
+    if (this.durationMinutes !== null) {
+      const durationSeconds = this.durationMinutes * 60
+      const windDownStart = t + durationSeconds
+      const windDownEnd = windDownStart + 30 // 30 second gentle fade
+      
+      // Schedule fade out
+      masterGain.gain.setValueAtTime(1, windDownStart)
+      masterGain.gain.linearRampToValueAtTime(0.001, windDownEnd)
+      
+      // Schedule singing bowl
+      this.scheduleBowl(windDownEnd)
+      
+      // Schedule actual teardown 5 seconds after bowl rings
+      this.durationTimer = globalThis.setTimeout(() => {
+        this.onAutoSessionEnd?.()
+      }, (durationSeconds + 35) * 1000)
+    }
   }
 
   stop(): void {
@@ -388,6 +425,35 @@ export class BinauralEngine {
       this.stopFadeTimer = null
       this.teardown(ctx)
     }, (FADE_S + 0.05) * 1000)
+  }
+
+  private scheduleBowl(t: number): void {
+    const ctx = this.context
+    if (!ctx) return
+    const bowlGain = ctx.createGain()
+    bowlGain.connect(ctx.destination) // bypass masterGain fade
+    
+    // Soft attack, extremely long decay
+    bowlGain.gain.setValueAtTime(0, t)
+    bowlGain.gain.linearRampToValueAtTime(0.7, t + 0.15)
+    bowlGain.gain.exponentialRampToValueAtTime(0.0001, t + 18)
+
+    // Fundamental + overtone partials for a Tibetan singing bowl
+    const freqs = [216, 432, 648, 864, 1296]
+    const gains = [0.8, 0.45, 0.2, 0.08, 0.04]
+    
+    for (let i = 0; i < freqs.length; i++) {
+        const osc = ctx.createOscillator()
+        osc.type = 'sine'
+        // Add subtle detune beating to the partials
+        osc.frequency.setValueAtTime(freqs[i]! + (Math.random() * 0.4), t)
+        const g = ctx.createGain()
+        g.gain.value = gains[i]!
+        osc.connect(g)
+        g.connect(bowlGain)
+        osc.start(t)
+        osc.stop(t + 20)
+    }
   }
 
   private attachResumeHandlers(ctx: AudioContext): void {
@@ -452,6 +518,10 @@ export class BinauralEngine {
       clearTimeout(this.stopFadeTimer)
       this.stopFadeTimer = null
     }
+    if (this.durationTimer !== null) {
+      clearTimeout(this.durationTimer)
+      this.durationTimer = null
+    }
 
     this.detachResumeHandlers(this.context)
 
@@ -490,6 +560,9 @@ export class BinauralEngine {
     }
     this.context = null
     this.playbackStartTime = null
+
+    // BUG 5 fix: release cached cosmic noise samples so memory is freed after teardown.
+    cosmicNoiseSampleCache.clear()
   }
 
   private clearLibraryLayer(): void {
@@ -506,6 +579,8 @@ export class BinauralEngine {
       this.libraryGain.gain.cancelScheduledValues(t)
       this.libraryGain.gain.setValueAtTime(0, t)
     }
+    // BUG 3 fix: null out so teardown()'s subsequent ?.disconnect() is safely skipped.
+    this.libraryGain = null
   }
 
   private applyLibraryLayer(): void {

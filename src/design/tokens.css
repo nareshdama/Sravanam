@@ -74,14 +74,14 @@
   --color-glass-border: rgba(0, 0, 0, 0.08);
   --color-glass-highlight: rgba(255, 255, 255, 0.74);
   --color-glass-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
-    0 18px 40px -22px rgba(0, 0, 0, 0.22),
-    0 24px 72px -28px rgba(0, 0, 0, 0.18);
+    0 1px 0 0 rgba(255, 255, 255, 0.8) inset,
+    0 24px 48px -20px rgba(0, 0, 0, 0.28),
+    0 32px 84px -24px rgba(0, 0, 0, 0.22);
   --gloss-overlay:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.72) 0%,
-      rgba(255, 255, 255, 0.16) 34%,
+      rgba(255, 255, 255, 0.82) 0%,
+      rgba(255, 255, 255, 0.2) 34%,
       rgba(255, 255, 255, 0) 100%
     );
 
@@ -163,14 +163,14 @@
     --color-glass-border: rgba(255, 255, 255, 0.1);
     --color-glass-highlight: rgba(255, 255, 255, 0.08);
     --color-glass-shadow:
-      0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
-      0 18px 40px -22px rgba(0, 0, 0, 0.7),
-      0 24px 72px -28px rgba(0, 0, 0, 0.75);
+      0 1px 0 0 rgba(255, 255, 255, 0.12) inset,
+      0 24px 48px -20px rgba(0, 0, 0, 0.85),
+      0 32px 84px -24px rgba(0, 0, 0, 0.9);
     --gloss-overlay:
       linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0.02) 36%,
+        rgba(255, 255, 255, 0.14) 0%,
+        rgba(255, 255, 255, 0.04) 36%,
         rgba(255, 255, 255, 0) 100%
       );
 

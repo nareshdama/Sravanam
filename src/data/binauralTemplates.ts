@@ -69,15 +69,15 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     recommendedCarrierHz: DEFAULT_TEMPLATE_CARRIER_HZ,
   },
   {
-    id: 'delta-3',
-    hzLabel: '3 Hz',
+    id: 'delta-2-3',
+    hzLabel: '2–3 Hz',
     brainwave: 'delta',
     useCase: 'Sleep / rest',
     effect:
       'Some people listen while winding down before sleep; responses vary and this is not sleep therapy.',
-    beatHzMin: 3,
+    beatHzMin: 2,
     beatHzMax: 3,
-    defaultBeatHz: 3,
+    defaultBeatHz: 2.5,
     recommendedCarrierHz: DEFAULT_TEMPLATE_CARRIER_HZ,
   },
   {
@@ -228,7 +228,12 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
 
 // Build index map for O(1) lookup across both existing and Vedic frequencies
 const TEMPLATE_INDEX = new Map<string, BinauralTemplate>()
-const RESOLVED_TEMPLATE_CACHE = new Map<string, ResolvedTemplateFrequencies>()
+/**
+ * Pre-clamp cache: stores resolved frequencies **before** device-specific
+ * Nyquist clamping.  Callers MUST pipe output through
+ * {@link clampBinauralFrequencies} with the real device sample rate.
+ */
+const PRE_CLAMP_TEMPLATE_CACHE = new Map<string, ResolvedTemplateFrequencies>()
 
 // Initialize with existing templates
 BINAURAL_TEMPLATES.forEach((t) => TEMPLATE_INDEX.set(t.id, t))
@@ -242,7 +247,18 @@ export function getTemplateById(id: string): BinauralTemplate | undefined {
 
 export function registerTemplate(template: BinauralTemplate): void {
   TEMPLATE_INDEX.set(template.id, template)
-  RESOLVED_TEMPLATE_CACHE.clear()
+  PRE_CLAMP_TEMPLATE_CACHE.clear()
+}
+
+/**
+ * Reset both indexes back to their initial state (static templates + Vedic frequencies).
+ * Intended for test isolation — prevents leaked registrations across test runs.
+ */
+export function resetTemplateRegistry(): void {
+  TEMPLATE_INDEX.clear()
+  PRE_CLAMP_TEMPLATE_CACHE.clear()
+  BINAURAL_TEMPLATES.forEach((t) => TEMPLATE_INDEX.set(t.id, t))
+  VEDIC_FREQUENCIES.forEach((f) => TEMPLATE_INDEX.set(f.id, f))
 }
 
 export function getAllTemplates(): BinauralTemplate[] {
@@ -291,7 +307,7 @@ export function resolveTemplateFrequencies(
       : template.defaultBeatHz
 
   const cacheKey = `${template.id}|${carrierHz}|${rawBeat}`
-  const cached = RESOLVED_TEMPLATE_CACHE.get(cacheKey)
+  const cached = PRE_CLAMP_TEMPLATE_CACHE.get(cacheKey)
   if (cached) return cached
 
   const resolved = {
@@ -299,6 +315,6 @@ export function resolveTemplateFrequencies(
     carrierHz,
     beatHz: rawBeat,
   }
-  RESOLVED_TEMPLATE_CACHE.set(cacheKey, resolved)
+  PRE_CLAMP_TEMPLATE_CACHE.set(cacheKey, resolved)
   return resolved
 }

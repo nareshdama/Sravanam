@@ -34,6 +34,7 @@ function renderCard(intention: typeof INTENTIONS[number], selected: boolean): st
   const illustration = getIntentionIllustrationSvg(intention.illustration)
   const label = `${intention.title}: ${intention.subtitle}${selected ? ', selected' : ''}`
   const checkSvg = `<svg class="intention-card__check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19l12-12l-1.41-1.41z"/></svg>`
+  const transitionAttr = selected ? `style="view-transition-name: active-card;"` : ''
   return `
     <button
       type="button"
@@ -42,6 +43,7 @@ function renderCard(intention: typeof INTENTIONS[number], selected: boolean): st
       data-illustration="${intention.illustration}"
       aria-pressed="${selected}"
       aria-label="${label}"
+      ${transitionAttr}
     >
       <span class="intention-card__check" aria-hidden="true">${checkSvg}</span>
       <span
@@ -91,11 +93,18 @@ export function renderIntentionPicker(root: HTMLElement): void {
       // Visual feedback + aria (selected state)
       cards.forEach((c) => {
         c.setAttribute('aria-pressed', 'false')
+        c.style.viewTransitionName = 'none'
         const cid = c.dataset.intention
         const i = INTENTIONS.find((x) => x.id === cid)
         if (i) c.setAttribute('aria-label', `${i.title}: ${i.subtitle}`)
       })
       card.setAttribute('aria-pressed', 'true')
+      card.style.viewTransitionName = 'active-card'
+      
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try { navigator.vibrate(15) } catch (e) {}
+      }
+
       const picked = INTENTIONS.find((x) => x.id === id)
       if (picked) {
         card.setAttribute('aria-label', `${picked.title}: ${picked.subtitle}, selected`)

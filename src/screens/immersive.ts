@@ -23,6 +23,7 @@ import {
   formatPlanetPanelText,
   getCurrentPlanetSnapshots,
 } from '../viz/planetaryEphemeris'
+import { breathEngine } from '../lib/breathingEngine'
 
 /** Part 6 — floating controls auto-hide (~4s), reappear on pointer activity */
 const IMMERSIVE_CONTROLS_AUTOHIDE_MS = 4000
@@ -35,6 +36,7 @@ let controlsTimer: ReturnType<typeof setTimeout> | null = null
 let sessionTimer: ReturnType<typeof setInterval> | null = null
 let ephemerisTimer: ReturnType<typeof setInterval> | null = null
 let liveFreqTimer: ReturnType<typeof setInterval> | null = null
+let breathingTimer: ReturnType<typeof setInterval> | null = null
 let unsubFullscreen: (() => void) | null = null
 let audioBanner: HTMLElement | null = null
 
@@ -81,6 +83,7 @@ export function renderImmersive(root: HTMLElement): void {
       <p class="immersive__info" id="immersive-info">
         <span class="immersive__info-line">${label} \u00B7 <span id="immersive-timer">0:00</span></span>
         <span class="immersive__live-freq mono" id="immersive-live-freq" aria-live="polite"></span>
+        <span class="immersive__breathing-guide" id="immersive-breathing-guide" style="display:none; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;"></span>
       </p>
 
       <div class="immersive__audio-banner" id="immersive-audio-banner" style="display:none" role="alert">
@@ -101,6 +104,9 @@ export function renderImmersive(root: HTMLElement): void {
         />
         <button type="button" class="btn-icon" id="immersive-ephemeris-toggle" aria-label="Toggle ephemeris">
           \u2609
+        </button>
+        <button type="button" class="btn-icon" id="immersive-breathing-toggle" aria-label="Toggle breathing pacer">
+          \u25CE
         </button>
         <button type="button" class="btn-icon" id="immersive-minimize" aria-label="Exit fullscreen" disabled>
           \u29C9
@@ -130,6 +136,8 @@ export function renderImmersive(root: HTMLElement): void {
   const planetPanel = root.querySelector<HTMLElement>('#immersive-planet-panel')!
   const liveFreqEl = root.querySelector<HTMLElement>('#immersive-live-freq')!
   const minimizeBtn = root.querySelector<HTMLButtonElement>('#immersive-minimize')!
+  const breathingGuideEl = root.querySelector<HTMLElement>('#immersive-breathing-guide')!
+  const breathingToggleBtn = root.querySelector<HTMLButtonElement>('#immersive-breathing-toggle')!
 
   function updateLiveFreqText(): void {
     const ch = engine.getChannelFrequencies()
@@ -191,6 +199,16 @@ export function renderImmersive(root: HTMLElement): void {
     appStore.set({ ephemerisVisible: !visible })
   })
 
+  // Breathing toggle button
+  breathingToggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation()
+    const active = !appStore.get().breathingPacer
+    appStore.set({ breathingPacer: active })
+    if (active) {
+       breathEngine.start()
+    }
+  })
+
   // Fullscreen
   root.querySelector<HTMLButtonElement>('#immersive-fullscreen')!.addEventListener('click', (e) => {
     e.stopPropagation()
@@ -219,6 +237,19 @@ export function renderImmersive(root: HTMLElement): void {
   ephemerisTimer = setInterval(() => {
     planetPanel.textContent = formatPlanetPanelText(getCurrentPlanetSnapshots())
   }, 2000)
+
+  // Breathing UI sync
+  breathingTimer = setInterval(() => {
+    const isPacing = appStore.get().breathingPacer
+    if (isPacing) {
+       breathingGuideEl.style.display = 'block'
+       liveFreqEl.style.display = 'none'
+       breathingGuideEl.textContent = breathEngine.getState().label
+    } else {
+       breathingGuideEl.style.display = 'none'
+       liveFreqEl.style.display = ''
+    }
+  }, 100)
 
   function mountStaticFallback(reason: unknown): void {
     reportError('immersive:vizFallback', reason, { severity: 'warn' })
@@ -252,6 +283,17 @@ export function renderImmersive(root: HTMLElement): void {
           mount: canvasMount,
           reducedMotion: prefersReducedMotion(),
           planetPanel: null, // We manage ephemeris separately
+          getAudioSync: () => {
+             const clock = engine.getAudioClock()
+             const start = engine.getPlaybackStartTime()
+             if (!clock || start === null) return null
+             const beatHz = sessionStore.get().beatHz
+             return { elapsed: clock.currentTime - start, beatHz }
+          },
+          getBreathingSync: () => {
+             if (!appStore.get().breathingPacer) return null
+             return { expansion: breathEngine.getState().expansion }
+          }
         })
         vizControl.start()
       } catch (e) {
@@ -280,6 +322,8 @@ export function destroyImmersive(): void {
   ephemerisTimer = null
   if (liveFreqTimer) clearInterval(liveFreqTimer)
   liveFreqTimer = null
+  if (breathingTimer) clearInterval(breathingTimer)
+  breathingTimer = null
   unsubFullscreen?.()
   unsubFullscreen = null
   // Exit fullscreen if active

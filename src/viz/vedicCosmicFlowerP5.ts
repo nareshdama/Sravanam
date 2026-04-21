@@ -78,8 +78,10 @@ export function createVedicCosmicFlower(options: {
   mount: HTMLElement
   reducedMotion: boolean
   planetPanel?: HTMLElement | null
+  getAudioSync?: () => { elapsed: number; beatHz: number } | null
+  getBreathingSync?: () => { expansion: number } | null
 }): VedicCosmicControllers {
-  const { mount, reducedMotion, planetPanel } = options
+  const { mount, reducedMotion, planetPanel, getAudioSync, getBreathingSync } = options
 
   let instance: p5 | undefined
   let booting = false
@@ -196,12 +198,31 @@ export function createVedicCosmicFlower(options: {
       const dim = p.min(p.width, p.height)
       p.background(2, 1, 6, 20)
 
-      const breath = p.sin(animAngle * 0.5) * 0.5 + 0.5
+      let breath = p.sin(animAngle * 0.5) * 0.5 + 0.5
       const w = p.max(p.width, 1)
       const mx = p.constrain(p.mouseX, 0, w)
       const targetFreq = p.map(mx, 0, w, 0.005, 0.1)
       currentFreq = p.lerp(currentFreq, targetFreq, 0.03)
       omWave = p.sin(animAngle * 0.3) * 0.5 + 0.5
+
+      // Phase 3: Visual Entrainment (Audio/Visual Sync)
+      if (getAudioSync && !reducedMotion) {
+        const sync = getAudioSync()
+        if (sync) {
+           const beatPhase = p.abs(p.sin(p.PI * sync.beatHz * sync.elapsed))
+           breath = p.lerp(breath, beatPhase, 0.35)
+           omWave = p.lerp(omWave, beatPhase, 0.25)
+        }
+      }
+
+      // Phase 4: Guided Breathing Pacer
+      if (getBreathingSync) {
+        const bSync = getBreathingSync()
+        if (bSync) {
+           // Completely override the autonomous cycle with the explicit 4-7-8 breathing pacer
+           breath = p.lerp(breath, bSync.expansion, 0.1)
+        }
+      }
 
       if (planetPanel) {
         const now = p.millis()

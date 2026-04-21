@@ -9,6 +9,10 @@ import { getTemplateById } from '../data/binauralTemplates'
 import { getIntentionById, getIntentionTemplateIds } from '../data/intentions'
 import { sessionStore } from '../state/sessionState'
 import {
+  renderDurationPicker,
+  wireDurationPicker,
+} from '../components/durationPicker'
+import {
   renderAmbientBedPicker,
   wireAmbientBedPicker,
 } from '../components/ambientBedPicker'
@@ -25,6 +29,7 @@ import {
   hasVedicMetadata,
 } from '../components/vedicMetadataPanel'
 import { renderDailyProtocol } from '../components/dailyProtocol'
+
 import { engine } from '../app'
 import type { SoundLibraryMode } from '../data/vedicSoundLibrary'
 
@@ -75,7 +80,7 @@ export function renderSessionCard(root: HTMLElement): void {
     : ''
 
   root.innerHTML = `
-    <div class="app__screen app__screen--padded">
+    <div class="app__screen app__screen--padded" style="view-transition-name: active-card;">
       ${renderAppChrome()}
       <div class="session">
         <div class="session__header">
@@ -83,6 +88,13 @@ export function renderSessionCard(root: HTMLElement): void {
           <h2 class="display-card">${title}</h2>
           <p class="body-secondary">${subtitle}</p>
           ${template ? `<p class="caption" style="margin-top: var(--space-1)">${template.effect}</p>` : ''}
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2)">
+            <p class="label-uppercase" style="margin: 0">Duration</p>
+          </div>
+          ${renderDurationPicker(session.durationMinutes)}
         </div>
 
         <div class="card">
@@ -106,7 +118,7 @@ export function renderSessionCard(root: HTMLElement): void {
           </div>
         ` : ''}
 
-        <div class="session__cta-area">
+        <div class="session__cta-area" style="margin-top: var(--space-2)">
           <p
             class="session__audio-error caption"
             id="session-audio-error"
@@ -133,17 +145,24 @@ export function renderSessionCard(root: HTMLElement): void {
   wireAppHome(root)
 
   // Wire components
+  wireDurationPicker(root)
   wireAmbientBedPicker(root)
   wireSessionGuideView(root)
   wireAdvancedTuning(root)
 
   // Back button
   root.querySelector<HTMLButtonElement>('#session-back')!.addEventListener('click', () => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate(10) } catch (e) {}
+    }
     navigate('intentions')
   })
 
   // Play button
   root.querySelector<HTMLButtonElement>('#session-play')!.addEventListener('click', async () => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([20, 30, 20]) } catch (e) {}
+    }
     const errEl = root.querySelector<HTMLElement>('#session-audio-error')
     if (errEl) {
       errEl.textContent = ''

@@ -21,6 +21,8 @@ export interface SessionState {
   wave: OscillatorType
   /** Volume 0–1 */
   volume: number
+  /** Session duration in minutes (null = infinite) */
+  durationMinutes: number | null
   /** Audio is currently playing */
   playing: boolean
   /** Set when engine.start() fails (e.g. autoplay policy); cleared on success or new attempt */
@@ -35,6 +37,7 @@ export const INITIAL_SESSION: SessionState = {
   beatHz: 10,
   wave: 'sine',
   volume: 0.2,
+  durationMinutes: 20, // default to 20 minutes instead of infinite
   playing: false,
   audioStartError: null,
 }

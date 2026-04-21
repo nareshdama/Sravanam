@@ -17,6 +17,8 @@ export interface AppState {
   advancedTuningOpen: boolean
   /** OS reduced-motion preference */
   reducedMotion: boolean
+  /** Whether the guided breathing pacer is active */
+  breathingPacer: boolean
 }
 
 export const INITIAL_APP: AppState = {
@@ -25,6 +27,7 @@ export const INITIAL_APP: AppState = {
   ephemerisVisible: false,
   advancedTuningOpen: false,
   reducedMotion: false,
+  breathingPacer: false,
 }
 
 export const appStore = createStore<AppState>(INITIAL_APP)

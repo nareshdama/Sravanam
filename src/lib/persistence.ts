@@ -27,6 +27,7 @@ export interface PersistedPrefs {
   beatHz: number
   wave: OscillatorType
   volume: number
+  durationMinutes: number | null
 }
 
 interface StoredPrefs extends PersistedPrefs {
@@ -43,6 +44,7 @@ const DEFAULTS: PersistedPrefs = {
   beatHz: 10,
   wave: 'sine',
   volume: 0.2,
+  durationMinutes: 20,
 }
 
 /** In-memory fallback when localStorage is unavailable or full. */
@@ -129,6 +131,10 @@ function validate(raw: Record<string, unknown>): PersistedPrefs {
       raw.volume <= 1
         ? raw.volume
         : DEFAULTS.volume,
+    durationMinutes:
+      raw.durationMinutes === null || (typeof raw.durationMinutes === 'number' && isFinite(raw.durationMinutes) && raw.durationMinutes > 0)
+        ? (raw.durationMinutes as number | null)
+        : DEFAULTS.durationMinutes,
   }
 }
 
