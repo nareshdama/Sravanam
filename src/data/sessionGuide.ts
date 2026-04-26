@@ -22,6 +22,7 @@ const BW_LABEL: Record<Brainwave, string> = {
   'alpha-beta': 'Low beta / high alpha-range beat',
   beta: 'Beta-range beat',
   gamma: 'Gamma-range beat',
+  'gamma-peak': 'High-gamma tonal pair (60–100 Hz)',
 }
 
 /** Rough band when the user is in Custom (manual) mode — not a clinical EEG claim. */
@@ -47,6 +48,8 @@ const VEDIC_BY_BAND: Record<Brainwave, string> = {
     'Alert, wakeful listening fits active contemplation or study. Keep sessions short; loud or anxious listening is the opposite of śānti.',
   gamma:
     'Very fast beats are a modern exploration; classical śāstra do not map neatly onto “gamma.” Treat as experimental listening only.',
+  'gamma-peak':
+    'High-gamma tonal pairs (60–100 Hz) exceed classical binaural-beat fusion; two separate tones are perceived. Used in advanced Turiya practice as cortical stimulation rather than beat entrainment. Experimental — treat with care and stop if any discomfort arises.',
 }
 
 const MODERN_BY_BAND: Record<Brainwave, string> = {
@@ -62,6 +65,8 @@ const MODERN_BY_BAND: Record<Brainwave, string> = {
     'Higher beat rates can feel stimulating; some find them unpleasant or fatiguing. Stop if you feel tense, dizzy, or odd.',
   gamma:
     'High beat frequencies are understudied for casual use; start quiet and brief.',
+  'gamma-peak':
+    'Beyond the 35–50 Hz binaural-fusion limit, two distinct tones are heard. Cortical entrainment at 60–80 Hz is speculative — this is advanced sound-design, not a clinical tool. Start very quiet; stop at any sign of tension or headache.',
 }
 
 /** Mode-specific Vedic context paragraph keyed by Life Mode intention ID. */

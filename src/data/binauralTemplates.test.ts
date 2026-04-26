@@ -15,8 +15,8 @@ describe('binauralTemplates', () => {
     expect(BINAURAL_TEMPLATES).toHaveLength(14)
   })
 
-  it('combined library has 45 total templates (14 existing + 31 Vedic)', () => {
-    expect(getAllTemplates()).toHaveLength(45)
+  it('combined library has 54 total templates (14 existing + 40 Vedic)', () => {
+    expect(getAllTemplates()).toHaveLength(54)
   })
 
   it('each template default beat lies within its band', () => {
@@ -32,6 +32,16 @@ describe('binauralTemplates', () => {
       const c = clampBinauralFrequencies(SAMPLE_RATE, r.carrierHz, r.beatHz)
       expect(c.carrierHz).toBeCloseTo(r.carrierHz, 5)
       expect(c.beatHz).toBeCloseTo(r.beatHz, 5)
+    }
+  })
+
+  it('all 54 templates resolve + clamp without Nyquist violation at 48 kHz', () => {
+    for (const t of getAllTemplates()) {
+      const r = resolveTemplateFrequencies(t)
+      const { carrierHz, beatHz } = clampBinauralFrequencies(SAMPLE_RATE, r.carrierHz, r.beatHz)
+      expect(carrierHz + beatHz, t.id).toBeLessThanOrEqual((SAMPLE_RATE / 2) * 0.49 + 1e-9)
+      expect(carrierHz, t.id).toBeGreaterThan(0)
+      expect(isFinite(beatHz), t.id).toBe(true)
     }
   })
 
@@ -73,13 +83,13 @@ describe('combined template library (existing + Vedic)', () => {
     expect(getTemplateById('nonexistent-template')).toBeUndefined()
   })
 
-  it('all 45 templates have unique IDs', () => {
+  it('all 54 templates have unique IDs', () => {
     const all = getAllTemplates()
     const ids = all.map((t) => t.id)
-    expect(new Set(ids).size).toBe(45)
+    expect(new Set(ids).size).toBe(54)
   })
 
-  it('all 45 templates have valid default beat frequencies', () => {
+  it('all 54 templates have valid default beat frequencies', () => {
     for (const t of getAllTemplates()) {
       expect(t.defaultBeatHz).toBeGreaterThanOrEqual(t.beatHzMin - 1e-9)
       expect(t.defaultBeatHz).toBeLessThanOrEqual(t.beatHzMax + 1e-9)
