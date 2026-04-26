@@ -2,7 +2,7 @@
  * 37 Vedic frequencies with rich metadata (sources, chakras, mantras, breathing patterns, postures).
  * Carriers use the authentic Saptaswar/Natya Shastra just-intonation grid at Sa=432:
  *   Sa 432, Ri 486, Ga 540, Ma 576, Pa 648, Dha 720, Ni 810, SA-octave 864.
- * Plus 136.1 Hz (AUM M-kara drone, Mandukya Upanishad) and 200 Hz default binaural carrier.
+ * Plus 136.1 Hz (AUM M-kara drone — mathematically derived by Hans Cousto, *The Cosmic Octave* (1978) from Earth's orbital period; associated symbolically with the Mandukya Upanishad's M-kara, but not scripturally prescribed) and 200 Hz default binaural carrier.
  * Guide-calibrated presets keep the app model explicit: left = carrier, right = carrier + beat,
  * and the perceived binaural difference = beat.
  * 528 Hz and 480 Hz are retained as sound-design carriers with explicit non-Vedic framing.
@@ -250,7 +250,7 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     brainwave: 'gamma',
     useCase: 'Spiritual power; peak awareness',
     effect:
-      'Pashyanti-vak — visionary sound; realm of Rishis. Beat capped at 40 Hz — binaural fusion breaks down above ~40 Hz; higher values are perceived as two separate tones rather than an entraining beat.',
+      'Pashyanti-vak — visionary sound; realm of Rishis. Beat capped at 40 Hz — binaural beat perception becomes less reliable in the 35–50 Hz range (a gradual transition, not a hard cutoff); recent neuroscience confirms gamma entrainment at 40 Hz, though beat salience is reduced compared to lower frequencies.',
     beatHzMin: 30,
     beatHzMax: 40,
     defaultBeatHz: 40,
@@ -282,7 +282,7 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
     brainwave: 'alpha',
     useCase: 'Natural universal resonance; cosmic abundance',
     effect:
-      'Natural tuning of Sa (Shadja) — aligned with Lakshmi Tattva. 432 Hz carrier with 10 Hz alpha entrainment for relaxed receptive abundance.',
+      'Sa (Shadja) at 432 Hz — aligned with Lakshmi Tattva. 432 Hz carrier with 10 Hz alpha entrainment for relaxed receptive abundance.',
     beatHzMin: 8,
     beatHzMax: 12,
     defaultBeatHz: 10,
@@ -292,7 +292,7 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       { text: 'Sama Veda', tradition: 'Vedic chants' },
     ],
     vedaVerification:
-      'Natural tuning of Sa (Shadja) — aligned with Lakshmi Tattva. The universal frequency that aligns human consciousness with cosmic order.',
+      'Sa at 432 Hz applies Hans Cousto\'s Cosmic Octave convention (1978) to the authentic Natya Shastra just-intonation ratios; the Natya Shastra prescribes interval ratios (e.g. Pa = 3/2 × Sa), not absolute Hz values. 432 Hz is a modern sound-design choice for the Sa root, not an ancient prescription.',
     postures: [
       'Face East at dawn; Padmasana or Sukhasana; Varada Mudra (right palm open facing outward — gesture of giving/receiving)',
     ],
@@ -800,7 +800,7 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       { text: 'Rigveda', verse: 'Nada Brahma — universe is sound', tradition: 'Vedic' },
     ],
     vedaVerification:
-      '7.83 Hz — digit sum: 7+8+3=18→9 (Family of 9, Brahman). The Schumann Resonance confirmed by W.O. Schumann (1952): Earth\'s electromagnetic cavity vibrates at 7.83 Hz — the same frequency encoded in the Mandukya Upanishad\'s AUM as the alpha-theta border state.',
+      '7.83 Hz — digit sum: 7+8+3=18→9 (Family of 9, Brahman). The Schumann Resonance confirmed by W.O. Schumann (1952): Earth\'s electromagnetic cavity resonates at 7.83 Hz. The Mandukya Upanishad describes AUM as four states (A-U-M-silence); 7.83 Hz corresponds to the alpha-theta border — a modern meditative analogy, not a frequency encoded in the text itself.',
     postures: ['Sukhasana; Chin Mudra; let mind float without direction'],
     mantras: ['AUM — chant once, then listen to the silence as the real sound'],
     practiceNotes:
@@ -918,7 +918,7 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       { text: 'Spanda Karika', tradition: 'Kashmir Shaivism' },
     ],
     vedaVerification:
-      'Schumann × 8 = 7.83 × 8 = 62.64 Hz. Atharva Veda: Ashta = 8 directions of cosmic power. 62.64 → 6+2+6+4=18→9 (Family of 9, Brahman). The 8-fold amplification of Earth\'s heartbeat — Spanda (divine tremor) at its most expanded.',
+      'Schumann × 8 = 7.83 × 8 = 62.64 Hz. Atharva Veda: Ashta = 8 directions of cosmic power. 62.64 → 6+2+6+4=18→9 (Family of 9, Brahman). The 8-fold amplification of Earth\'s heartbeat — Spanda (divine tremor) at its most expanded. Note: 62.64 Hz exceeds the typical binaural beat fusion range (~35–50 Hz); listeners perceive two separate tones rather than a unified beating effect at this frequency. Any neural gamma influence operates via cortical-frequency stimulation rather than classic binaural fusion.',
     postures: ['Virasana or power-seated; Kali Mudra (fingers interlaced, index fingers pointing up)'],
     mantras: ['Om Namah Shivaya (11x before session)'],
     breathingPattern: {

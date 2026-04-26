@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { BinauralEngine, clampBinauralFrequencies, getBinauralLimits } from './binauralEngine'
-import { getTemplateById, resolveTemplateFrequencies } from '../data/binauralTemplates'
+import { getAllTemplates, getTemplateById, resolveTemplateFrequencies } from '../data/binauralTemplates'
 
 /** Minimal Web Audio mocks so `BinauralEngine` runs in Node without a browser. */
 function createAudioParam(initial = 0) {
@@ -380,6 +380,22 @@ describe('BinauralEngine', () => {
       expect(isFinite(r.beatHz)).toBe(true)
       expect(r.carrierHz).toBe(t.recommendedCarrierHz)
       expect(r.beatHz).toBe(t.defaultBeatHz)
+    }
+  })
+
+  it('all 51 templates stay within Nyquist at common device sample rates', () => {
+    const sampleRates = [8_000, 22_050, 44_100, 48_000, 96_000]
+    for (const sr of sampleRates) {
+      for (const t of getAllTemplates()) {
+        const r = resolveTemplateFrequencies(t)
+        const { carrierHz, beatHz } = clampBinauralFrequencies(sr, r.carrierHz, r.beatHz)
+        const rightHz = carrierHz + beatHz
+        const limit = (sr / 2) * 0.49
+        expect(rightHz, `${t.id} right channel at ${sr} Hz SR`).toBeLessThanOrEqual(limit + 1e-9)
+        expect(carrierHz, `${t.id} carrier`).toBeGreaterThan(0)
+        expect(isFinite(carrierHz), `${t.id} carrier finite`).toBe(true)
+        expect(isFinite(beatHz), `${t.id} beat finite`).toBe(true)
+      }
     }
   })
 })

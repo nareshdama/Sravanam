@@ -45,6 +45,7 @@ describe('persistence', () => {
       beatHz: 10,
       wave: 'sine',
       volume: 0.2,
+      durationMinutes: 20,
     })
   })
 
@@ -66,6 +67,7 @@ describe('persistence', () => {
       beatHz: 1.25,
       wave: 'triangle',
       volume: 0.35,
+      durationMinutes: 20,
     })
   })
 
@@ -140,6 +142,7 @@ describe('persistence', () => {
       beatHz: 1.25,
       wave: 'triangle',
       volume: 0.05,
+      durationMinutes: 20,
     })
 
     const stored = JSON.parse(localStorage.getItem('sravanam_prefs')!)
@@ -173,6 +176,7 @@ describe('persistence', () => {
       beatHz: 40,
       wave: 'sine',
       volume: 0.4,
+      durationMinutes: 20,
     })
   })
 

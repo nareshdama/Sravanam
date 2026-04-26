@@ -35,6 +35,16 @@ describe('binauralTemplates', () => {
     }
   })
 
+  it('all 51 templates resolve + clamp without Nyquist violation at 48 kHz', () => {
+    for (const t of getAllTemplates()) {
+      const r = resolveTemplateFrequencies(t)
+      const { carrierHz, beatHz } = clampBinauralFrequencies(SAMPLE_RATE, r.carrierHz, r.beatHz)
+      expect(carrierHz + beatHz, t.id).toBeLessThanOrEqual((SAMPLE_RATE / 2) * 0.49 + 1e-9)
+      expect(carrierHz, t.id).toBeGreaterThan(0)
+      expect(isFinite(beatHz), t.id).toBe(true)
+    }
+  })
+
   it('7.83 Hz preset resolves to 7.83 Hz beat', () => {
     const t = getTemplateById('theta-7.83')!
     const r = resolveTemplateFrequencies(t)
