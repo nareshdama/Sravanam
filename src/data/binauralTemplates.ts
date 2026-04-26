@@ -12,6 +12,7 @@ export type Brainwave =
   | 'alpha'
   | 'beta'
   | 'gamma'
+  | 'gamma-peak'
   | 'alpha-beta'
 
 export interface VedicSource {

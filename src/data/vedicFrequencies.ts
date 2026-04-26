@@ -1140,6 +1140,102 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
       'Use before active tasks, exercise, or decision-making. If it feels too activating, step back to the 12.5 Hz SMR preset.',
     timeOfDay: 'Daytime active work',
   },
+
+  // 38. Sankalpa Shakti — Precision intention gateway (7.5 Hz, Sa carrier 432 Hz)
+  {
+    id: 'vedic-sankalpa-shakti-7.5',
+    hzLabel: '7.5 Hz',
+    brainwave: 'theta',
+    useCase: 'Sankalpa Shakti — precision intention planting',
+    effect:
+      'Precise alpha-theta border (7.5 Hz): theta rhythm facilitates hippocampal-cortical dialogue and reduces self-referential ego filtering, allowing Sankalpa (deep resolve) to encode in subconscious neural circuits without critical resistance. Used in Yoga Nidra at the hypnagogic onset.',
+    beatHzMin: 7.5,
+    beatHzMax: 7.5,
+    defaultBeatHz: 7.5,
+    recommendedCarrierHz: 432,
+    vedicSources: [
+      { text: 'Yoga Nidra — Bihar School of Yoga (Swami Satyananda Saraswati)', tradition: 'Yoga' },
+      { text: 'Mandukya Upanishad', verse: 'M-kara / Sushupti threshold', tradition: 'Advaita' },
+    ],
+    vedaVerification:
+      'Yoga Nidra research (Kjaer et al. 2002; Ferreira-Vorkapic et al. 2018) confirms sustained theta activity at the alpha-theta border. The Bihar School places Sankalpa at the hypnagogic threshold (7–8 Hz) where the doubting mind relaxes. The Mandukya Upanishad describes the transition between Svapna (dream/theta) and Sushupti (deep sleep/delta) — this 7.5 Hz point straddles that transition. Hz mapping is a modern neuroscience-Vedanta correspondence, not an ancient textual prescription.',
+    associatedChakra: 'Ajna',
+    mantras: ['Set your Sankalpa once, clearly and without forcing, then release it into the field of awareness'],
+    postures: ['Savasana or Yoga Nidra position (flat on back, palms up, eyes closed)'],
+    breathingPattern: {
+      name: 'Nāḍī Śodhana (Alternate Nostril) — 5 minutes pre-session',
+      inhaleSec: 4,
+      holdSec: 4,
+      exhaleSec: 6,
+    },
+    practiceNotes:
+      '20–30 min; start with 5 min Nāḍī Śodhana to drop from beta to alpha; state your Sankalpa once at the start (just before entering the hypnagogic state), once midway, and once at the end; do not repeat compulsively — one clear intention is more powerful than forced repetition.',
+    timeOfDay: 'Pre-sleep (within 30 min of lying down) or early morning (hypnagogic on waking)',
+  },
+
+  // 39. Turiya Gamma 60 Hz — Lower Turiya gamma range (tonal pair, beyond binaural fusion)
+  {
+    id: 'vedic-turiya-gamma-60',
+    hzLabel: '60 Hz',
+    brainwave: 'gamma-peak',
+    useCase: 'Turiya — advanced gamma practice',
+    effect:
+      'Lower boundary of Turiya gamma (60 Hz): at this frequency the two carrier tones are perceived as separate rather than fused (binaural beat fusion ends ~35–50 Hz). The effect is cortical-frequency stimulation via the tonal pair — analogous to ASSR (Auditory Steady-State Response) at 40 Hz, extended to 60 Hz. Advanced meditators in deep Dhyana may experience Spanda (divine tremor) or moments of non-dual awareness. Not a classic binaural beat; use with awareness.',
+    beatHzMin: 60,
+    beatHzMax: 60,
+    defaultBeatHz: 60,
+    recommendedCarrierHz: 432,
+    vedicSources: [
+      { text: 'Mandukya Upanishad', verse: 'Turiya — the 4th state', tradition: 'Advaita' },
+      { text: 'Spanda Karika', tradition: 'Kashmir Shaivism' },
+    ],
+    vedaVerification:
+      'Turiya (the 4th state) in the Mandukya Upanishad is the silent witness underlying Jagrat/Svapna/Sushupti — it is not a state you enter but what remains when the three states are seen through. Advanced yogis show elevated high-frequency gamma (Lutz, Davidson et al. PNAS 2004 confirmed 25–42 Hz; later studies observe 60–80 Hz activity in extreme practitioners). 60 Hz tonal stimulation is experimental — beyond proven binaural entrainment range; treat as sound-design for advanced sitting practice, not a clinical claim.',
+    associatedChakra: 'Sahasrara',
+    mantras: ['Aham Brahmasmi — I am Brahman (repeat silently, then release into silence)'],
+    postures: ['Siddhasana or Padmasana; Chin Mudra; spine tall'],
+    breathingPattern: {
+      name: 'Kumbhaka breath pause (with mastery only)',
+      inhaleSec: 6,
+      holdSec: 6,
+      exhaleSec: 6,
+    },
+    practiceNotes:
+      'For practitioners with stable Dhyana practice of 2+ years. 15–30 min; begin with 5 min at 40 Hz (vedic-spanda-power-40) then transition to 60 Hz. Stop if you feel agitation, tension, or headache.',
+    timeOfDay: 'Early morning Brahma Muhurta (4–6 AM) or after extended daily practice',
+  },
+
+  // 40. Turiya Gamma 80 Hz — Mid Turiya gamma range (tonal pair, advanced Siddhis)
+  {
+    id: 'vedic-turiya-gamma-80',
+    hzLabel: '80 Hz',
+    brainwave: 'gamma-peak',
+    useCase: 'Advanced Siddhis — peak gamma / Turiyatita',
+    effect:
+      'Mid-range Turiya gamma (80 Hz): tonal pair for advanced Siddhi-oriented practice. Beyond standard binaural fusion — two separate tones are heard. Produces ASSR-adjacent cortical stimulation at 80 Hz, the same rate associated with parieto-occipital high-gamma bursts during deep Samadhi states in advanced practitioners. Suitable only for experienced meditators.',
+    beatHzMin: 80,
+    beatHzMax: 80,
+    defaultBeatHz: 80,
+    recommendedCarrierHz: 432,
+    vedicSources: [
+      { text: 'Mandukya Upanishad', verse: 'Turiyatita — beyond the 4th', tradition: 'Advaita' },
+      { text: 'Vijnanabhairava Tantra', verse: '112 dharanas', tradition: 'Kashmir Shaivism' },
+    ],
+    vedaVerification:
+      'Turiyatita (beyond Turiya) appears in the Turiyatitavadhuta Upanishad (Shukla Yajurveda) and Gaudapada Karika, and is central to Kashmir Shaivism — denoting jivanmukti, liberation in life where non-dual awareness is continuous, not episodic. 80 Hz gamma is speculative/experimental: neuroscience data for monks peaks at 25–42 Hz (Davidson 2004); occasional higher-frequency observations exist but are not replicated at scale. Offered as advanced sound-design for practitioners who have stabilised Turiya states, not a proven entrainment frequency.',
+    associatedChakra: 'Brahmarandhra (crown beyond Sahasrara)',
+    mantras: ['Silence is the loudest mantra — Ramana Maharshi'],
+    postures: ['Any stable seated posture with spine erect; no mudra required at this depth'],
+    breathingPattern: {
+      name: 'Spontaneous breath — do not regulate at this depth',
+      inhaleSec: 4,
+      holdSec: 0,
+      exhaleSec: 6,
+    },
+    practiceNotes:
+      'Advanced practice only — not for beginners. Begin with 10 min pranayama (4-0-6 ratio), then 30 min at 40 Hz (vedic-spanda-power-40), then optionally shift to 80 Hz for the final 10–15 min. If no stable practice base exists, the higher frequency may feel agitating rather than expansive.',
+    timeOfDay: 'Brahma Muhurta only; not recommended after sunset',
+  },
 ] as const
 
 // Build index map for O(1) lookup

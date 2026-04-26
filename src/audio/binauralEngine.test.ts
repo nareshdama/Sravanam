@@ -383,7 +383,7 @@ describe('BinauralEngine', () => {
     }
   })
 
-  it('all 51 templates stay within Nyquist at common device sample rates', () => {
+  it('all 54 templates stay within Nyquist at common device sample rates', () => {
     const sampleRates = [8_000, 22_050, 44_100, 48_000, 96_000]
     for (const sr of sampleRates) {
       for (const t of getAllTemplates()) {

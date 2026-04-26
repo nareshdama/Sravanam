@@ -61,6 +61,7 @@ export const INTENTIONS: readonly Intention[] = [
     alternateTemplateIds: [
       'vedic-sleep-onset-aum-136.1',
       'vedic-sankalpa-6.32',
+      'vedic-sankalpa-shakti-7.5',
       'vedic-theta-aum-7.83',
       'vedic-lipton-theta-6',
       'vedic-sankalpa-theta-4-8',
@@ -205,6 +206,8 @@ export const INTENTIONS: readonly Intention[] = [
       'vedic-parabrahman-octave-864',
       'vedic-ajna-vision-dha-720',
       'vedic-gamma-sovereignty-30-100',
+      'vedic-turiya-gamma-60',
+      'vedic-turiya-gamma-80',
     ],
     defaultBed: 'nada',
     color: '#3d1a6b',
