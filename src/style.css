@@ -623,12 +623,12 @@ body {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   line-height: 1.45;
-  color: rgba(196, 181, 140, 0.75);
+  color: rgba(232, 220, 190, 0.88);
   word-break: break-word;
 }
 
 .viz-panel--cosmic .viz-panel__warn {
-  color: rgba(212, 181, 106, 0.72);
+  color: rgba(232, 198, 120, 0.90);
 }
 
 .viz-panel__summary::-webkit-details-marker {

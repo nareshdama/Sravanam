@@ -454,8 +454,8 @@ body::before {
     var(--color-surface-raised) 100%);
   border: 0.5px solid var(--color-border-light);
   border-radius: var(--radius-lg);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
     0 8px 24px -8px rgba(0, 0, 0, 0.5);
@@ -552,6 +552,13 @@ body::before {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+@media (max-width: 480px) {
+  .intention-card__icon svg path,
+  .intention-card__icon svg circle {
+    stroke-width: 2;
+  }
 }
 
 .intention-card__title {
@@ -682,8 +689,8 @@ body::before {
   padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-full);
   background: var(--color-immersive-surface);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(140%);
+  backdrop-filter: blur(var(--blur-lg)) saturate(140%);
   border: 0.5px solid var(--color-border-light);
   box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
   font-size: 0.85rem;
@@ -706,8 +713,8 @@ body::before {
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
   background: var(--color-immersive-surface);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(140%);
+  backdrop-filter: blur(var(--blur-lg)) saturate(140%);
   border: 0.5px solid var(--color-border-light);
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
@@ -755,8 +762,8 @@ body::before {
   padding: var(--space-4) var(--space-5);
   border-radius: var(--radius-lg);
   background: var(--color-immersive-surface);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(140%);
+  backdrop-filter: blur(var(--blur-lg)) saturate(140%);
   border: 0.5px solid var(--color-border-light);
   box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
   font-family: var(--font-mono);

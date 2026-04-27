@@ -1,7 +1,13 @@
-/**
+﻿/**
  * Immersive screen — full-viewport p5 visualization with floating controls.
  * This is the experience: mandala fills the screen, controls auto-hide.
  */
+
+const ICON_STOP = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="4.5" y="4.5" width="9" height="9" rx="2" fill="currentColor"/></svg>`
+const ICON_SUN = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M9 1.5v2M9 14.5v2M1.5 9h2M14.5 9h2M3.64 3.64l1.41 1.41M12.95 12.95l1.41 1.41M14.36 3.64l-1.41 1.41M5.05 12.95l-1.41 1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`
+const ICON_BREATHE = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="9" r="3.5" stroke="currentColor" stroke-width="1.25"/></svg>`
+const ICON_MINIMIZE = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M7 2v5H2M11 2v5h5M7 16v-5H2M11 16v-5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+const ICON_FULLSCREEN = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 7V2h5M16 7V2h-5M2 11v5h5M16 11v5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
 
 import { stopSession, engine } from '../app'
 import { renderAppChrome, wireAppHome } from '../components/appChrome'
@@ -92,7 +98,7 @@ export function renderImmersive(root: HTMLElement): void {
 
       <div class="immersive__controls" id="immersive-controls">
         <button type="button" class="btn-icon" id="immersive-stop" aria-label="Stop">
-          \u25A0
+          ${ICON_STOP}
         </button>
         <input
           type="range"
@@ -103,16 +109,16 @@ export function renderImmersive(root: HTMLElement): void {
           aria-label="Volume"
         />
         <button type="button" class="btn-icon" id="immersive-ephemeris-toggle" aria-label="Toggle ephemeris">
-          \u2609
+          ${ICON_SUN}
         </button>
         <button type="button" class="btn-icon" id="immersive-breathing-toggle" aria-label="Toggle breathing pacer">
-          \u25CE
+          ${ICON_BREATHE}
         </button>
         <button type="button" class="btn-icon" id="immersive-minimize" aria-label="Exit fullscreen" disabled>
-          \u29C9
+          ${ICON_MINIMIZE}
         </button>
         <button type="button" class="btn-icon" id="immersive-fullscreen" aria-label="Toggle fullscreen">
-          \u26F6
+          ${ICON_FULLSCREEN}
         </button>
       </div>
     </div>

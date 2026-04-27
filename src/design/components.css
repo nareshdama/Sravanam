@@ -44,7 +44,7 @@
   font-weight: 600;
   font-size: 0.9375rem;
   letter-spacing: -0.005em;
-  min-height: 46px;
+  min-height: var(--btn-height);
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-full);
   border: none;
@@ -122,8 +122,8 @@
   background: var(--color-surface);
   border: 0.5px solid var(--color-border-strong);
   color: var(--color-ink);
-  -webkit-backdrop-filter: blur(var(--blur-strength)) saturate(140%);
-  backdrop-filter: blur(var(--blur-strength)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+  backdrop-filter: blur(var(--blur-sm)) saturate(140%);
   box-shadow:
     0 1px 0 0 var(--color-glass-highlight) inset,
     0 12px 28px -20px rgba(0, 0, 0, 0.18);
@@ -172,8 +172,8 @@
   border: 0.5px solid rgba(255, 255, 255, 0.1);
   background: var(--color-immersive-surface);
   color: var(--color-ink);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
   cursor: pointer;
   transition:
     background var(--duration-fast) var(--ease-default),
@@ -191,7 +191,7 @@
 
 .btn-icon:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-bg-deep), 0 0 0 4px var(--color-gold-glow);
+  box-shadow: var(--focus-ring-shadow);
 }
 
 .btn-icon:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
@@ -249,7 +249,7 @@
   outline: none;
   border-color: var(--color-blue);
   background: var(--color-bg);
-  box-shadow: 0 0 0 3px var(--color-blue-glow);
+  box-shadow: var(--focus-ring-shadow);
 }
 
 .field input:disabled,
@@ -304,8 +304,8 @@ input[type='range']::-moz-range-thumb {
   border-radius: var(--radius-full);
   border: 0.5px solid var(--color-border-light);
   padding: 3px;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  backdrop-filter: blur(var(--blur-sm));
 }
 
 .segmented__option {
@@ -418,10 +418,10 @@ input[type='range']::-moz-range-thumb {
 
 .disclosure[open] > summary::before { transform: rotate(45deg); }
 
-.disclosure > summary:focus-visible { outline: none; }
-.disclosure > summary:focus-visible::before {
-  box-shadow: 0 0 0 2px var(--color-focus-ring);
-  border-radius: 2px;
+.disclosure > summary:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring-shadow);
 }
 
 /* ── Shared mono helpers ── */
@@ -724,8 +724,8 @@ input[type='range']::-moz-range-thumb {
   max-width: min(94vw, 32rem);
   border-radius: var(--radius-full);
   background: var(--color-immersive-surface, rgba(12, 16, 40, 0.82));
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(140%);
+  backdrop-filter: blur(var(--blur-lg)) saturate(140%);
   border: 0.5px solid var(--color-border-light, rgba(255, 255, 255, 0.12));
   box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
   color: var(--color-warm-light, #f4d9a6);

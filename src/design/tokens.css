@@ -105,8 +105,16 @@
   --duration-slow: 0.4s;
   --duration-xslow: 0.6s;
 
-  --blur-strength: 12px;
-  --blur-strong: 20px;
+  /* Blur scale — use these named tokens; --blur-strength/--blur-strong are kept as aliases */
+  --blur-sm: 12px;
+  --blur-md: 20px;
+  --blur-lg: 24px;
+  --blur-strength: var(--blur-sm);
+  --blur-strong: var(--blur-md);
+
+  --btn-height: 46px;
+  --btn-height-sm: 40px;
+
   --opacity-disabled: 0.45;
 
   --color-focus-ring: var(--color-blue);

@@ -70,7 +70,7 @@ export function renderSessionCard(root: HTMLElement): void {
         <summary>Choose a different template</summary>
         <div style="padding-top: var(--space-2); display: flex; flex-direction: column; gap: var(--space-2)">
           ${alternates.map((t) => `
-            <button type="button" class="btn btn--ghost" style="min-height: 40px; font-size: 0.875rem" data-alt-template="${t.id}">
+            <button type="button" class="btn btn--ghost" style="min-height: var(--btn-height-sm); font-size: 0.875rem" data-alt-template="${t.id}">
               ${brainwaveLabel(t.brainwave)} \u00B7 ${t.hzLabel} \u2014 ${t.useCase}
             </button>
           `).join('')}
