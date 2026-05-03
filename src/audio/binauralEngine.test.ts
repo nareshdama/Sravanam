@@ -398,4 +398,28 @@ describe('BinauralEngine', () => {
       }
     }
   })
+
+  it('setSoundLibrary changes take effect while the engine is running', async () => {
+    const { factory, oscillators } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+    await engine.start()
+
+    // 2 binaural oscillators (L + R) created on start
+    expect(oscillators).toHaveLength(2)
+    expect(engine.getSoundLibrary()).toBe('off')
+
+    // Switching to 'om' must trigger applyLibraryLayer(), which creates 3 partial oscillators.
+    // Before the Bug 1 fix, this call returned early and oscillator count stayed at 2.
+    engine.setSoundLibrary('om')
+    expect(engine.getSoundLibrary()).toBe('om')
+    expect(oscillators.length).toBeGreaterThan(2)
+
+    // Switching to 'nada' must replace the om layer (2 nada oscillators added).
+    const countAfterOm = oscillators.length
+    engine.setSoundLibrary('nada')
+    expect(engine.getSoundLibrary()).toBe('nada')
+    expect(oscillators.length).toBeGreaterThan(countAfterOm)
+
+    engine.stop()
+  })
 })

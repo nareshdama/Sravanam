@@ -245,7 +245,7 @@ export const VEDIC_FREQUENCIES: readonly BinauralTemplate[] = [
 
   // 9. Gamma Sovereignty
   {
-    id: 'vedic-gamma-sovereignty-30-100',
+    id: 'vedic-gamma-sovereignty-30-40',
     hzLabel: '30–40 Hz',
     brainwave: 'gamma',
     useCase: 'Spiritual power; peak awareness',

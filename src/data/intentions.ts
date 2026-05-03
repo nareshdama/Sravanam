@@ -107,7 +107,7 @@ export const INTENTIONS: readonly Intention[] = [
       'vedic-spanda-power-40',
       'vedic-beta-sharp-33.18',
       'vedic-gamma-ashta-62.64',
-      'vedic-gamma-sovereignty-30-100',
+      'vedic-gamma-sovereignty-30-40',
     ],
     defaultBed: 'off',
     color: '#6b2d7a',
@@ -205,7 +205,7 @@ export const INTENTIONS: readonly Intention[] = [
     alternateTemplateIds: [
       'vedic-parabrahman-octave-864',
       'vedic-ajna-vision-dha-720',
-      'vedic-gamma-sovereignty-30-100',
+      'vedic-gamma-sovereignty-30-40',
       'vedic-turiya-gamma-60',
       'vedic-turiya-gamma-80',
     ],

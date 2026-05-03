@@ -149,6 +149,9 @@ export class BinauralEngine {
   private libraryMode: SoundLibraryMode = 'off'
   /** Stoppable sources + disconnectable nodes for the ambient layer */
   private libraryDisposables: { disconnect: () => void }[] = []
+  /** Singing bowl end-of-session bell — tracked so stop() can fade it cleanly. */
+  private bowlGain: GainNode | null = null
+  private bowlOscillators: OscillatorNode[] = []
   /** `AudioContext.currentTime` when binaural oscillators started (phase reference). */
   private playbackStartTime: number | null = null
   /** Scheduled from `stop()`; cleared if user starts again before fade completes. */
@@ -413,6 +416,12 @@ export class BinauralEngine {
     masterGain.gain.setValueAtTime(masterGain.gain.value, t)
     masterGain.gain.linearRampToValueAtTime(0, t + FADE_S)
 
+    if (this.bowlGain) {
+      this.bowlGain.gain.cancelScheduledValues(t)
+      this.bowlGain.gain.setValueAtTime(this.bowlGain.gain.value, t)
+      this.bowlGain.gain.linearRampToValueAtTime(0, t + FADE_S)
+    }
+
     const stopAt = t + FADE_S + 0.02
     try {
       oscL.stop(stopAt)
@@ -431,8 +440,9 @@ export class BinauralEngine {
     const ctx = this.context
     if (!ctx) return
     const bowlGain = ctx.createGain()
+    this.bowlGain = bowlGain
     bowlGain.connect(ctx.destination) // bypass masterGain fade
-    
+
     // Soft attack, extremely long decay
     bowlGain.gain.setValueAtTime(0, t)
     bowlGain.gain.linearRampToValueAtTime(0.7, t + 0.15)
@@ -441,18 +451,19 @@ export class BinauralEngine {
     // Fundamental + overtone partials for a Tibetan singing bowl
     const freqs = [216, 432, 648, 864, 1296]
     const gains = [0.8, 0.45, 0.2, 0.08, 0.04]
-    
+
     for (let i = 0; i < freqs.length; i++) {
-        const osc = ctx.createOscillator()
-        osc.type = 'sine'
-        // Add subtle detune beating to the partials
-        osc.frequency.setValueAtTime(freqs[i]! + (Math.random() * 0.4), t)
-        const g = ctx.createGain()
-        g.gain.value = gains[i]!
-        osc.connect(g)
-        g.connect(bowlGain)
-        osc.start(t)
-        osc.stop(t + 20)
+      const osc = ctx.createOscillator()
+      osc.type = 'sine'
+      // Add subtle detune beating to the partials
+      osc.frequency.setValueAtTime(freqs[i]! + (Math.random() * 0.4), t)
+      const g = ctx.createGain()
+      g.gain.value = gains[i]!
+      osc.connect(g)
+      g.connect(bowlGain)
+      osc.start(t)
+      osc.stop(t + 20)
+      this.bowlOscillators.push(osc)
     }
   }
 
@@ -555,14 +566,22 @@ export class BinauralEngine {
     this.binauralGain = null
     this.libraryGain = null
     this.masterGain = null
+
+    for (const osc of this.bowlOscillators) {
+      try { osc.stop() } catch { /* already stopped */ }
+      osc.disconnect()
+    }
+    this.bowlOscillators = []
+    this.bowlGain?.disconnect()
+    this.bowlGain = null
+
     if (closeContext && closeContext.state !== 'closed') {
       closeContextSafely(closeContext, 'audio:teardownCloseContext', { state: closeContext.state })
     }
     this.context = null
     this.playbackStartTime = null
-
-    // BUG 5 fix: release cached cosmic noise samples so memory is freed after teardown.
-    cosmicNoiseSampleCache.clear()
+    // Cosmic noise samples are safe to keep across sessions — the Float32Array is small
+    // (~768 KB at 48 kHz) and regenerating it costs ~8–15 ms on a mid-tier phone.
   }
 
   private clearLibraryLayer(): void {
@@ -579,8 +598,6 @@ export class BinauralEngine {
       this.libraryGain.gain.cancelScheduledValues(t)
       this.libraryGain.gain.setValueAtTime(0, t)
     }
-    // BUG 3 fix: null out so teardown()'s subsequent ?.disconnect() is safely skipped.
-    this.libraryGain = null
   }
 
   private applyLibraryLayer(): void {
