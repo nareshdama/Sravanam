@@ -3,6 +3,7 @@
  * Drives the audio engine and session card UI.
  */
 
+import type { BeatMode } from '../audio/binauralEngine'
 import type { SoundLibraryMode } from '../data/vedicSoundLibrary'
 import { createStore } from './store'
 
@@ -19,6 +20,8 @@ export interface SessionState {
   beatHz: number
   /** Oscillator waveform */
   wave: OscillatorType
+  /** How the beat is delivered (binaural / monaural / isochronic) */
+  mode: BeatMode
   /** Volume 0–1 */
   volume: number
   /** Session duration in minutes (null = infinite) */
@@ -36,6 +39,7 @@ export const INITIAL_SESSION: SessionState = {
   carrierHz: 200,
   beatHz: 10,
   wave: 'sine',
+  mode: 'binaural',
   volume: 0.2,
   durationMinutes: 20, // default to 20 minutes instead of infinite
   playing: false,

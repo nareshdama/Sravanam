@@ -6,8 +6,10 @@
 import { sessionStore } from '../state/sessionState'
 import { engine } from '../app'
 import {
+  assessBinauralFusion,
   clampBinauralFrequencies,
   getBinauralLimits,
+  type BeatMode,
 } from '../audio/binauralEngine'
 import { SAPTASWAR_SCALE } from '../data/saptaswarScale'
 
@@ -46,6 +48,23 @@ export function renderAdvancedTuning(): string {
     <details class="disclosure" id="advanced-tuning">
       <summary>Advanced tuning</summary>
       <div style="padding-top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4)">
+        <div class="field">
+          <span class="field__label" id="adv-mode-label">Beat method</span>
+          <div class="tuning__mode" role="radiogroup" aria-labelledby="adv-mode-label">
+            <label class="tuning__mode-opt">
+              <input type="radio" name="adv-mode" value="binaural" ${s.mode === 'binaural' ? 'checked' : ''} aria-describedby="adv-mode-binaural-desc" />
+              <span><strong>Binaural</strong><br><small id="adv-mode-binaural-desc">Headphones · two ears integrate</small></span>
+            </label>
+            <label class="tuning__mode-opt">
+              <input type="radio" name="adv-mode" value="monaural" ${s.mode === 'monaural' ? 'checked' : ''} aria-describedby="adv-mode-monaural-desc" />
+              <span><strong>Monaural</strong><br><small id="adv-mode-monaural-desc">Speakers OK · acoustic beat</small></span>
+            </label>
+            <label class="tuning__mode-opt">
+              <input type="radio" name="adv-mode" value="isochronic" ${s.mode === 'isochronic' ? 'checked' : ''} aria-describedby="adv-mode-isochronic-desc" />
+              <span><strong>Isochronic</strong><br><small id="adv-mode-isochronic-desc">Speakers OK · pulsed envelope</small></span>
+            </label>
+          </div>
+        </div>
         ${renderSaptaswarPicker(s.carrierHz)}
         <label class="field">
           <span class="field__label">Carrier (Hz)</span>
@@ -71,6 +90,7 @@ export function renderAdvancedTuning(): string {
           </select>
         </div>
         <p class="mono-sm" id="adv-limits" style="text-align: center"></p>
+        <p class="tuning__fusion" id="adv-fusion" aria-live="polite"></p>
       </div>
     </details>
   `
@@ -84,6 +104,7 @@ export function wireAdvancedTuning(container: HTMLElement): void {
   const volumeEl = container.querySelector<HTMLInputElement>('#adv-volume')!
   const waveEl = container.querySelector<HTMLSelectElement>('#adv-wave')!
   const limitsEl = container.querySelector<HTMLElement>('#adv-limits')!
+  const fusionEl = container.querySelector<HTMLElement>('#adv-fusion')!
 
   function syncFromInputs(): void {
     const sr = engine.getLimits().sampleRate
@@ -105,10 +126,18 @@ export function wireAdvancedTuning(container: HTMLElement): void {
   function refreshLimits(): void {
     const sr = engine.getLimits().sampleRate
     const c = Number(carrierNum.value)
+    const b = Number(beatNum.value)
     const l = getBinauralLimits(sr, c)
     limitsEl.textContent = `SR ${sr} Hz \u00B7 Carrier ${formatHz(l.minCarrierHz)}\u2013${formatHz(l.maxCarrierHz)} \u00B7 Max beat ${formatHz(l.maxBeatHz)}`
     beatRange.max = String(Math.max(0.1, l.maxBeatHz))
     carrierRange.max = String(l.maxCarrierHz)
+
+    const mode = sessionStore.get().mode
+    const fusion = assessBinauralFusion(mode, c, b)
+    fusionEl.dataset.level = fusion.level
+    const dot =
+      fusion.level === 'good' ? '\u25CF' : fusion.level === 'marginal' ? '\u25D0' : '\u25CB'
+    fusionEl.textContent = `${dot} ${fusion.reason}`
   }
 
   // Saptaswar note buttons — snap carrier to selected note
@@ -153,6 +182,15 @@ export function wireAdvancedTuning(container: HTMLElement): void {
     const w = waveEl.value as OscillatorType
     engine.setWave(w)
     sessionStore.set({ wave: w })
+  })
+
+  container.querySelectorAll<HTMLInputElement>('input[name="adv-mode"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+      if (!radio.checked) return
+      const mode = radio.value as BeatMode
+      sessionStore.set({ mode })
+      refreshLimits()
+    })
   })
 
   refreshLimits()

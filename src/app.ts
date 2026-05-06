@@ -27,6 +27,7 @@ function syncEngineFromSession(session: Readonly<SessionState>): void {
   engine.setBeatHz(session.beatHz)
   engine.setVolume(session.volume)
   engine.setWave(session.wave)
+  engine.setBeatMode(session.mode)
   engine.setSoundLibrary(session.bedId)
   engine.setDurationMinutes(session.durationMinutes)
 }
@@ -140,6 +141,7 @@ export async function startSession(): Promise<void> {
     beatHz: live.beatHz,
     volume: live.volume,
     wave: live.wave,
+    mode: live.mode,
     bedId: liveBedId,
   })
 
@@ -169,6 +171,7 @@ export async function startSession(): Promise<void> {
     carrierHz: live.carrierHz,
     beatHz: live.beatHz,
     wave: live.wave,
+    mode: live.mode,
     volume: live.volume,
     durationMinutes: session.durationMinutes,
   })
@@ -198,6 +201,7 @@ export function boot(): void {
       session.beatHz !== lastSession.beatHz ||
       session.volume !== lastSession.volume ||
       session.wave !== lastSession.wave ||
+      session.mode !== lastSession.mode ||
       session.bedId !== lastSession.bedId
     ) {
       syncEngineFromSession(session)
@@ -233,6 +237,7 @@ export function boot(): void {
     carrierHz: clampedPrefs.carrierHz,
     beatHz: clampedPrefs.beatHz,
     wave: prefs.wave,
+    mode: prefs.mode,
     volume: prefs.volume,
     durationMinutes: prefs.durationMinutes,
   })

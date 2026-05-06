@@ -1,8 +1,10 @@
 # Sravanam
 
-**Sravanam** (Sanskrit: shravanam — attentive listening) is a browser-based binaural-beat listening experience with Vedic-themed visuals. You choose a life-mode intention, optionally tune the session, then listen inside an immersive full-screen mandala with optional planetary ephemeris.
+**Sravanam** (Sanskrit: shravanam — attentive listening) is a browser-based brainwave-entrainment listening experience with Vedic-themed visuals. You choose a life-mode intention, optionally tune the session, then listen inside an immersive full-screen mandala with optional planetary ephemeris.
 
 All audio is synthesized live in the browser with the Web Audio API. There are no pre-recorded meditation tracks.
+
+The audio engine supports three beat-delivery methods — **binaural** (headphones), **monaural** (speakers OK), and **isochronic** (speakers OK; the most reliable entrainment driver in the literature) — and tags every preset with an evidence tier (Validated · Experimental · Traditional) so users can tell research-backed bands from culturally-derived ones at a glance.
 
 ## Documentation
 
@@ -25,7 +27,7 @@ npm run dev
 
 Open the URL Vite prints, usually `http://localhost:5173`.
 
-For the intended effect, use stereo headphones.
+Use stereo headphones for **binaural** mode. **Monaural** and **isochronic** modes work over speakers.
 
 ## Scripts
 
@@ -51,7 +53,7 @@ npx playwright install chromium
 - **Runtime:** modern browsers with Web Audio API
 - **Router / app shell:** `src/main.ts` and `src/app.ts`
 - **State:** lightweight pub/sub stores in `src/state/`
-- **Audio engine:** `src/audio/binauralEngine.ts`
+- **Audio engine:** `src/audio/binauralEngine.ts` — three beat modes (binaural / monaural / isochronic), pink-noise cosmic bed, RMS-loudness-matched waveforms, beat-drift ramp API, fusion-confidence helper
 - **Landing visualization:** React + React Three Fiber under `src/landing/`
 - **Immersive visualization:** lazy-loaded p5 sketch in `src/viz/vedicCosmicFlowerP5.ts`
 - **Fallback visualization:** `src/viz/staticMandala.ts`
@@ -81,3 +83,4 @@ The main smoke path is:
 - React is intentionally isolated to the landing/global Sri Yantra layer.
 - The main app flow and UI outside that layer are vanilla TypeScript.
 - The active styling system is `src/design/`. The legacy `src/style.css` file remains in the repo for reference/history, but it is no longer part of the runtime bundle.
+- Every preset in `src/data/binauralTemplates.ts` and `src/data/vedicFrequencies.ts` carries an evidence tier (`validated` | `experimental` | `traditional`). New presets default to `experimental` — never claim validation by silence. Vedic entries default to `traditional` automatically at registration time.

@@ -31,7 +31,7 @@ export function renderLanding(root: HTMLElement): void {
               Begin a session
             </button>
             <p class="footnote landing__disclaimer">
-              Use stereo headphones · personal listening only
+              Stereo headphones for binaural mode · personal listening only · not medical treatment
             </p>
           </div>
         </div>

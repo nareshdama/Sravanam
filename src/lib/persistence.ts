@@ -13,11 +13,12 @@
  *     (not thrown) and the corrupt value is logged.
  */
 
+import type { BeatMode } from '../audio/binauralEngine'
 import type { SoundLibraryMode } from '../data/vedicSoundLibrary'
 import { reportError } from './errorReport'
 
 const STORAGE_KEY = 'sravanam_prefs'
-const PREFS_VERSION = 2
+const PREFS_VERSION = 3
 
 export interface PersistedPrefs {
   intentionId: string | null
@@ -26,6 +27,7 @@ export interface PersistedPrefs {
   carrierHz: number
   beatHz: number
   wave: OscillatorType
+  mode: BeatMode
   volume: number
   durationMinutes: number | null
 }
@@ -43,6 +45,7 @@ const DEFAULTS: PersistedPrefs = {
   carrierHz: 200,
   beatHz: 10,
   wave: 'sine',
+  mode: 'binaural',
   volume: 0.2,
   durationMinutes: 20,
 }
@@ -124,6 +127,11 @@ function validate(raw: Record<string, unknown>): PersistedPrefs {
       ['sine', 'triangle', 'sawtooth', 'square'].includes(raw.wave)
         ? (raw.wave as OscillatorType)
         : DEFAULTS.wave,
+    mode:
+      typeof raw.mode === 'string' &&
+      ['binaural', 'monaural', 'isochronic'].includes(raw.mode)
+        ? (raw.mode as BeatMode)
+        : DEFAULTS.mode,
     volume:
       typeof raw.volume === 'number' &&
       isFinite(raw.volume) &&

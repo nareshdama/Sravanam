@@ -30,19 +30,37 @@ CI runs: `npm ci` → `npm run check` → Playwright on the built artifacts.
 
 Two pub/sub stores (factory in `src/state/store.ts`):
 - **appStore** (`src/state/appState.ts`): UI state — current screen, fullscreen, ephemeris visibility, advanced tuning open, reducedMotion
-- **sessionStore** (`src/state/sessionState.ts`): Audio session — intention, template, carrier Hz, beat Hz, waveform, volume, bed type, error status
+- **sessionStore** (`src/state/sessionState.ts`): Audio session — intention, template, carrier Hz, beat Hz, waveform, beat **mode** (`binaural` | `monaural` | `isochronic`), volume, bed type, error status
 
 ### Audio Pipeline
 
-`src/audio/binauralEngine.ts` is the sole audio module. Left ear = carrier Hz, right ear = carrier + beat Hz. Optional ambient beds (om/cosmic/nada) are mixed underneath using Praṇava-inspired partials (136/272/408 Hz for "om" mode). `startSession()` in `app.ts` calls `engine.start()`; sessionStore changes propagate to the engine via store subscriptions. `stopSession()` kills the audio context and navigates back to the session card.
+`src/audio/binauralEngine.ts` is the sole audio module. The signal graph is:
+
+```
+beat sources → merger → waveGain → binauralGain → masterGain → destination
+ambient bed  ──────────────────────────↗
+```
+
+- **`waveGain`** holds a per-`OscillatorType` RMS-loudness compensation (sine = 1.0 reference; square = 0.707×; triangle/saw = 1.225×) so timbre changes don't change perceived loudness.
+- **Beat modes** (`BeatMode`):
+  - `binaural` — `oscL` at carrier into merger.in[0]; `oscR` at carrier+beat into merger.in[1]. Headphones-only, weakest entrainment but smoothest experience.
+  - `monaural` — both oscillators summed and routed equally to L+R. Acoustic beat; works on speakers.
+  - `isochronic` — single carrier amplitude-gated by an LFO at beat rate (envelope = 0.5 baseline + LFO×0.5). Strongest entrainment driver.
+- **Ambient beds** (`SoundLibraryMode`): `om` (Praṇava-inspired 136/272/408 Hz partials), `cosmic` (pink noise via Paul Kellet's filter cascade, lowpassed at 420 Hz), `nada` (low detuned drone).
+- **Public API of note:** `setBeatMode()`, `rampBeatHz(target, rampSec)` (slow drift), `assessBinauralFusion(mode, carrier, beat)` (returns `'good' | 'marginal' | 'poor'` with rationale).
+- **iOS Safari:** constructor falls back to `webkitAudioContext` for older mobile browsers.
+
+`startSession()` in `app.ts` calls `engine.start()`; sessionStore changes propagate via subscription. `stopSession()` kills the audio context and navigates back to the session card.
 
 ### Data Layer
 
 `src/data/` holds all preset content:
-- `binauralTemplates.ts` — named frequency presets (Alpha, Theta, etc.)
-- `intentions.ts` — 5 intentions with default templates and guide text
+- `binauralTemplates.ts` — named frequency presets (Alpha, Theta, etc.) plus the `EvidenceTier` type and `getTemplateTier()` helper
+- `intentions.ts` — 9 life-mode intentions with default templates and guide text
 - `sessionGuide.ts` — per-intention meditation guidance
-- `vedicFrequencies.ts` — Vedic frequency reference data and mappings
+- `vedicFrequencies.ts` — ~40 Vedic-themed presets; auto-tagged `traditional` at registration time
+
+**Evidence tiers** (`validated` | `experimental` | `traditional`): `validated` is reserved for bands with peer-reviewed RCT support for the labeled use case (e.g. 40 Hz gamma — Iaccarino 2016; 10 Hz alpha — Vernon 2005; 1.5–4 Hz delta sleep — Ngo 2013). New presets default to `experimental` — do not claim validation by silence.
 
 ### Visualization
 
@@ -63,4 +81,6 @@ Vite config manually chunks `p5`, `three`, and `@react-three/fiber` into separat
 - **No new frameworks.** Vanilla TypeScript for all app code; React is isolated to the Sri Yantra landing viz and must not spread.
 - **User gesture required for AudioContext.** The session card surfaces `audioStartError` when autoplay is blocked.
 - **E2E smoke path**: landing → intention → session card → "I'm Ready" → immersive → Stop. Touch this path after any routing, audio, or immersive change.
+- **Persistence schema is versioned.** Bumping `PersistedPrefs` shape requires incrementing `PREFS_VERSION` in `src/lib/persistence.ts` and adding a migration in `migrate()`. Current version is 3 (added `mode`).
+- **Honest evidence labels.** Don't promote a preset to `validated` without a citable peer-reviewed source for the band *and* the use case. When in doubt, leave it `experimental`.
 - Match existing TypeScript and CSS style; keep changes scoped to the task.

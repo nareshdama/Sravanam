@@ -97,6 +97,34 @@ For major product, flow, or architecture changes, also run the recurring rubric 
 - The active styling system is `src/design/`.
 - `src/style.css` is legacy/reference only and is not part of the current runtime bundle.
 
+### Audio Engine (`src/audio/binauralEngine.ts`)
+
+Signal graph: `beat-sources → merger → waveGain → binauralGain → masterGain → destination`. Ambient bed mixes into `masterGain` via its own `libraryGain`.
+
+- **Beat modes** (`BeatMode = 'binaural' | 'monaural' | 'isochronic'`). The constructor builds a per-mode carrier sub-graph in `buildBeatGraph()`. `setBeatMode()` rebuilds the sub-graph live — `binauralGain` is briefly faded to 0 across the swap so it's click-free.
+- **`waveGain`** applies per-`OscillatorType` RMS compensation so changing waveform doesn't change perceived loudness. See `WAVEFORM_LOUDNESS_GAIN`.
+- **Cosmic ambient bed** uses Paul Kellet's economy pink-noise filter (cached per frame count, peak-normalized to ±1).
+- **`rampBeatHz(target, rampSec)`** schedules a slow ramp on `oscR.frequency` (binaural / monaural) or `gateLfo.frequency` (isochronic). Honors `clampBinauralFrequencies` against the device Nyquist.
+- **`assessBinauralFusion(mode, carrier, beat)`** returns `'good' | 'marginal' | 'poor'` with a one-line reason. Used by Advanced Tuning to render a live confidence badge. Monaural and isochronic always return `'good'`.
+- **iOS Safari** falls back to `webkitAudioContext` when the unprefixed constructor is missing.
+
+### Evidence Tiers
+
+Every preset has an `EvidenceTier`:
+- `validated` — peer-reviewed RCT support (e.g. `gamma-40`, `alpha-10`, `theta-6`, delta sleep entries)
+- `experimental` — plausible but not robustly replicated (default for unannotated entries)
+- `traditional` — Vedic / Saptaswar / Schumann-Cousto / planetary correspondence (auto-applied to `VEDIC_FREQUENCIES` at registration time)
+
+Use `getTemplateTier(template)` to read the tier with the `'experimental'` default applied. Never silently promote to `validated` — keep citations alongside any new validated entry.
+
+### Persistence
+
+`PersistedPrefs` is versioned. Current version is **3** (added `mode`). Bumping the shape requires:
+1. Update `PREFS_VERSION` in `src/lib/persistence.ts`.
+2. Add a migration branch in `migrate()`.
+3. Extend `validate()` for the new field.
+4. Update the persistence tests' expected snapshots.
+
 ## Before Pushing
 
 1. Run `npm run check`

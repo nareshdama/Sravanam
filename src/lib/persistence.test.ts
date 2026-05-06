@@ -44,6 +44,7 @@ describe('persistence', () => {
       carrierHz: 200,
       beatHz: 10,
       wave: 'sine',
+      mode: 'binaural',
       volume: 0.2,
       durationMinutes: 20,
     })
@@ -66,6 +67,7 @@ describe('persistence', () => {
       carrierHz: 180,
       beatHz: 1.25,
       wave: 'triangle',
+      mode: 'binaural',
       volume: 0.35,
       durationMinutes: 20,
     })
@@ -141,12 +143,13 @@ describe('persistence', () => {
       carrierHz: 180,
       beatHz: 1.25,
       wave: 'triangle',
+      mode: 'binaural',
       volume: 0.05,
       durationMinutes: 20,
     })
 
     const stored = JSON.parse(localStorage.getItem('sravanam_prefs')!)
-    expect(stored.version).toBe(2)
+    expect(stored.version).toBe(3)
     expect(stored.volume).toBe(0.05)
   })
 
@@ -175,6 +178,7 @@ describe('persistence', () => {
       carrierHz: 222,
       beatHz: 40,
       wave: 'sine',
+      mode: 'binaural',
       volume: 0.4,
       durationMinutes: 20,
     })

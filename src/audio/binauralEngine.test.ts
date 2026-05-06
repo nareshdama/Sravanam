@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { BinauralEngine, clampBinauralFrequencies, getBinauralLimits } from './binauralEngine'
+import {
+  BinauralEngine,
+  assessBinauralFusion,
+  clampBinauralFrequencies,
+  getBinauralLimits,
+} from './binauralEngine'
 import { getAllTemplates, getTemplateById, resolveTemplateFrequencies } from '../data/binauralTemplates'
 
 /** Minimal Web Audio mocks so `BinauralEngine` runs in Node without a browser. */
@@ -325,9 +330,9 @@ describe('BinauralEngine', () => {
         createChannelMerger() { return { connect(d: AudioNode) { return d }, disconnect() {} } },
         createGain() {
           gainCount++
-          // binauralGain is the 1st createGain call in startInternal
-          const gain = gainCount === 1 ? createTrackingAudioParam(0) : createAudioParam(0)
-          if (gainCount === 1) binauralGain = gain as ReturnType<typeof createTrackingAudioParam>
+          // start() creates: 1=waveGain, 2=binauralGain, 3=libraryGain, 4=masterGain.
+          const gain = gainCount === 2 ? createTrackingAudioParam(0) : createAudioParam(0)
+          if (gainCount === 2) binauralGain = gain as ReturnType<typeof createTrackingAudioParam>
           return { connect(_d: AudioNode) { return _d }, gain, disconnect() {} }
         },
         createOscillator() {
@@ -420,6 +425,82 @@ describe('BinauralEngine', () => {
     expect(engine.getSoundLibrary()).toBe('nada')
     expect(oscillators.length).toBeGreaterThan(countAfterOm)
 
+    engine.stop()
+  })
+
+  it('monaural mode runs two carriers at carrier and carrier+beat (just like binaural)', async () => {
+    const { factory, oscillators } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+    engine.setBeatMode('monaural')
+    engine.setCarrierHz(220)
+    engine.setBeatHz(10)
+    await engine.start()
+
+    expect(engine.getBeatMode()).toBe('monaural')
+    expect(oscillators).toHaveLength(2)
+    const { carrierHz, beatHz } = clampBinauralFrequencies(48_000, 220, 10)
+    expect(oscillators[0]!.frequency.value).toBeCloseTo(carrierHz, 8)
+    expect(oscillators[1]!.frequency.value).toBeCloseTo(carrierHz + beatHz, 8)
+    engine.stop()
+  })
+
+  it('isochronic mode uses one carrier oscillator + an LFO at the beat rate', async () => {
+    const { factory, oscillators } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+    engine.setBeatMode('isochronic')
+    engine.setCarrierHz(300)
+    engine.setBeatHz(8)
+    await engine.start()
+
+    expect(engine.getBeatMode()).toBe('isochronic')
+    // Two oscillators total: [0] carrier, [1] LFO envelope
+    expect(oscillators).toHaveLength(2)
+    expect(oscillators[0]!.frequency.value).toBeCloseTo(300, 8)
+    expect(oscillators[1]!.frequency.value).toBeCloseTo(8, 8)
+
+    // In isochronic, the public channel-frequency view should reflect single carrier (no right channel).
+    expect(engine.getChannelFrequencies()).toBeNull()
+    engine.stop()
+  })
+
+  it('assessBinauralFusion: monaural and isochronic always good; binaural depends on carrier/beat', () => {
+    expect(assessBinauralFusion('monaural', 100, 40).level).toBe('good')
+    expect(assessBinauralFusion('isochronic', 50, 40).level).toBe('good')
+
+    expect(assessBinauralFusion('binaural', 350, 10).level).toBe('good')
+    expect(assessBinauralFusion('binaural', 200, 10).level).toBe('marginal')
+    expect(assessBinauralFusion('binaural', 800, 10).level).toBe('marginal')
+    expect(assessBinauralFusion('binaural', 80, 10).level).toBe('poor')
+    expect(assessBinauralFusion('binaural', 1500, 10).level).toBe('poor')
+    expect(assessBinauralFusion('binaural', 350, 40).level).toBe('poor') // beat too high
+  })
+
+  it('rampBeatHz schedules a frequency ramp on the right oscillator (binaural)', async () => {
+    const { factory, oscillators } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+    engine.setCarrierHz(300)
+    engine.setBeatHz(12)
+    await engine.start()
+
+    const ret = engine.rampBeatHz(6, 60)
+    expect(ret).toBeCloseTo(6, 8)
+    // Right oscillator final value tracks the ramp target (mock applies linearRamp immediately).
+    expect(oscillators[1]!.frequency.value).toBeCloseTo(306, 8)
+    engine.stop()
+  })
+
+  it('switching beat mode while running rebuilds the carrier graph', async () => {
+    const { factory, oscillators } = createMockAudioContextFactory(48_000)
+    const engine = new BinauralEngine(factory)
+    engine.setCarrierHz(200)
+    engine.setBeatHz(10)
+    await engine.start()
+    expect(oscillators).toHaveLength(2) // binaural: L + R
+
+    engine.setBeatMode('isochronic')
+    // After rebuild we have the original 2 + new (carrier + LFO) = 4
+    expect(oscillators.length).toBeGreaterThanOrEqual(4)
+    expect(engine.getBeatMode()).toBe('isochronic')
     engine.stop()
   })
 })

@@ -633,6 +633,122 @@ input[type='range']::-moz-range-thumb {
   box-shadow: 0 0 16px -4px var(--color-gold-glow);
 }
 
+/* ── Beat mode picker ── */
+
+.tuning__mode {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.tuning__mode-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: rgba(8, 12, 28, 0.55);
+  color: var(--color-ink-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.tuning__mode-opt:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold-bright);
+}
+
+.tuning__mode-opt input[type='radio'] {
+  margin-top: 0.18rem;
+  accent-color: var(--color-gold);
+}
+
+.tuning__mode-opt:has(input:checked) {
+  background: linear-gradient(180deg, rgba(230, 198, 110, 0.22) 0%, rgba(184, 146, 61, 0.18) 100%);
+  border-color: var(--color-gold);
+  color: var(--color-gold-bright);
+  box-shadow: 0 0 16px -4px var(--color-gold-glow);
+}
+
+/* Visible focus ring for keyboard users — :focus-within is a wide-support fallback. */
+.tuning__mode-opt:focus-within {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.tuning__mode-opt small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.6875rem;
+  color: var(--color-ink-tertiary);
+  font-weight: 400;
+}
+
+/* ── Evidence-tier badge ── */
+
+.tier-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 0.5px solid transparent;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tier-badge--validated {
+  background: rgba(120, 200, 140, 0.16);
+  border-color: rgba(120, 200, 140, 0.55);
+  color: rgba(170, 230, 180, 0.95);
+}
+
+.tier-badge--experimental {
+  background: rgba(230, 198, 110, 0.14);
+  border-color: rgba(230, 198, 110, 0.45);
+  color: var(--color-gold-bright);
+}
+
+.tier-badge--traditional {
+  background: rgba(190, 150, 220, 0.14);
+  border-color: rgba(190, 150, 220, 0.45);
+  color: rgba(220, 195, 240, 0.95);
+}
+
+/* ── Fusion confidence badge (advanced tuning) ── */
+
+.tuning__fusion {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--color-border);
+  background: rgba(8, 12, 28, 0.55);
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--color-ink-secondary);
+  transition: border-color var(--duration-fast) var(--ease-default),
+    color var(--duration-fast) var(--ease-default);
+}
+
+.tuning__fusion[data-level='good'] {
+  border-color: rgba(120, 200, 140, 0.55);
+  color: rgba(170, 230, 180, 0.92);
+}
+
+.tuning__fusion[data-level='marginal'] {
+  border-color: rgba(230, 198, 110, 0.55);
+  color: var(--color-gold-bright);
+}
+
+.tuning__fusion[data-level='poor'] {
+  border-color: rgba(220, 120, 120, 0.55);
+  color: rgba(240, 175, 175, 0.92);
+}
+
 /* ── Daily protocol table ── */
 
 .daily-protocol__body { padding-top: var(--space-3); }

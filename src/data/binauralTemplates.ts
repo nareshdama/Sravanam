@@ -28,6 +28,21 @@ export interface BreathingPattern {
   exhaleSec: number
 }
 
+/**
+ * Evidence tier — what the *frequency choice* itself rests on.
+ *
+ * - `validated` — peer-reviewed RCT or replicated EEG-entrainment studies
+ *   support the band for the labeled use case (e.g. 10 Hz alpha, 40 Hz gamma,
+ *   1.5–4 Hz delta sleep, 6 Hz theta memory).
+ * - `experimental` — plausible based on EEG bands or small studies, but not
+ *   robustly replicated; treat as personal exploration.
+ * - `traditional` — derived from contemplative/cultural sources (Vedic śāstra,
+ *   Saptaswar tuning, Schumann/Cousto math). The carrier or beat may have a
+ *   real geophysical or musical basis, but the *therapeutic* claim is cultural,
+ *   not clinical.
+ */
+export type EvidenceTier = 'validated' | 'experimental' | 'traditional'
+
 export interface BinauralTemplate {
   id: string
   /** Display string for the beat row (e.g. "0.5–2 Hz", "7.83 Hz") */
@@ -41,6 +56,11 @@ export interface BinauralTemplate {
   defaultBeatHz: number
   /** Typical carrier for sine binaural beats (Hz) */
   recommendedCarrierHz: number
+  /**
+   * Evidence basis for this preset. Defaults to `'experimental'` when omitted —
+   * never claim validation by silence.
+   */
+  tier?: EvidenceTier
 
   // Vedic metadata (all optional for backward compatibility)
   vedicSources?: readonly VedicSource[]
@@ -68,6 +88,7 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     beatHzMax: 2,
     defaultBeatHz: 1.25,
     recommendedCarrierHz: DEFAULT_TEMPLATE_CARRIER_HZ,
+    tier: 'validated',
   },
   {
     id: 'delta-2-3',
@@ -80,6 +101,7 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     beatHzMax: 3,
     defaultBeatHz: 2.5,
     recommendedCarrierHz: DEFAULT_TEMPLATE_CARRIER_HZ,
+    tier: 'validated',
   },
   {
     id: 'theta-4',
@@ -128,6 +150,7 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     beatHzMax: 6,
     defaultBeatHz: 6,
     recommendedCarrierHz: DEFAULT_TEMPLATE_CARRIER_HZ,
+    tier: 'validated',
   },
   {
     id: 'theta-7.83',
@@ -164,6 +187,7 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     beatHzMax: 10,
     defaultBeatHz: 10,
     recommendedCarrierHz: DEFAULT_TEMPLATE_CARRIER_HZ,
+    tier: 'validated',
   },
   {
     id: 'alpha-11',
@@ -188,6 +212,7 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     beatHzMax: 12.5,
     defaultBeatHz: 12.5,
     recommendedCarrierHz: DEFAULT_TEMPLATE_CARRIER_HZ,
+    tier: 'validated',
   },
   {
     id: 'beta-20',
@@ -224,6 +249,7 @@ export const BINAURAL_TEMPLATES: readonly BinauralTemplate[] = [
     beatHzMax: 40,
     defaultBeatHz: 40,
     recommendedCarrierHz: DEFAULT_TEMPLATE_CARRIER_HZ,
+    tier: 'validated',
   },
 ] as const
 
@@ -239,8 +265,12 @@ const PRE_CLAMP_TEMPLATE_CACHE = new Map<string, ResolvedTemplateFrequencies>()
 // Initialize with existing templates
 BINAURAL_TEMPLATES.forEach((t) => TEMPLATE_INDEX.set(t.id, t))
 
-// Register all 18 Vedic frequencies
-VEDIC_FREQUENCIES.forEach((f) => TEMPLATE_INDEX.set(f.id, f))
+// Register Vedic frequencies. They derive from Saptaswar tuning, Schumann/Cousto math,
+// or planetary correspondences — culturally rich but not clinically validated. Default
+// any entry without an explicit `tier` to `'traditional'`.
+VEDIC_FREQUENCIES.forEach((f) => {
+  TEMPLATE_INDEX.set(f.id, f.tier ? f : { ...f, tier: 'traditional' })
+})
 
 export function getTemplateById(id: string): BinauralTemplate | undefined {
   return TEMPLATE_INDEX.get(id)
@@ -259,7 +289,14 @@ export function resetTemplateRegistry(): void {
   TEMPLATE_INDEX.clear()
   PRE_CLAMP_TEMPLATE_CACHE.clear()
   BINAURAL_TEMPLATES.forEach((t) => TEMPLATE_INDEX.set(t.id, t))
-  VEDIC_FREQUENCIES.forEach((f) => TEMPLATE_INDEX.set(f.id, f))
+  VEDIC_FREQUENCIES.forEach((f) => {
+    TEMPLATE_INDEX.set(f.id, f.tier ? f : { ...f, tier: 'traditional' })
+  })
+}
+
+/** Resolve the evidence tier of a template, defaulting unannotated entries to `experimental`. */
+export function getTemplateTier(template: BinauralTemplate): EvidenceTier {
+  return template.tier ?? 'experimental'
 }
 
 export function getAllTemplates(): BinauralTemplate[] {
