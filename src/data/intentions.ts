@@ -38,6 +38,8 @@ export const INTENTIONS: readonly Intention[] = [
     brainwaves: ['delta'],
     defaultTemplateId: 'vedic-deep-sleep-aum-136.1',
     alternateTemplateIds: [
+      'delta-0.5-2',
+      'delta-2-3',
       'vedic-delta-healing-3',
       'vedic-aum-drone-136.1',
       'vedic-deep-delta-3.2',
@@ -59,6 +61,7 @@ export const INTENTIONS: readonly Intention[] = [
     brainwaves: ['theta'],
     defaultTemplateId: 'vedic-theta-relax-sa-432',
     alternateTemplateIds: [
+      'theta-6',
       'vedic-sleep-onset-aum-136.1',
       'vedic-sankalpa-6.32',
       'vedic-sankalpa-shakti-7.5',
@@ -82,6 +85,8 @@ export const INTENTIONS: readonly Intention[] = [
     brainwaves: ['alpha', 'beta'],
     defaultTemplateId: 'vedic-smr-focus-sa-432',
     alternateTemplateIds: [
+      'alpha-10',
+      'alpha-12.5',
       'vedic-beta-attention-sa-432',
       'vedic-alpha-clarity-10',
       'vedic-alpha-phi-12.67',
@@ -104,6 +109,7 @@ export const INTENTIONS: readonly Intention[] = [
     brainwaves: ['gamma', 'beta'],
     defaultTemplateId: 'vedic-fortune-gate-dha-720',
     alternateTemplateIds: [
+      'gamma-40',
       'vedic-spanda-power-40',
       'vedic-beta-sharp-33.18',
       'vedic-gamma-ashta-62.64',
